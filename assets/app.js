@@ -20,7 +20,6 @@ $(document).ready(function() {
   $('.source_table tbody tr:even').addClass('even');
   
   $('.file_list_container').hide();
-  $('.file_list_container').first().show();
   
   $('.file_list_container h2').each(function(){
     $('.group_tabs').append('<li><a href="#">' + $(this).html() + '</a></li>');
