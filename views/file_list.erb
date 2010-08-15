@@ -1,0 +1,27 @@
+<div class="file_list_container">
+  <h2><%= title %></h2>
+  <% coverage = source_files.count == 0 ? 0 : source_files.map(&:covered_percent).inject(&:+) / source_files.count %>
+  <h3><span class="<%= coverage_css_class(coverage) %>"><%= coverage.round(2) %> %</span> covered</h3>
+  <table class="file_list">
+    <thead>
+      <tr>
+        <th>File</th>
+        <th>% covered</th>
+        <th>LOC</th>
+        <th>Lines covered</th>
+        <th>Lines missed</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% source_files.each do |source_file| %>
+      <tr>
+        <td><a href="#<%= id source_file %>" class="src_link" title="<%= source_file.filename %>"><%= source_file.filename %></a></td>
+        <td class="<%= coverage_css_class(source_file.covered_percent) %>"><%= source_file.covered_percent.round(2).to_s %> %</td>
+        <td><%= source_file.lines.count %></td>
+        <td><%= source_file.covered_lines.count %></td>
+        <td><%= source_file.missed_lines.count %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

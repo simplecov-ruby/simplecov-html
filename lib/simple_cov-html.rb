@@ -18,6 +18,11 @@ class SimpleCov::Formatter::HTMLFormatter
     template('source_file').result(binding)
   end
   
+  # Returns a table containing the given source files
+  def formatted_file_list(title, source_files)
+    template('file_list').result(binding)
+  end
+  
   # Returns the an erb instance for the template of given name
   def template(name)
     ERB.new(File.read(File.join(File.dirname(__FILE__), '../views/', "#{name}.erb")))
@@ -32,14 +37,18 @@ class SimpleCov::Formatter::HTMLFormatter
     Digest::SHA1.hexdigest(source_file.filename)
   end
   
-  def coverage_css_class(source_file)
-    if source_file.covered_percent > 90
+  def coverage_css_class(covered_percent)
+    if covered_percent > 90
       'green'
-    elsif source_file.covered_percent > 80
+    elsif covered_percent > 80
       'yellow'
     else
       'red'
     end
+  end
+  
+  def timeago(time)
+    "<abbr class=\"timeago\" title=\"#{time.strftime("%Y-%m-%dT%H:%M:%SZ")}\">#{time.strftime("%Y-%m-%dT%H:%M:%SZ")}</abbr>"
   end
 end
 

@@ -1,29 +1,8 @@
-jQuery.fn.dataTableExt.oSort['percent-asc']  = function(a,b) {
-	var x = (a == "-") ? 0 : a.replace( /%/, "" );
-	var y = (b == "-") ? 0 : b.replace( /%/, "" );
-	x = parseFloat( x );
-	y = parseFloat( y );
-	return ((x < y) ? -1 : ((x > y) ?  1 : 0));
-};
-
-jQuery.fn.dataTableExt.oSort['percent-desc'] = function(a,b) {
-	var x = (a == "-") ? 0 : a.replace( /%/, "" );
-	var y = (b == "-") ? 0 : b.replace( /%/, "" );
-	x = parseFloat( x );
-	y = parseFloat( y );
-	return ((x < y) ?  1 : ((x > y) ? -1 : 0));
-};
-
-
 $(document).ready(function() {
-  $('.src_link').click(function(){
-    $.scrollTo( $($(this).attr('href')), 800 );
-    return false;
-  });
-  
-  $('#overview').dataTable({
+  $('.file_list').dataTable({
     "aaSorting": [[ 1, "asc" ]],
     "bPaginate": false,
+    "bJQueryUI": true,
     "aoColumns": [
 			null,
 		  { "sType": "percent" },
@@ -32,4 +11,34 @@ $(document).ready(function() {
 			null
 		]
   });
+  
+  $("a.src_link").fancybox({
+		'hideOnContentClick': true
+	});
+	
+  $('.source_table tbody tr:odd').addClass('odd');
+  $('.source_table tbody tr:even').addClass('even');
+  
+  $('.file_list_container').hide();
+  $('.file_list_container').first().show();
+  
+  $('.file_list_container h2').each(function(){
+    $('.group_tabs').append('<li><a href="#">' + $(this).html() + '</a></li>');
+  });
+
+  $('.group_tabs a').live('focus', function() {
+    $(this).blur();
+  });
+  $('.group_tabs a').live('click', function(){
+    if (!$(this).parent().hasClass('active')) {
+      $('.group_tabs a').parent().removeClass('active');
+      $(this).parent().addClass('active');
+      $('.file_list_container').hide();
+      $(".file_list_container h2:contains('" + $(this).html() + "')").parent().slideDown();
+    };
+  });
+  
+  $('.group_tabs a:first').click();
+  
+  $("abbr.timeago").timeago();
 });
