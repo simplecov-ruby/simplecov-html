@@ -5,12 +5,12 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "simple_cov-html"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
-    gem.email = ""christoph"
+    gem.summary = %Q{HTML formatter for SimpleCov}
+    gem.description = %Q{HTML formatter for SimpleCov}
+    gem.email = "christoph at olszowka de"
     gem.homepage = "http://github.com/colszowka/simple_cov-html"
-    gem.authors = [""Christoph"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.authors = ["Christoph Olszowka"]
+    gem.add_development_dependency "shoulda", "= 2.10.3"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

@@ -1,0 +1,21 @@
+<div class="source_table">
+<table>
+  <tr>
+    <td colspan="2">
+      <h2 id="<%= id source_file %>"><a name="<%= id(source_file) %>"></a><%= source_file.filename %></h2>
+      <h3><span class="<%= coverage_css_class(source_file) %>"><%= source_file.covered_percent.round(2).to_s %> %</span> covered</h3>
+    </td>
+  </tr>
+<% source_file.lines.each do |line| %>
+  <% classname = line.coverage ? (line.coverage > 0 ? 'hit' : 'miss') : 'never' %>
+  <tr class="<%= classname %>" <%= line.coverage ? "data-hits=\"#{line.coverage}\"" : '' %>>
+    <td class="line_number">
+      <pre><%= line.number %></pre>
+    </td>
+    <td>
+      <pre><%= line.src.chomp %></pre>
+    </td>
+  </tr>
+<% end %>
+</table>
+</div>
