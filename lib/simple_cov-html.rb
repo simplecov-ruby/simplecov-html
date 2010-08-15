@@ -1,6 +1,8 @@
 require 'erb'
 require 'fileutils'
 require 'digest/sha1'
+require 'simple_cov'
+
 class SimpleCov::Formatter::HTMLFormatter
   def format(result)
     FileUtils.rm_rf(output_path)

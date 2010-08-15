@@ -5,11 +5,12 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "simple_cov-html"
-    gem.summary = %Q{HTML formatter for SimpleCov}
-    gem.description = %Q{HTML formatter for SimpleCov}
+    gem.summary = %Q{HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
+    gem.description = %Q{HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
     gem.email = "christoph at olszowka de"
     gem.homepage = "http://github.com/colszowka/simple_cov-html"
     gem.authors = ["Christoph Olszowka"]
+    gem.add_dependency "simple_cov", ">= 0.0.2"
     gem.add_development_dependency "shoulda", "= 2.10.3"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
