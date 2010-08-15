@@ -52,6 +52,14 @@ class SimpleCov::Formatter::HTMLFormatter
   def timeago(time)
     "<abbr class=\"timeago\" title=\"#{time.strftime("%Y-%m-%dT%H:%M:%SZ")}\">#{time.strftime("%Y-%m-%dT%H:%M:%SZ")}</abbr>"
   end
+  
+  def shortened_filename(source_file)
+    source_file.filename.gsub(/^#{File.expand_path(Dir.getwd)}/, '.')
+  end
+  
+  def link_to_source_file(source_file)
+    %Q(<a href="##{id source_file}" class="src_link" title="#{shortened_filename source_file}">#{shortened_filename source_file}</a>)
+  end
 end
 
 # Set up the html formatter
