@@ -60,7 +60,7 @@ class SimpleCov::Formatter::HTMLFormatter
   end
   
   def shortened_filename(source_file)
-    source_file.filename.gsub(/^#{File.expand_path(SimpleCov.root)}/, '.')
+    source_file.filename.gsub(SimpleCov.root, '.')
   end
   
   def link_to_source_file(source_file)

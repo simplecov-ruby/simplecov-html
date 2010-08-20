@@ -221,6 +221,11 @@ abbr.timeago {
   margin-bottom: 18px;
 }
 
+a.src_link {
+  background: url('./magnify.png') no-repeat left 50%;
+  padding-left: 18px;
+}
+
 tr, td {
   margin: 0;
   padding: 0;
