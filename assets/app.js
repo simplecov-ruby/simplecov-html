@@ -19,10 +19,11 @@ $(document).ready(function() {
   $('.source_table tbody tr:odd').addClass('odd');
   $('.source_table tbody tr:even').addClass('even');
   
+  $('.source_files').hide();
   $('.file_list_container').hide();
   
   $('.file_list_container h2').each(function(){
-    $('.group_tabs').append('<li><a href="#">' + $(this).html() + '</a></li>');
+    $('.group_tabs').append('<li><a href="' + $(this).attr('id') + '">' + $(this).html() + '</a></li>');
   });
 
   $('.group_tabs a').live('focus', function() {
@@ -33,8 +34,9 @@ $(document).ready(function() {
       $('.group_tabs a').parent().removeClass('active');
       $(this).parent().addClass('active');
       $('.file_list_container').hide();
-      $(".file_list_container h2:contains('" + $(this).html() + "')").parent().show();
+      $(".file_list_container h2#" + $(this).attr('href')).parent().show();
     };
+    return false;
   });
   
   $('.group_tabs a:first').click();

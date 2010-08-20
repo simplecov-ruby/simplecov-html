@@ -235,6 +235,10 @@ th {
   white-space: nowrap;
 }
 
+th.ui-state-default {
+  cursor: pointer;
+}
+
 th span.ui-icon {
   float: left;
 }

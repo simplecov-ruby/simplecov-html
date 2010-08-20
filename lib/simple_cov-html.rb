@@ -16,7 +16,7 @@ class SimpleCov::Formatter::HTMLFormatter
     File.open(File.join(output_path, "index.html"), "w+") do |file|
       file.puts template('layout').result(binding)
     end
-    puts "Coverage report generated to #{output_path}"
+    puts "Coverage report generated for #{result.command_name} to #{output_path}"
   end
   
   private
@@ -38,6 +38,28 @@ class SimpleCov::Formatter::HTMLFormatter
   # Returns a table containing the given source files
   def formatted_file_list(title, source_files)
     template('file_list').result(binding)
+  end
+  
+  # Computes the coverage based upon lines covered and lines missed
+  def coverage(file_list)
+    return 100.0 if file_list.length == 0
+    lines_missed = file_list.map {|f| f.missed_lines.count }.inject(&:+)
+    
+    lines_covered(file_list) * 100 / lines_of_code(file_list).to_f
+  end
+  
+  def lines_of_code(file_list)
+    lines_missed(file_list) + lines_covered(file_list)
+  end
+  
+  def lines_covered(file_list)
+    return 0.0 if file_list.length == 0
+    file_list.map {|f| f.covered_lines.count }.inject(&:+)
+  end
+  
+  def lines_missed(file_list)
+    return 0.0 if file_list.length == 0
+    file_list.map {|f| f.missed_lines.count }.inject(&:+)
   end
   
   def coverage_css_class(covered_percent)
