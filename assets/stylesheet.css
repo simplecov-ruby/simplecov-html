@@ -113,7 +113,7 @@ a:hover {
 }
 
 body {
-  font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
+  font-family: "Lucida Grande", Helvetica, "Helvetica Neue", Arial, sans-serif;
   padding: 12px;
   background-color: #333;
 }
@@ -135,6 +135,19 @@ table {
   border: 2px solid #ddd;
   border-top: 8px solid #ddd;
   padding: 18px;
+  -webkit-border-bottom-left-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -moz-border-radius-topright: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.dataTables_filter, .dataTables_info {
+  padding: 2px 6px;
 }
 
 abbr.timeago {
@@ -160,24 +173,48 @@ abbr.timeago {
 }
 
 .group_tabs li a {
+  font-family: Helvetica, Arial, sans-serif;
   display: block;
   float: left;
   text-decoration: none;
   padding: 4px 8px;
   background-color: #aaa;
+  background: -webkit-gradient(linear, 0 0, 0 bottom, from(#DDD), to(#aaa));
+  background: -moz-linear-gradient(#DDD, #aaa);
+  background: linear-gradient(#DDD, #aaa);
+  text-shadow: #e5e5e5 1px 1px 0px;
   border-bottom: none;
   color: #333;
   font-weight: bold;
   margin-right: 8px;
+  border-top: 1px solid #efefef;
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-top-right-radius: 2px;
+  -moz-border-radius-topleft: 2px;
+  -moz-border-radius-topright: 2px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
 }
 
 .group_tabs li a:hover {
   background-color: #ccc;
+  background: -webkit-gradient(linear, 0 0, 0 bottom, from(#eee), to(#aaa));
+  background: -moz-linear-gradient(#eee, #aaa);
+  background: linear-gradient(#eee, #aaa);
+}
+
+.group_tabs li a:active {
+  padding-top: 5px;
+  padding-bottom: 3px;
 }
 
 .group_tabs li.active a {
   color: black;
+  text-shadow: #fff 1px 1px 0px;
   background-color: #ddd;
+  background: -webkit-gradient(linear, 0 0, 0 bottom, from(#fff), to(#ddd));
+  background: -moz-linear-gradient(#fff, #ddd);
+  background: linear-gradient(#fff, #ddd);
 }
 
 .file_list {
@@ -234,6 +271,22 @@ td pre {
 .line_number {
   width: 20px;
   font-weight: bold;
+}
+
+#footer {
+  color: #ddd;
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 12px;
+  text-align: right;
+}
+#footer a {
+  color: #eee;
+  text-decoration: underline;
+}
+#footer a:hover {
+  color: #fff;
+  text-decoration: none;
 }
 
 .green {

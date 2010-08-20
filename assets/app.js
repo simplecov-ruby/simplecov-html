@@ -33,7 +33,7 @@ $(document).ready(function() {
       $('.group_tabs a').parent().removeClass('active');
       $(this).parent().addClass('active');
       $('.file_list_container').hide();
-      $(".file_list_container h2:contains('" + $(this).html() + "')").parent().slideDown();
+      $(".file_list_container h2:contains('" + $(this).html() + "')").parent().show();
     };
   });
   
