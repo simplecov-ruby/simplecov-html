@@ -8,6 +8,7 @@ $(document).ready(function() {
 		  { "sType": "percent" },
 			null,
 			null,
+			null,
 			null
 		]
   });

@@ -264,6 +264,14 @@ td {
   background-color: white;
 }
 
+.source_table thead th {
+  background-color: white;
+}
+
+.source_table td.hits {
+  text-align: right;
+}
+
 .source_table h3, .source_table h4 {
   padding: 0;
   margin: 0;

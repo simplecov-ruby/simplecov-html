@@ -2,10 +2,15 @@
   <table>
     <thead>
     <tr>
-      <td colspan="2">
+      <td colspan="3">
         <h3><%= shortened_filename source_file %></h3>
         <h4><span class="<%= coverage_css_class(source_file.covered_percent) %>"><%= source_file.covered_percent.round(2).to_s %> %</span> covered</h4>
       </td>
+    </tr>
+    <tr>
+      <th>#</th>
+      <th></th>
+      <th>Hits</th>
     </tr>
     </thead>
     <tbody>
@@ -17,6 +22,9 @@
       </td>
       <td>
         <pre><%= line.src.chomp %></pre>
+      </td>
+      <td class="hits">
+        <%= line.coverage %>
       </td>
     </tr>
   <% end %>
