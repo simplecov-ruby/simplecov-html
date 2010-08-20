@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simple_cov-html}
-  s.version = "0.1.1"
+  s.version = "0.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Christoph Olszowka"]
-  s.date = %q{2010-08-15}
+  s.date = %q{2010-08-20}
   s.description = %q{HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
   s.email = %q{christoph at olszowka de}
   s.extra_rdoc_files = [
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
      "assets/jquery-1.4.2.min.js",
      "assets/jquery.dataTables.min.js",
      "assets/jquery.timeago.js",
+     "assets/magnify.png",
      "assets/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png",
      "assets/smoothness/images/ui-bg_flat_75_ffffff_40x100.png",
      "assets/smoothness/images/ui-bg_glass_55_fbf9ee_1x400.png",
@@ -87,14 +88,14 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<simple_cov>, [">= 0.0.2"])
+      s.add_runtime_dependency(%q<simple_cov>, [">= 0.2.0"])
       s.add_development_dependency(%q<shoulda>, ["= 2.10.3"])
     else
-      s.add_dependency(%q<simple_cov>, [">= 0.0.2"])
+      s.add_dependency(%q<simple_cov>, [">= 0.2.0"])
       s.add_dependency(%q<shoulda>, ["= 2.10.3"])
     end
   else
-    s.add_dependency(%q<simple_cov>, [">= 0.0.2"])
+    s.add_dependency(%q<simple_cov>, [">= 0.2.0"])
     s.add_dependency(%q<shoulda>, ["= 2.10.3"])
   end
 end
