@@ -44,5 +44,5 @@ $(document).ready(function() {
   
   $("abbr.timeago").timeago();
   $('#loading').fadeOut();
-  $('#wrapper').fadeIn(500);
+  $('#wrapper').show();
 });
