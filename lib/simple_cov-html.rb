@@ -10,8 +10,12 @@ if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.2.0")
 end
 
 class SimpleCov::Formatter::HTMLFormatter
+  VERSION = File.read(File.join(File.dirname(__FILE__), '../VERSION')).strip.chomp
+  
   def format(result)
-    FileUtils.cp_r(File.join(File.dirname(__FILE__), '../assets'), output_path)
+    Dir[File.join(File.dirname(__FILE__), '../assets/*')].each do |path|
+      FileUtils.cp_r(path, asset_output_path)
+    end
     
     File.open(File.join(output_path, "index.html"), "w+") do |file|
       file.puts template('layout').result(binding)
@@ -28,6 +32,17 @@ class SimpleCov::Formatter::HTMLFormatter
   
   def output_path
     SimpleCov.coverage_path
+  end
+  
+  def asset_output_path
+    return @asset_output_path if @asset_output_path
+    @asset_output_path = File.join(output_path, 'assets', SimpleCov::Formatter::HTMLFormatter::VERSION)
+    FileUtils.mkdir_p(@asset_output_path)
+    @asset_output_path
+  end
+  
+  def assets_path(name)
+    File.join('./assets', SimpleCov::Formatter::HTMLFormatter::VERSION, name)
   end
   
   # Returns the html for the given source_file

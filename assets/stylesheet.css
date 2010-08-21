@@ -59,7 +59,7 @@ table {margin-bottom:1.4em;width:100%;}
 th {font-weight:bold;}
 thead th {background:#c3d9ff;}
 th, td, caption {padding:4px 10px 4px 5px;}
-tr.even td {background:#e5ecf9;}
+tr.even td {background:#efefef;}
 tfoot {font-style:italic;}
 caption {background:#eee;}
 .small {font-size:.8em;margin-bottom:1.875em;line-height:1.875em;}
@@ -101,6 +101,15 @@ hr.space {background:#fff;color:#fff;visibility:hidden;}
 .clearfix:after, .container:after {content:"\0020";display:block;height:0;clear:both;visibility:hidden;overflow:hidden;}
 .clearfix, .container {display:block;}
 .clear {clear:both;}
+
+#loading {
+  position: fixed;
+  left: 40%;
+  top: 50%;
+}
+#loading h1 {
+  color: #ccc;
+}
 
 a {
   color: #600;
@@ -257,7 +266,7 @@ td {
 }
 
 .source_table table {
-  width: 100%;
+  width: 95%;
 }
 
 .source_table thead td {

@@ -43,4 +43,6 @@ $(document).ready(function() {
   $('.group_tabs a:first').click();
   
   $("abbr.timeago").timeago();
+  $('#loading').fadeOut();
+  $('#wrapper').fadeIn(500);
 });
