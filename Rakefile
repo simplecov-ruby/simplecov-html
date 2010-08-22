@@ -7,7 +7,7 @@ begin
     gem.name = "simplecov-html"
     gem.summary = %Q{HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
     gem.description = %Q{HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
-    gem.email = "christoph at olszowka de"
+    gem.email = "christoph at olszowka.de"
     gem.homepage = "http://github.com/colszowka/simplecov-html"
     gem.authors = ["Christoph Olszowka"]
     gem.add_dependency "simplecov", ">= 0.3.0"
@@ -48,7 +48,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "simple_cov-html #{version}"
+  rdoc.title = "simplecov-html #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
