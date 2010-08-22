@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.authors = ["Christoph Olszowka"]
   s.date = %q{2010-08-22}
   s.description = %q{HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
-  s.email = %q{christoph at olszowka de}
+  s.email = %q{christoph at olszowka.de}
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
