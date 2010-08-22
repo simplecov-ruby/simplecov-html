@@ -2,10 +2,10 @@ require 'erb'
 require 'fileutils'
 require 'digest/sha1'
 require 'time'
-require 'simple_cov'
+require 'simplecov'
 
 # Ensure we are using an compatible version of SimpleCov
-if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.2.0")
+if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.3.0")
   raise RuntimeError, "The version of SimpleCov you are using is too old. Please update with 'gem install simplecov'"
 end
 
