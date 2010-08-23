@@ -10,7 +10,7 @@ begin
     gem.email = "christoph at olszowka.de"
     gem.homepage = "http://github.com/colszowka/simplecov-html"
     gem.authors = ["Christoph Olszowka"]
-    gem.add_dependency "simplecov", ">= 0.3.0"
+    gem.add_dependency "simplecov", "~> 0.3.0"
     gem.add_development_dependency "shoulda", "= 2.10.3"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
@@ -24,19 +24,6 @@ Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
   test.pattern = 'test/**/test_*.rb'
   test.verbose = true
-end
-
-begin
-  require 'rcov/rcovtask'
-  Rcov::RcovTask.new do |test|
-    test.libs << 'test'
-    test.pattern = 'test/**/test_*.rb'
-    test.verbose = true
-  end
-rescue LoadError
-  task :rcov do
-    abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
-  end
 end
 
 task :test => :check_dependencies
