@@ -1,15 +1,15 @@
 = HTML formatter for SimpleCov
 
-Note: To learn more about SimpleCov, check out the main repo at http://github.com/colszowka/simplecov
+=== Note: To learn more about SimpleCov, check out the main repo at http://github.com/colszowka/simplecov
 
-Generates a nice HTML overview of your SimpleCov coverage results.
+Generates a nice HTML report of your SimpleCov coverage results on Ruby 1.9 using client-side Javascript
+quite extensively.
 
 To use, add this to your Bundler Gemfile:
   
-  gem 'simplecov-html', '>= 0.3.3'
+  gem 'simplecov-html', '>= 0.3.5'
   
-The html formatter will be used automatically. The HTML is put into the 'coverage' subdirectory of the
-current working directory (supposedly the main dir of your project)
+The html formatter will be used automatically then.
   
 == Note on Patches/Pull Requests
  
