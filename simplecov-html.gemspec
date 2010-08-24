@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simplecov-html}
-  s.version = "0.3.2"
+  s.version = "0.3.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Christoph Olszowka"]
-  s.date = %q{2010-08-23}
+  s.date = %q{2010-08-24}
   s.description = %q{HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
   s.email = %q{christoph at olszowka.de}
   s.extra_rdoc_files = [
