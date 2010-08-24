@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simplecov-html}
-  s.version = "0.3.4"
+  s.version = "0.3.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Christoph Olszowka"]
-  s.date = %q{2010-08-24}
+  s.date = %q{2010-08-25}
   s.description = %q{HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
   s.email = %q{christoph at olszowka.de}
   s.extra_rdoc_files = [
@@ -49,6 +49,7 @@ Gem::Specification.new do |s|
      "assets/jquery-1.4.2.min.js",
      "assets/jquery.dataTables.min.js",
      "assets/jquery.timeago.js",
+     "assets/jquery.url.js",
      "assets/loading.gif",
      "assets/magnify.png",
      "assets/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png",
