@@ -1,8 +1,9 @@
-<div class="file_list_container">
-  <h2 id="<%= title.gsub(/[^a-zA-Z]/, '') %>">
+<div class="file_list_container" id="<%= title.gsub(/[^a-zA-Z]/, '') %>">
+  <h2>
     <%= title %>
     (<span class="<%= coverage_css_class(coverage(source_files)) %>"><%= coverage(source_files).round(2) %>%</span>)
   </h2>
+  <a name="<%= title.gsub(/[^a-zA-Z]/, '') %>"></a>
   <div>
     <b><%= source_files.length %></b> files in total.
     <b><%= lines_of_code(source_files) %></b> relevant lines. 
