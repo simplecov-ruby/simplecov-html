@@ -2,10 +2,12 @@ require 'erb'
 require 'fileutils'
 require 'digest/sha1'
 require 'time'
-require 'simplecov'
 
+unless defined?(SimpleCov)
+  raise RuntimeError, "simplecov-html is now the default formatter of simplecov. Please update your test helper and gemfile to require 'simplecov' instead of 'simplecov-html'!"
+end
 # Ensure we are using an compatible version of SimpleCov
-if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.3.0")
+if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.3.2")
   raise RuntimeError, "The version of SimpleCov you are using is too old. Please update with 'gem install simplecov'"
 end
 
@@ -104,6 +106,3 @@ class SimpleCov::Formatter::HTMLFormatter
     %Q(<a href="##{id source_file}" class="src_link" title="#{shortened_filename source_file}">#{shortened_filename source_file}</a>)
   end
 end
-
-# Set up the html formatter
-SimpleCov.formatter = SimpleCov::Formatter::HTMLFormatter
