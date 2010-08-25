@@ -21,7 +21,7 @@
         <pre><%= line.number %></pre>
       </td>
       <td>
-        <pre><%= line.src.chomp %></pre>
+        <pre><%= CGI.escapeHTML(line.src.chomp) %></pre>
       </td>
       <td class="hits">
         <%= line.coverage %>
