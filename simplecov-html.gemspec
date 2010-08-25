@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simplecov-html}
-  s.version = "0.3.6"
+  s.version = "0.3.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Christoph Olszowka"]
@@ -90,14 +90,11 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<simplecov>, ["~> 0.3.0"])
       s.add_development_dependency(%q<shoulda>, ["= 2.10.3"])
     else
-      s.add_dependency(%q<simplecov>, ["~> 0.3.0"])
       s.add_dependency(%q<shoulda>, ["= 2.10.3"])
     end
   else
-    s.add_dependency(%q<simplecov>, ["~> 0.3.0"])
     s.add_dependency(%q<shoulda>, ["= 2.10.3"])
   end
 end
