@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{simplecov-html}
-  s.version = "0.3.7"
+  s.version = "0.3.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Christoph Olszowka"]
@@ -46,6 +46,7 @@ Gem::Specification.new do |s|
      "assets/fancybox/fancybox.png",
      "assets/fancybox/jquery.fancybox-1.3.1.css",
      "assets/fancybox/jquery.fancybox-1.3.1.pack.js",
+     "assets/favicon.png",
      "assets/jquery-1.4.2.min.js",
      "assets/jquery.dataTables.min.js",
      "assets/jquery.timeago.js",
