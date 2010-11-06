@@ -60,7 +60,7 @@ class SimpleCov::Formatter::HTMLFormatter
   
   # Computes the coverage based upon lines covered and lines missed
   def coverage(file_list)
-    return 100.0 if file_list.length == 0
+    return 100.0 if file_list.length == 0 or lines_of_code(file_list) == 0
     lines_missed = file_list.map {|f| f.missed_lines.count }.inject(&:+)
     
     lines_covered(file_list) * 100 / lines_of_code(file_list).to_f
