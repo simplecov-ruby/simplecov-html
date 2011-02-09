@@ -1,3 +1,6 @@
+require 'bundler'
+Bundler.setup(:default)
+
 require 'erb'
 require 'cgi'
 require 'fileutils'
@@ -7,14 +10,13 @@ require 'time'
 unless defined?(SimpleCov)
   raise RuntimeError, "simplecov-html is now the default formatter of simplecov. Please update your test helper and gemfile to require 'simplecov' instead of 'simplecov-html'!"
 end
+
 # Ensure we are using an compatible version of SimpleCov
 if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.3.2")
   raise RuntimeError, "The version of SimpleCov you are using is too old. Please update with 'gem install simplecov'"
 end
 
 class SimpleCov::Formatter::HTMLFormatter
-  VERSION = File.read(File.join(File.dirname(__FILE__), '../VERSION')).strip.chomp
-  
   def format(result)
     Dir[File.join(File.dirname(__FILE__), '../assets/*')].each do |path|
       FileUtils.cp_r(path, asset_output_path)
@@ -23,7 +25,7 @@ class SimpleCov::Formatter::HTMLFormatter
     File.open(File.join(output_path, "index.html"), "w+") do |file|
       file.puts template('layout').result(binding)
     end
-    puts "Coverage report generated for #{result.command_name} to #{output_path}"
+    puts "Coverage report generated for #{result.command_name} to #{output_path}. #{result.covered_percent.round(2)}% covered."
   end
   
   private
@@ -107,3 +109,5 @@ class SimpleCov::Formatter::HTMLFormatter
     %Q(<a href="##{id source_file}" class="src_link" title="#{shortened_filename source_file}">#{shortened_filename source_file}</a>)
   end
 end
+
+require 'simplecov-html/version'

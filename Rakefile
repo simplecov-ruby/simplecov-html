@@ -1,22 +1,5 @@
-require 'rubygems'
-require 'rake'
-
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "simplecov-html"
-    gem.summary = %Q{HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
-    gem.description = %Q{HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
-    gem.email = "christoph at olszowka.de"
-    gem.homepage = "http://github.com/colszowka/simplecov-html"
-    gem.authors = ["Christoph Olszowka"]
-    gem.add_development_dependency "shoulda", "2.10.3"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
-  end
-  Jeweler::GemcutterTasks.new
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
-end
+require 'bundler'
+Bundler::GemHelper.install_tasks
 
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
@@ -25,16 +8,11 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-task :test => :check_dependencies
-
 task :default => :test
 
 require 'rake/rdoctask'
 Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "simplecov-html #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
