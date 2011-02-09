@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require 'simplecov-html/version'
 
 Gem::Specification.new do |s|
-  s.name        = "punchcard"
+  s.name        = "simplecov-html"
   s.version     = SimpleCov::Formatter::HTMLFormatter::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Christoph Olszowka"]
