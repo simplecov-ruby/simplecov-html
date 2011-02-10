@@ -7,7 +7,6 @@ require 'fileutils'
 require 'digest/sha1'
 require 'time'
 
-require 'simplecov'
 unless defined?(SimpleCov)
   raise RuntimeError, "simplecov-html is now the default formatter of simplecov. Please update your test helper and gemfile to require 'simplecov' instead of 'simplecov-html'!"
 end
