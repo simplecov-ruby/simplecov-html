@@ -110,4 +110,5 @@ class SimpleCov::Formatter::HTMLFormatter
   end
 end
 
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__)))
 require 'simplecov-html/version'
