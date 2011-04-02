@@ -12,7 +12,7 @@ unless defined?(SimpleCov)
 end
 
 # Ensure we are using an compatible version of SimpleCov
-if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.4.0")
+if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.4.2")
   raise RuntimeError, "The version of SimpleCov you are using is too old. Please update with 'gem install simplecov'"
 end
 
