@@ -1,14 +1,14 @@
 <div class="file_list_container" id="<%= title.gsub(/[^a-zA-Z]/, '') %>">
   <h2>
     <%= title %>
-    (<span class="<%= coverage_css_class(coverage(source_files)) %>"><%= coverage(source_files).round(2) %>%</span>)
+    (<span class="<%= coverage_css_class(coverage) %>"><%= coverage.round(2) %>%</span>)
   </h2>
   <a name="<%= title.gsub(/[^a-zA-Z]/, '') %>"></a>
   <div>
     <b><%= source_files.length %></b> files in total.
-    <b><%= lines_of_code(source_files) %></b> relevant lines. 
-    <span class="green"><b><%= lines_covered(source_files) %></b> lines covered</span> and
-    <span class="red"><b><%= lines_missed(source_files) %></b> lines missed </span>
+    <b><%= lines_of_code %></b> relevant lines. 
+    <span class="green"><b><%= lines_covered %></b> lines covered</span> and
+    <span class="red"><b><%= lines_missed %></b> lines missed </span>
   </div>
   <table class="file_list">
     <thead>
