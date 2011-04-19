@@ -62,7 +62,7 @@ class SimpleCov::Formatter::HTMLFormatter
   def formatted_file_list(title, source_files)
     result.file_whitelist = source_files
     table = template('file_list').result(binding)
-    result.reset_file_whitelist!
+    result.reset_file_whitelist
     table
   end
 
