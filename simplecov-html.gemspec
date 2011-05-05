@@ -13,7 +13,8 @@ Gem::Specification.new do |s|
   s.description = %Q{Default HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
 
   s.rubyforge_project = "simplecov-html"
-  
+
+  s.add_development_dependency "bundler", "1.0.13"
   s.add_development_dependency "shoulda", "2.10.3"
 
   s.files         = `git ls-files`.split("\n")

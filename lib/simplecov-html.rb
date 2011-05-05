@@ -1,6 +1,4 @@
-require 'bundler'
-Bundler.setup(:default)
-
+require "simplecov"
 require 'erb'
 require 'cgi'
 require 'fileutils'
