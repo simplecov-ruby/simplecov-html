@@ -1,13 +1,10 @@
-= HTML formatter for SimpleCov
+= Default HTML formatter for SimpleCov
 
 === Note: To learn more about SimpleCov, check out the main repo at http://github.com/colszowka/simplecov
 
 Generates a nice HTML report of your SimpleCov coverage results on Ruby 1.9 using client-side Javascript
 quite extensively.
 
-Starting from simplecov 0.3.2, the HTML Formatter is the default one and you don't need any further setup.
-Please check out the documentation for simplecov to learn how to set things up: http://github.com/colszowka/simplecov
-  
 == Note on Patches/Pull Requests
  
 * Fork the project.
