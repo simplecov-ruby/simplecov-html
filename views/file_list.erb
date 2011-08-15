@@ -1,7 +1,8 @@
 <div class="file_list_container" id="<%= title.gsub(/[^a-zA-Z]/, '') %>">
   <h2>
     <%= title %>
-    (<span class="<%= coverage_css_class(coverage(source_files)) %>"><%= coverage(source_files).round(2) %>%</span>)
+    (<span class="<%= coverage_css_class(coverage(source_files)) %>"><%= coverage(source_files).round(2) %>%</span> x
+     <span class="<%= coverage_css_class(coverage(source_files)) %>"><%= strength(source_files).round(2) %></span>)
   </h2>
   <a name="<%= title.gsub(/[^a-zA-Z]/, '') %>"></a>
   <div>
@@ -19,6 +20,7 @@
         <th>Relevant Lines</th>
         <th>Lines covered</th>
         <th>Lines missed</th>
+        <th>Strength multiple</th>
       </tr>
     </thead>
     <tbody>
@@ -30,6 +32,7 @@
         <td><%= source_file.covered_lines.count + source_file.missed_lines.count %></td>
         <td><%= source_file.covered_lines.count %></td>
         <td><%= source_file.missed_lines.count %></td>
+        <td><%= source_file.covered_strength %></td>
       </tr>
       <% end %>
     </tbody>
