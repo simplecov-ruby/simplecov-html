@@ -5,7 +5,7 @@ require 'digest/sha1'
 require 'time'
 
 # Ensure we are using a compatible version of SimpleCov
-if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.5.0")
+if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.4")
   raise RuntimeError, "The version of SimpleCov you are using is too old. Please update with 'gem install simplecov'"
 end
 
@@ -86,6 +86,16 @@ class SimpleCov::Formatter::HTMLFormatter
     if covered_percent > 90
       'green'
     elsif covered_percent > 80
+      'yellow'
+    else
+      'red'
+    end
+  end
+  
+  def strength_css_class(covered_strength)
+    if covered_strength > 1
+      'green'
+    elsif covered_strength == 1
       'yellow'
     else
       'red'

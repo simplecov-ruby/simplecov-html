@@ -27,7 +27,11 @@ $(document).ready(function() {
   
   // Add tabs based upon existing file_list_containers
   $('.file_list_container h2').each(function(){
-    $('.group_tabs').append('<li><a href="#' + $(this).parent().attr('id') + '">' + $(this).html() + '</a></li>');
+    var container_id = $(this).parent().attr('id');
+    var group_name = $(this).find('.group_name').first().html();
+    var covered_percent = $(this).find('.covered_percent').first().html();
+    
+    $('.group_tabs').append('<li><a href="#' + container_id + '">' + group_name + ' ('+ covered_percent +')</a></li>');
   });
 
   $('.group_tabs a').each( function() {

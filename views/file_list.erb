@@ -1,8 +1,13 @@
 <div class="file_list_container" id="<%= title.gsub(/[^a-zA-Z]/, '') %>">
   <h2>
-    <%= title %>
-    (<span class="<%= coverage_css_class(coverage(source_files)) %>"><%= coverage(source_files).round(2) %>%</span> x
-     <span class="<%= coverage_css_class(coverage(source_files)) %>"><%= strength(source_files).round(2) %></span>)
+    <span class="group_name"><%= title %></span>
+    (<span class="covered_percent"><span class="<%= coverage_css_class(coverage(source_files)) %>"><%= coverage(source_files).round(2) %>%</span></span>
+     covered at
+     <span class="covered_strength">
+       <span class="<%= strength_css_class(strength(source_files)) %>">
+         <%= strength(source_files).round(2) %>
+       </span>
+    </span> hits/line)
   </h2>
   <a name="<%= title.gsub(/[^a-zA-Z]/, '') %>"></a>
   <div>
@@ -20,7 +25,7 @@
         <th>Relevant Lines</th>
         <th>Lines covered</th>
         <th>Lines missed</th>
-        <th>Strength multiple</th>
+        <th>Avg. Hits / Line</th>
       </tr>
     </thead>
     <tbody>
