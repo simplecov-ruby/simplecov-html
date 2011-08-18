@@ -5,6 +5,11 @@
       <td colspan="3">
         <h3><%= shortened_filename source_file %></h3>
         <h4><span class="<%= coverage_css_class(source_file.covered_percent) %>"><%= source_file.covered_percent.round(2).to_s %> %</span> covered</h4>
+        <div>
+          <b><%= source_file.lines_of_code %></b> relevant lines. 
+          <span class="green"><b><%= source_file.covered_lines.count %></b> lines covered</span> and
+          <span class="red"><b><%= source_file.missed_lines.count %></b> lines missed.</span>
+        </div>
       </td>
     </tr>
     <tr>
