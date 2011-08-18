@@ -289,7 +289,7 @@ td.strong {
 td pre {
   margin: 0;
   padding: 0;
-  color: #222;
+  color: #000;
   font-family: "Monaco", "Inconsolata", "Consolas", monospace;
   white-space: pre;
   white-space: pre-wrap;
