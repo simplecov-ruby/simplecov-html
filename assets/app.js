@@ -18,8 +18,10 @@ $(document).ready(function() {
   $('.source_table tbody tr:even').addClass('even');
   
   $("a.src_link").fancybox({
-		'hideOnContentClick': true
-	});
+		'hideOnContentClick': true,
+		'centerOnScroll': true,
+		'width': '90%'
+  });
 	
 	// Hide src files and file list container
   $('.source_files').hide();

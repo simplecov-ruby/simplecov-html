@@ -263,11 +263,9 @@ td.strong {
 
 
 .source_table {
-  overflow: auto;
 }
 
 .source_table table {
-  width: 95%;
 }
 
 .source_table thead td {
@@ -293,11 +291,16 @@ td pre {
   padding: 0;
   color: #222;
   font-family: "Monaco", "Inconsolata", "Consolas", monospace;
+  white-space: normal;
 }
 
-.line_number {
+td.line_number {
   width: 20px;
   font-weight: bold;
+}
+
+td.line_number, td.hits {
+  vertical-align: top;  
 }
 
 #footer {
