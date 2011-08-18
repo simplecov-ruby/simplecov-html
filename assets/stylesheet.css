@@ -109,12 +109,12 @@ hr.space {background:#fff;color:#fff;visibility:hidden;}
 }
 
 a {
-  color: #600;
+  color: #333;
   text-decoration: none;
 }
 
 a:hover {
-  color: #900;
+  color: #000;
   text-decoration: underline;
 }
 
@@ -251,6 +251,10 @@ th span.ui-icon {
 
 td {
   padding: 4px 8px;
+}
+
+td.strong {
+  font-weight: bold;
 }
 
 .source_table td {

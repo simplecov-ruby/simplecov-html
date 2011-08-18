@@ -31,8 +31,8 @@
     <tbody>
       <% source_files.each do |source_file| %>
       <tr>
-        <td><b><%= link_to_source_file(source_file) %></b></td>
-        <td class="<%= coverage_css_class(source_file.covered_percent) %>"><b><%= source_file.covered_percent.round(2).to_s %> %</b></td>
+        <td class="strong"><%= link_to_source_file(source_file) %></td>
+        <td class="<%= coverage_css_class(source_file.covered_percent) %> strong"><%= source_file.covered_percent.round(2).to_s %> %</td>
         <td><%= source_file.lines.count %></td>
         <td><%= source_file.covered_lines.count + source_file.missed_lines.count %></td>
         <td><%= source_file.covered_lines.count %></td>
