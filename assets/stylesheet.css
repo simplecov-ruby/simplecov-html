@@ -291,7 +291,6 @@ td pre {
   padding: 0;
   color: #222;
   font-family: "Monaco", "Inconsolata", "Consolas", monospace;
-  white-space: normal;
 }
 
 td.line_number {
