@@ -8,29 +8,16 @@
       <span class="red"><b><%= source_file.missed_lines.count %></b> lines missed.</span>
     </div>
   </div>
-  <table>
-    <thead>
-    <tr>
-      <th>#</th>
-      <th></th>
-      <th>Hits</th>
-    </tr>
-    </thead>
-    <tbody>
-  <% source_file.lines.each do |line| %>
-    <% classname = line.coverage ? (line.coverage > 0 ? 'hit' : 'miss') : 'never' %>
-    <tr class="<%= classname %>" <%= line.coverage ? "data-hits=\"#{line.coverage}\"" : '' %>>
-      <td class="line_number">
-        <pre><%= line.number %></pre>
-      </td>
-      <td>
-        <pre><%= CGI.escapeHTML(line.src.chomp) %></pre>
-      </td>
-      <td class="hits">
-        <%= line.coverage %>
-      </td>
-    </tr>
-  <% end %>
-    </tbody>
-  </table>
+  
+  <pre>
+    <ol>
+      <% source_file.lines.each_with_index do |line| %>
+        <% classname = line.coverage ? (line.coverage > 0 ? 'hit' : 'miss') : 'never' %>
+        <li class="<%= classname %>" data-hits="<%= line.coverage ? line.coverage : '' %>" data-linenumber="<%= line.number %>">
+          <% if line.covered? %><span class="hits"><%= line.coverage %></span><% end %>
+          <code><%= CGI.escapeHTML(line.src.chomp) %></code>
+        </li>
+      <% end %>
+    </ol>
+  </pre>
 </div>

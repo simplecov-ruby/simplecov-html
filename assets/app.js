@@ -20,7 +20,8 @@ $(document).ready(function() {
   $("a.src_link").fancybox({
 		'hideOnContentClick': true,
 		'centerOnScroll': true,
-		'width': '90%'
+		'width': '90%',
+		'padding': 0
   });
 	
 	// Hide src files and file list container

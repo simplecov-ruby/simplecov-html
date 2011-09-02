@@ -257,51 +257,66 @@ td.strong {
   font-weight: bold;
 }
 
-.source_table td {
-  padding: 2px 8px;
-}
-
-
-.source_table {
-}
-
-.source_table table {
-}
-
-.source_table thead td {
-  background-color: white;
-}
-
-.source_table thead th {
-  background-color: white;
-}
-
-.source_table td.hits {
-  text-align: right;
-}
-
 .source_table h3, .source_table h4 {
   padding: 0;
   margin: 0;
   margin-bottom: 4px;
 }
 
-td pre {
+.source_table .header {
+  padding: 10px;
+}
+
+.source_table pre {
   margin: 0;
   padding: 0;
+  white-space: normal;
+}
+
+.source_table pre, .source_table code {
   color: #000;
   font-family: "Monaco", "Inconsolata", "Consolas", monospace;
+}
+
+.source_table pre {
+  background-color: #333;
+}
+
+.source_table pre ol {
+  margin: 0px; 
+  padding: 0px;
+  margin-left: 45px;
+  font-size: 12px;
+  color: white;
+}
+
+.source_table pre li {
+  margin: 0px;
+  padding: 2px 6px;
+  border-left: 5px solid white;
+}
+
+.source_table pre li code {
   white-space: pre;
   white-space: pre-wrap;
 }
 
-td.line_number {
-  width: 20px;
+.source_table pre .hits {
+  float: right;
+  margin-left: 10px;
+  padding: 2px 4px;
+  
+  background-color: #444;
+  background: -webkit-gradient(linear, 0 0, 0 bottom, from(#222), to(#666));
+  background: -moz-linear-gradient(#222, #666);
+  background: linear-gradient(#222, #666);
+  
+  color: white;
+  font-family: Helvetica, "Helvetica Neue", Arial, sans-serif;
+  font-size: 10px;
   font-weight: bold;
-}
-
-td.line_number, td.hits {
-  vertical-align: top;  
+  text-align: center;
+  border-radius: 6px;
 }
 
 #footer {
@@ -329,21 +344,31 @@ td.line_number, td.hits {
 .yellow {
   color: #da0;
 }
-.hit.odd td {
+.source_table .hit {
+  border-color: #090;
+}
+.source_table .miss {
+  border-color: #900;
+}
+.source_table .never {
+  border-color: black;
+}
+
+.source_table .hit:nth-child(odd) {
   background-color: #bbdbb6;
 }
-.hit.even td {
+.source_table .hit:nth-child(even) {
   background-color: #cde1c9;
 }
-.miss.odd td {
+.source_table .miss:nth-child(odd) {
   background-color: #f19683;
 }
-.miss.even td {
+.source_table .miss:nth-child(even) {
   background-color: #efb5a8;
 }
-.never.odd td {
+.source_table .never:nth-child(odd) {
   background-color: #efefef;
 }
-.never.even td {
+.source_table .never:nth-child(even) {
   background-color: #f4f4f4;
 }
