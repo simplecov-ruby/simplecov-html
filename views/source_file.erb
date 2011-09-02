@@ -15,7 +15,7 @@
         <% classname = line.coverage ? (line.coverage > 0 ? 'hit' : 'miss') : 'never' %>
         <li class="<%= classname %>" data-hits="<%= line.coverage ? line.coverage : '' %>" data-linenumber="<%= line.number %>">
           <% if line.covered? %><span class="hits"><%= line.coverage %></span><% end %>
-          <code><%= CGI.escapeHTML(line.src.chomp) %></code>
+          <code class="ruby"><%= CGI.escapeHTML(line.src.chomp) %></code>
         </li>
       <% end %>
     </ol>

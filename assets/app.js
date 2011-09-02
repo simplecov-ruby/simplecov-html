@@ -14,8 +14,7 @@ $(document).ready(function() {
 		]
   });
   
-  $('.source_table tbody tr:odd').addClass('odd');
-  $('.source_table tbody tr:even').addClass('even');
+  $('pre code').each(function(i, e) {hljs.highlightBlock(e, '  ')});
   
   $("a.src_link").fancybox({
 		'hideOnContentClick': true,
