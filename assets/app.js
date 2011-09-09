@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  // Configuration for fancy sortable tables for source file groups
   $('.file_list').dataTable({
     "aaSorting": [[ 1, "asc" ]],
     "bPaginate": false,
@@ -14,16 +15,31 @@ $(document).ready(function() {
 		]
   });
   
-  $('pre code').each(function(i, e) {hljs.highlightBlock(e, '  ')});
+  // Syntax highlight all files up front - deactivated
+  // $('.source_table pre code').each(function(i, e) {hljs.highlightBlock(e, '  ')});
   
+  // Syntax highlight source files on first toggle of the file view popup
+  $("a.src_link").click(function() {
+    // Get the source file element that corresponds to the clicked element
+    var source_table = $($(this).attr('href'));
+    
+    // If not highlighted yet, do it!
+    if (!source_table.hasClass('highlighted')) {
+      source_table.find('pre code').each(function(i, e) {hljs.highlightBlock(e, '  ')});
+      source_table.addClass('highlighted');
+    };
+  });
+  
+  // Set-up of popup for source file views
   $("a.src_link").fancybox({
 		'hideOnContentClick': true,
 		'centerOnScroll': true,
 		'width': '90%',
-		'padding': 0
+		'padding': 0,
+		'transitionIn': 'elastic'
   });
 	
-	// Hide src files and file list container
+	// Hide src files and file list container after load
   $('.source_files').hide();
   $('.file_list_container').hide();
   
@@ -40,9 +56,8 @@ $(document).ready(function() {
     $(this).addClass($(this).attr('href').replace('#', ''));
   });
   
-  $('.group_tabs a').live('focus', function() {
-    $(this).blur();
-  });
+  // Make sure tabs don't get ugly focus borders when active
+  $('.group_tabs a').live('focus', function() { $(this).blur(); });
   
   var favicon_path = $('link[rel="shortcut icon"]').attr('href')
   $('.group_tabs a').live('click', function(){
