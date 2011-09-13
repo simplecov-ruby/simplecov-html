@@ -12,9 +12,9 @@
   <pre>
     <ol>
       <% source_file.lines.each_with_index do |line| %>
-        <% classname = line.coverage ? (line.coverage > 0 ? 'hit' : 'miss') : 'never' %>
-        <li class="<%= classname %>" data-hits="<%= line.coverage ? line.coverage : '' %>" data-linenumber="<%= line.number %>">
+        <li class="<%= line.status %>" data-hits="<%= line.coverage ? line.coverage : '' %>" data-linenumber="<%= line.number %>">
           <% if line.covered? %><span class="hits"><%= line.coverage %></span><% end %>
+          <% if line.skipped? %><span class="hits">skipped</span><% end %>
           <code class="ruby"><%= CGI.escapeHTML(line.src.chomp) %></code>
         </li>
       <% end %>
