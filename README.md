@@ -10,13 +10,19 @@ quite extensively.
 Note on Patches/Pull Requests
 -----------------------------
 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+The formatter itself has no actual tests. Instead, it is tested in the cucumber features of simplecov itself. If you
+modify the formatter, please make sure the simplecov test suites still pass by doing the following:
+
+  * Clone simplecov into the parent directory of your simplecov-html checkout
+  * `cd` there, run `bundle`
+  * You should end up with all dev dependencies installed and simplecov-html being used from your disk
+  * Run the tests (units and features)
+  
+Please remember to add tests if you add functionality.
+
+**Important:** If you modify the JS/CSS assets, you'll have to precompile them using `rake assets:compile` - otherwise,
+your changes will not be included in your coverage reports.
+
 
 Copyright
 ---------
