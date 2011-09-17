@@ -11,7 +11,7 @@ end
 
 class SimpleCov::Formatter::HTMLFormatter
   def format(result)
-    Dir[File.join(File.dirname(__FILE__), '../assets/*')].each do |path|
+    Dir[File.join(File.dirname(__FILE__), '../public/*')].each do |path|
       FileUtils.cp_r(path, asset_output_path)
     end
     

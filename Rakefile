@@ -16,3 +16,15 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+namespace :assets do
+  desc "Compiles all assets"
+  task :compile do
+    require 'sprockets'
+    assets = Sprockets::Environment.new
+    assets.append_path 'assets/javascripts'
+    assets.append_path 'assets/stylesheets'
+    puts assets['application.js'].write_to('public/application.js')
+    puts assets['application.css'].write_to('public/application.css')
+  end
+end

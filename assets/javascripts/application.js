@@ -1,3 +1,7 @@
+//= require_directory ./libraries/
+//= require_directory ./plugins/
+//= require_self
+
 $(document).ready(function() {
   // Configuration for fancy sortable tables for source file groups
   $('.file_list').dataTable({
