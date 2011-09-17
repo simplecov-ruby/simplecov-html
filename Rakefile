@@ -25,7 +25,7 @@ namespace :assets do
     assets = Sprockets::Environment.new
     assets.append_path 'assets/javascripts'
     assets.append_path 'assets/stylesheets'
-    puts assets['application.js'].write_to('public/application.js')
-    puts assets['application.css'].write_to('public/application.css')
+    assets['application.js'].write_to('public/application.js')
+    assets['application.css'].write_to('public/application.css')
   end
 end
