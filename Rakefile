@@ -20,6 +20,7 @@ end
 namespace :assets do
   desc "Compiles all assets"
   task :compile do
+    puts "Compiling assets"
     require 'sprockets'
     assets = Sprockets::Environment.new
     assets.append_path 'assets/javascripts'
