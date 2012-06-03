@@ -37,7 +37,7 @@ class SimpleCov::Formatter::HTMLFormatter
   end
   
   def asset_output_path
-    return @asset_output_path if @asset_output_path
+    return @asset_output_path if defined? @asset_output_path and @asset_output_path
     @asset_output_path = File.join(output_path, 'assets', SimpleCov::Formatter::HTMLFormatter::VERSION)
     FileUtils.mkdir_p(@asset_output_path)
     @asset_output_path
