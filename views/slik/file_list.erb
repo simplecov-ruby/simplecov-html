@@ -1,0 +1,15 @@
+<div id="menu">
+    <li>
+      <a href="#overview">overview</a>
+    </li>
+  <% source_files.each do |file| %>
+    <li>
+      <span class="cov <%= coverage_css_class(file.covered_percent) %>"><%= file.covered_percent.to_i.to_s %></span>
+      <a href="#<%= shortened_filename(file) %>">
+        <span class="dirname"><%= path_without_filename(file) %></span>
+        <span class="basename"><%= file_name(file) %></span>
+      </a>
+    </li>
+  <% end %>
+  <a id="logo" href="http://visionmedia.github.com/mocha/">m</a>
+</div>

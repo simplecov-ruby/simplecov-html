@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>Code coverage for <%= SimpleCov.project_name %></title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script src='<%= assets_path('application.js') %>' type='text/javascript'></script>
+    <link href='<%= assets_path('stylesheet.css') %>' media='screen, projection, print' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" type="image/png" href="<%= assets_path('favicon.png') %>" />
+    <link rel="icon" type="image/png" href="<%= assets_path('favicon.png') %>" />
+  </head>
+
+  <body>
+    <div id="coverage">
+      <h1 id="overview">Coverage</h1>
+
+      <%= formatted_file_list("All Files", result.source_files) %>
+
+      <div id="stats" class="<%= coverage_css_class(coverage(result.source_files).to_i) %>">
+        <div class="percentage"><%= coverage(result.source_files).to_i.to_s || 0 %>%</div>
+        <div class="sloc"><%= lines_of_code(result.source_files).to_i.to_s || 0 %></div>
+      </div>
+
+      <div id="files">
+        <% result.source_files.each do |file| %>
+          <%= formatted_source_file(file) %>
+        <% end %>
+      </div>
+
+    </div>
+  </body>
+</html>

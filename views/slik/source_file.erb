@@ -1,0 +1,27 @@
+<div class="file" id="<%= id source_file %>">
+<h2 id="<%= shortened_filename source_file %>"><%= shortened_filename source_file %></h2>
+  <div id="stats" class="<%= coverage_css_class(coverage([source_file]).to_i) %>">
+    <div class="percentage"><%= source_file.covered_percent.to_i.to_s %>%</div>
+    <div class="sloc"><%= lines_of_code([source_file]) %></div>
+  </div>
+
+  <table id="source">
+    <thead>
+      <tr>
+        <th>Line</th>
+        <th>Hits</th>
+        <th>Source</th>
+      </tr>
+    </thead>
+    <tbody>
+  <% source_file.lines.each do |line| %>
+    <% classname = line.coverage ? (line.coverage > 0 ? 'hit' : 'miss') : 'never' %>
+      <tr class="<%= classname %>" <%= line.coverage ? "data-hits=\"#{line.coverage}\"" : '' %>>
+        <td class="line"><%= line.number %></td>
+        <td class="hits"><%= line.coverage %></td>
+        <td class="source"><%= CGI.escapeHTML(line.src.chomp.gsub("\n", "")) %></td>
+      </tr>
+  <% end %>
+    </tbody>
+  </table>
+</div>
