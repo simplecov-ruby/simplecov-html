@@ -19,7 +19,7 @@
       <tr class="<%= classname %>" <%= line.coverage ? "data-hits=\"#{line.coverage}\"" : '' %>>
         <td class="line"><%= line.number %></td>
         <td class="hits"><%= line.coverage %></td>
-        <td class="source"><%= CGI.escapeHTML(line.src.chomp.gsub("\n", "")) %></td>
+        <td class="source"><pre><code><%= CGI.escapeHTML(line.src.chomp.gsub("\n", "")) %></code></pre></td>
       </tr>
   <% end %>
     </tbody>

@@ -29,3 +29,8 @@ function find(y) {
     }
   }
 }
+
+
+$(function(){
+  $("[data-toggle='dropdown']").dropdown();
+});

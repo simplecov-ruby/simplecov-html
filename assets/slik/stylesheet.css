@@ -41,29 +41,21 @@ a:hover {
   text-decoration: underline;
 }
 
-ul {
-  margin-top: 20px;
-  padding: 0 15px;
-  width: 100%;
+#groups {
+  position: relative;
+  bottom: 44px;
+  width: 200px;
 }
 
-ul li {
-  float: left;
-  width: 40%;
-  margin-top: 5px;
-  margin-right: 60px;
+#groups ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+#groups ul li {
   list-style: none;
-  border-bottom: 1px solid #eee;
-  padding: 5px 0;
   font-size: 12px;
-}
-
-ul::after {
-  content: '.';
-  height: 0;
-  display: block;
-  visibility: hidden;
-  clear: both;
+  right: 0;
 }
 
 code {
@@ -71,15 +63,17 @@ code {
 }
 
 pre {
-  margin: 30px;
-  padding: 30px;
-  border: 1px solid #eee;
-  border-bottom-color: #ddd;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-box-shadow: inset 0 0 10px #eee;
-  -moz-box-shadow: inset 0 0 10px #eee;
+  border: none;
+  font-family: inherit;
+  height: 20px;
+  margin: 0px;padding: 0px;
   overflow-x: auto;
+}
+
+#files pre code {
+  background: inherit;
+  height: 0;
+  padding: 0;
 }
 
 img {
