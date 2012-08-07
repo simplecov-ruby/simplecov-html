@@ -533,6 +533,9 @@ jQuery.url = function()
 	
 }();
 
+
+
+
 $(document).ready(function() {
   // Configuration for fancy sortable tables for source file groups
   $('.file_list').dataTable({
