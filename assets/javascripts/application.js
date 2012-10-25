@@ -41,7 +41,6 @@ $(document).ready(function() {
   $("a.src_link").colorbox({
     transition: "none",
     inline: true,
-    iframe: true,
     opacity: 1,
     width: "95%",
     height: "95%",
