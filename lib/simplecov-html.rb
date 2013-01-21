@@ -15,7 +15,7 @@ class SimpleCov::Formatter::HTMLFormatter
       FileUtils.cp_r(path, asset_output_path)
     end
 
-    File.open(File.join(output_path, "index.html"), "w+") do |file|
+    File.open(File.join(output_path, "index.html"), "wb+") do |file|
       file.puts template('layout').result(binding)
     end
     puts output_message(result)
