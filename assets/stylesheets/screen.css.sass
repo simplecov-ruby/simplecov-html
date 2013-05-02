@@ -98,7 +98,56 @@ abbr.timeago
       background: -moz-linear-gradient(white, #dddddd)
       background: linear-gradient(white, #dddddd)
 
+.report_tabs
+  list-style: none
+  float: left
+  margin: 0
+  padding: 0
+  li
+    display: inline
+    float: left
+    a
+      font-family: Georgia, Times, serif
+      display: block
+      float: left
+      text-decoration: none
+      padding: 8px 12px
+      background-color: #ffb
+      background: -webkit-gradient(linear, 0 0, 0 bottom, from(#fdfddd), to(#fafaaa))
+      background: -moz-linear-gradient(#fdfddd, #fafaaa)
+      background: linear-gradient(#fdfddd, #fafaaa)
+      text-shadow: #e5e5e5 1px 1px 0px
+      border-bottom: none
+      color: #333
+      font-weight: bold
+      margin-right: 8px
+      border-top: 1px solid #efefef
+      -webkit-border-top-left-radius: 2px
+      -webkit-border-top-right-radius: 2px
+      -moz-border-radius-topleft: 2px
+      -moz-border-radius-topright: 2px
+      border-top-left-radius: 2px
+      border-top-right-radius: 2px
+      &:hover
+        background-color: #ffc
+        background: -webkit-gradient(linear, 0 0, 0 bottom, from(#fefeee), to(#fafaaa))
+        background: -moz-linear-gradient(#fefeee, #fafaaa)
+        background: linear-gradient(#fefeee, #fafaaa)
+      &:active
+        padding-top: 5px
+        padding-bottom: 3px
+    &.active a
+      color: black
+      text-shadow: #fff 1px 1px 0px
+      background-color: #ffd
+      background: -webkit-gradient(linear, 0 0, 0 bottom, from(white), to(#fdfddd))
+      background: -moz-linear-gradient(white, #fdfddd)
+      background: linear-gradient(white, #fdfddd)
+
 .file_list
+  margin-bottom: 18px
+
+.report_content
   margin-bottom: 18px
 
 a.src_link
