@@ -16,12 +16,17 @@
     <div id="wrapper" style="display:none;">
       <div class="timestamp">Generated <%= timeago(Time.now) %></div>
       <ul class="group_tabs"></ul>
+      <ul class="report_tabs"></ul>
 
       <div id="content">
         <%= formatted_file_list("All Files", result.source_files) %>
 
         <% result.groups.each do |name, files| %>
           <%= formatted_file_list(name, files) %>
+        <% end %>
+
+        <% result.reports.each do |report| %>
+          <%= formatted_report(report) %>
         <% end %>
       </div>
     
