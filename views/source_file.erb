@@ -15,7 +15,7 @@
         <li class="<%= line.status %>" data-hits="<%= line.coverage ? line.coverage : '' %>" data-linenumber="<%= line.number %>">
           <% if line.covered? %><span class="hits"><%= line.coverage %></span><% end %>
           <% if line.skipped? %><span class="hits">skipped</span><% end %>
-          <code class="ruby"><%= CGI.escapeHTML(line.src.chomp) %></code>
+          <code class="ruby" author="<%= line.author %>" authored_date="<%= line.date %>" ><%= CGI.escapeHTML(line.src.chomp) %></code>
         </li>
       <% end %>
     </ol>
