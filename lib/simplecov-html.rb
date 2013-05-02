@@ -58,6 +58,41 @@ class SimpleCov::Formatter::HTMLFormatter
     template('file_list').result(binding)
   end
 
+  def formatted_report(report)
+    case report[:type][:main]
+      when :file_report
+        formatted_file_report(report)
+      when :author_report
+        formatted_author_report(report)
+    end
+  end
+
+  def formatted_file_report(report)
+    case report[:type][:subtype]
+      when :api
+      when :class
+      when :method
+      when :configure
+    end
+    title = "#{report[:type]} #{report[:type][:subtype]}"
+    title_id = title.gsub(/^[^a-zA-Z]+/, '').gsub(/[^a-zA-Z0-9\-\_]/, '')
+    template('file_report').result(binding)
+  end
+
+  def formatted_author_report(report)
+    generated_source = ""
+    report[:sub_reports].each do |sub_report|
+      case sub_report[:type]
+        when :best_authors
+        when :author_stats
+      end
+      title = "#{report[:type]} #{sub_report[:type]}"
+      title_id = title.gsub(/^[^a-zA-Z]+/, '').gsub(/[^a-zA-Z0-9\-\_]/, '')
+      generated_source += template('author_report').result(binding)
+    end
+    generated_source
+  end
+
   def coverage_css_class(covered_percent)
     if covered_percent > 90
       'green'
