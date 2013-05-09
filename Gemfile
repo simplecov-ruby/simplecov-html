@@ -15,5 +15,5 @@ group :development do
 
   gem 'guard-bundler'
   gem 'guard-rake'
-  gem 'simplecov', '=0.8.1.ooyala'
+  gem 'simplecov', '0.8.2.ooyala'
 end

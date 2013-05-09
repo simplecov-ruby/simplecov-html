@@ -1585,7 +1585,6 @@ $(document).ready(function() {
     $('.report_tabs a.'+jQuery.url.attr('anchor').replace('_', '')).click();
   } else {
     $('.group_tabs a:first').click();
-    $('.report_tabs a:first').click();
   };
 
   $("abbr.timeago").timeago();

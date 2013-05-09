@@ -716,8 +716,8 @@ abbr.timeago {
         background: -moz-linear-gradient(#fefeee, #fafaaa);
         background: linear-gradient(#fefeee, #fafaaa); }
       .report_tabs li a:active {
-        padding-top: 5px;
-        padding-bottom: 3px; }
+        padding-top: 10px;
+        padding-bottom: 6px; }
     .report_tabs li.active a {
       color: black;
       text-shadow: white 1px 1px 0px;
