@@ -11,7 +11,6 @@ group :development do
     gem 'simplecov', :git => 'https://github.com/colszowka/simplecov'
   end
 =end
-  gem 'simplecov', '0.8.2.ooyala'
 
   gem 'guard-bundler'
   gem 'guard-rake'
