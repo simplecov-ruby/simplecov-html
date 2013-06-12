@@ -10,6 +10,16 @@ if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.7.1")
 end
 
 class SimpleCov::Formatter::HTMLFormatter
+  @report_formatters = {}
+
+  class << self
+    attr_accessor :report_formatters
+
+    def add_report_formatters(formatters)
+      @report_formatters = @report_formatters.merge(formatters)
+    end
+  end
+
   def format(result)
     Dir[File.join(File.dirname(__FILE__), '../public/*')].each do |path|
       FileUtils.cp_r(path, asset_output_path)
@@ -59,38 +69,8 @@ class SimpleCov::Formatter::HTMLFormatter
   end
 
   def formatted_report(report)
-    case report[:type][:main]
-      when :file_report
-        formatted_file_report(report)
-      when :author_report
-        formatted_author_report(report)
-    end
-  end
-
-  def formatted_file_report(report)
-    case report[:type][:subtype]
-      when :api
-      when :class
-      when :method
-      when :configure
-    end
-    title = "#{report[:type]} #{report[:type][:subtype]}"
-    title_id = title.gsub(/^[^a-zA-Z]+/, '').gsub(/[^a-zA-Z0-9\-\_]/, '')
-    template('file_report').result(binding)
-  end
-
-  def formatted_author_report(report)
-    generated_source = ""
-    report[:sub_reports].each do |sub_report|
-      case sub_report[:type]
-        when :best_authors
-        when :author_stats
-      end
-      title = "#{report[:type]} #{sub_report[:type]}"
-      title_id = title.gsub(/^[^a-zA-Z]+/, '').gsub(/[^a-zA-Z0-9\-\_]/, '')
-      generated_source += template('author_report').result(binding)
-    end
-    generated_source
+    report_formatter = method(self.class.report_formatters[report[:type][:main]])
+    report_formatter.call(report)
   end
 
   def coverage_css_class(covered_percent)
