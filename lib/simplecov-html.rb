@@ -3,17 +3,24 @@ require 'cgi'
 require 'fileutils'
 require 'digest/sha1'
 require 'time'
+require 'hike'
 
 # Ensure we are using a compatible version of SimpleCov
 if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.7.1")
   raise RuntimeError, "The version of SimpleCov you are using is too old. Please update with `gem install simplecov` or `bundle update simplecov`"
 end
 
+GEM_ROOT = File.expand_path(File.join(File.dirname(__FILE__), ".."))
+
+include SimpleCov::Formatter
+
 class SimpleCov::Formatter::HTMLFormatter
   @report_formatters = {}
+  @erb_files = Hike::Trail.new(GEM_ROOT)
 
   class << self
     attr_accessor :report_formatters
+    attr_accessor :erb_files
 
     def add_report_formatters(formatters)
       @report_formatters = @report_formatters.merge(formatters)
@@ -39,7 +46,7 @@ class SimpleCov::Formatter::HTMLFormatter
 
   # Returns the an erb instance for the template of given name
   def template(name)
-    ERB.new(File.read(File.join(File.dirname(__FILE__), '../views/', "#{name}.erb")))
+    ERB.new(File.read(self.class.erb_files.find("#{name}.erb")))
   end
 
   def output_path
@@ -110,6 +117,8 @@ class SimpleCov::Formatter::HTMLFormatter
     %Q(<a href="##{id source_file}" class="src_link" title="#{shortened_filename source_file}">#{shortened_filename source_file}</a>)
   end
 end
+
+HTMLFormatter.erb_files.append_path(File.join(GEM_ROOT, "views"))
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__)))
 require 'simplecov-html/version'
