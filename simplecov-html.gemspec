@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'sass'
 
   s.add_dependency 'hike'
-  s.add_dependency "simplecov", "0.9.0.ooyala"
+  s.add_dependency "simplecov", "0.9.1.ooyala"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
