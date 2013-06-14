@@ -27,6 +27,26 @@ class SimpleCov::Formatter::HTMLFormatter
     end
   end
 
+  module Views
+    class SourceFile
+      @line_attributes_map = {}
+
+      class << self
+        def line_attributes(line)
+          line_attributes_text = ""
+          @line_attributes_map.each do |attribute_name, attribute_lambda|
+            line_attributes_text << "#{attribute_name}=\"#{attribute_lambda.call(line)}\" "
+          end
+          line_attributes_text.strip
+        end
+
+        def add_line_attribute(attribute_name, attribute_lambda)
+          @line_attributes_map.merge!(attribute_name => attribute_lambda)
+        end
+      end
+    end
+  end
+
   def format(result)
     Dir[File.join(File.dirname(__FILE__), '../public/*')].each do |path|
       FileUtils.cp_r(path, asset_output_path)
