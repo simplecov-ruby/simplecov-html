@@ -4,6 +4,7 @@ require 'fileutils'
 require 'digest/sha1'
 require 'time'
 require 'hike'
+require "simplecov"
 
 # Ensure we are using a compatible version of SimpleCov
 if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.7.1")
