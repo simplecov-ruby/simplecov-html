@@ -11,13 +11,11 @@ if Gem::Version.new(SimpleCov::VERSION) < Gem::Version.new("0.7.1")
   raise RuntimeError, "The version of SimpleCov you are using is too old. Please update with `gem install simplecov` or `bundle update simplecov`"
 end
 
-GEM_ROOT = File.expand_path(File.join(File.dirname(__FILE__), ".."))
-
-include SimpleCov::Formatter
 
 class SimpleCov::Formatter::HTMLFormatter
+  gem_root = File.expand_path(File.join(File.dirname(__FILE__), ".."))
   @report_formatters = {}
-  @erb_files = Hike::Trail.new(GEM_ROOT)
+  @erb_files = Hike::Trail.new(gem_root)
 
   class << self
     attr_accessor :report_formatters
@@ -137,9 +135,10 @@ class SimpleCov::Formatter::HTMLFormatter
   def link_to_source_file(source_file)
     %Q(<a href="##{id source_file}" class="src_link" title="#{shortened_filename source_file}">#{shortened_filename source_file}</a>)
   end
+
+  erb_files.append_path(File.join(gem_root, "views"))
 end
 
-HTMLFormatter.erb_files.append_path(File.join(GEM_ROOT, "views"))
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__)))
 require 'simplecov-html/version'
