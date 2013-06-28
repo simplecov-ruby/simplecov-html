@@ -694,10 +694,10 @@ abbr.timeago {
       float: left;
       text-decoration: none;
       padding: 8px 12px;
-      background-color: #ffffbb;
-      background: -webkit-gradient(linear, 0 0, 0 bottom, from(#fdfddd), to(#fafaaa));
-      background: -moz-linear-gradient(#fdfddd, #fafaaa);
-      background: linear-gradient(#fdfddd, #fafaaa);
+      background-color: #ffffdd;
+      background: -webkit-gradient(linear, 0 0, 0 bottom, from(white), to(#fdfddd));
+      background: -moz-linear-gradient(white, #fdfddd);
+      background: linear-gradient(white, #fdfddd);
       text-shadow: #e5e5e5 1px 1px 0px;
       border-bottom: none;
       color: #333333;
@@ -721,10 +721,10 @@ abbr.timeago {
     .report_tabs li.active a {
       color: black;
       text-shadow: white 1px 1px 0px;
-      background-color: #ffffdd;
-      background: -webkit-gradient(linear, 0 0, 0 bottom, from(white), to(#fdfddd));
-      background: -moz-linear-gradient(white, #fdfddd);
-      background: linear-gradient(white, #fdfddd); }
+      background-color: #ffffbb;
+      background: -webkit-gradient(linear, 0 0, 0 bottom, from(#fdfddd), to(#faaaaa));
+      background: -moz-linear-gradient(#fdfddd, #fafaaa);
+      background: linear-gradient(#fdfddd, #fafaaa); }
 
 .file_list {
   margin-bottom: 18px; }
