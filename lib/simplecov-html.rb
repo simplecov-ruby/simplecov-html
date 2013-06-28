@@ -55,6 +55,7 @@ class SimpleCov::Formatter::HTMLFormatter
       file.puts template('layout').result(binding)
     end
     puts output_message(result)
+    result
   end
 
   def output_message(result)
