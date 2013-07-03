@@ -34,7 +34,7 @@ class SimpleCov::Formatter::HTMLFormatter
         def line_attributes(line)
           line_attributes_text = ""
           @line_attributes_map.each do |attribute_name, attribute_lambda|
-            line_attributes_text << "#{attribute_name}=\"#{attribute_lambda.call(line)}\" "
+            line_attributes_text << "data-#{attribute_name.downcase.tr('_', '-')}=\"#{attribute_lambda.call(line)}\" "
           end
           line_attributes_text.strip
         end
