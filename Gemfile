@@ -1,5 +1,4 @@
 source :rubygems
-source "http://gems.ooyala.com"
 gemspec
 
 group :development do
@@ -12,7 +11,6 @@ group :development do
   end
 =end
   gem "simplecov", "0.9.3.ooyala"
-  # gem "simplecov", :path => "/Users/rkonda/repos/qa/tools/simplecov"
 
   gem 'guard-bundler'
   gem 'guard-rake'
