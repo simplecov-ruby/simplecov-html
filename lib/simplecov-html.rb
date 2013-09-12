@@ -54,7 +54,8 @@ class SimpleCov::Formatter::HTMLFormatter
 
   # Returns a table containing the given source files
   def formatted_file_list(title, source_files)
-    title.gsub(/^[^a-zA-Z]+/, '').gsub(/[^a-zA-Z0-9\-\_]/, '')
+    title_id = title.gsub(/^[^a-zA-Z]+/, '').gsub(/[^a-zA-Z0-9\-\_]/, '')
+    title_id # Ruby will give a warning when we do not use this except via the binding :( FIXME
     template('file_list').result(binding)
   end
 
