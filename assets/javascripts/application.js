@@ -9,14 +9,14 @@ $(document).ready(function() {
     "bPaginate": false,
     "bJQueryUI": true,
     "aoColumns": [
-			null,
-		  { "sType": "percent" },
-			null,
-			null,
-			null,
-			null,
+      null,
+      { "sType": "percent" },
+      null,
+      null,
+      null,
+      null,
       null
-		]
+    ]
   });
 
   // Syntax highlight all files up front - deactivated
@@ -64,7 +64,7 @@ $(document).ready(function() {
     }
   });
 
-	// Hide src files and file list container after load
+  // Hide src files and file list container after load
   $('.source_files').hide();
   $('.file_list_container').hide();
 
@@ -102,7 +102,12 @@ $(document).ready(function() {
   });
 
   if (jQuery.url.attr('anchor')) {
-    $('.group_tabs a.'+jQuery.url.attr('anchor').replace('_', '')).click();
+    var anchor = jQuery.url.attr('anchor')
+    if (anchor.length == 40) {
+      $('a.src_link[href=#' + anchor + ']').click();
+    } else {
+      $('.group_tabs a.'+anchor.replace('_', '')).click();
+    }
   } else {
     $('.group_tabs a:first').click();
   };
