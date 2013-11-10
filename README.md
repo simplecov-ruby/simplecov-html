@@ -27,4 +27,4 @@ your changes will not be included in your coverage reports.
 Copyright
 ---------
 
-Copyright (c) 2011 Christoph Olszowka. See LICENSE for details.
+Copyright (c) 2010-2013 Christoph Olszowka. See LICENSE for details.
