@@ -40,17 +40,17 @@
       <thead>
         <tr>
           <th>File</th>
-          <th>% covered</th>
-          <th>Lines</th>
-          <th>Relevant Lines</th>
-          <th>Lines covered</th>
-          <th>Lines missed</th>
-          <th>Avg. Hits / Line</th>
+          <th class="cell--number">% covered</th>
+          <th class="cell--number">Lines</th>
+          <th class="cell--number">Relevant Lines</th>
+          <th class="cell--number">Lines covered</th>
+          <th class="cell--number">Lines missed</th>
+          <th class="cell--number">Avg. Hits / Line</th>
           <% if branchable_result? %>
-            <th>Branch Coverage</th>
-            <th>Branches</th>
-            <th>Covered branches</th>
-            <th>Missed branches </th>
+            <th class="cell--number">Branch Coverage</th>
+            <th class="cell--number">Branches</th>
+            <th class="cell--number">Covered branches</th>
+            <th class="cell--number">Missed branches </th>
           <% end %>
         </tr>
       </thead>
@@ -58,17 +58,17 @@
         <% source_files.each do |source_file| %>
           <tr class="t-file">
             <td class="strong t-file__name"><%= link_to_source_file(source_file) %></td>
-            <td class="<%= coverage_css_class(source_file.covered_percent) %> strong t-file__coverage"><%= source_file.covered_percent.round(2).to_s %> %</td>
-            <td><%= source_file.lines.count %></td>
-            <td><%= source_file.covered_lines.count + source_file.missed_lines.count %></td>
-            <td><%= source_file.covered_lines.count %></td>
-            <td><%= source_file.missed_lines.count %></td>
-            <td><%= source_file.covered_strength.round(2) %></td>
+            <td class="<%= coverage_css_class(source_file.covered_percent) %> strong cell--number t-file__coverage"><%= sprintf("%.2f", source_file.covered_percent.round(2)) %> %</td>
+            <td class="cell--number"><%= source_file.lines.count %></td>
+            <td class="cell--number"><%= source_file.covered_lines.count + source_file.missed_lines.count %></td>
+            <td class="cell--number"><%= source_file.covered_lines.count %></td>
+            <td class="cell--number"><%= source_file.missed_lines.count %></td>
+            <td class="cell--number"><%= source_file.covered_strength.round(2) %></td>
             <% if branchable_result? %>
-              <td class="<%= coverage_css_class(source_file.branches_coverage_percent) %> strong t-file__branch-coverage"><%= source_file.branches_coverage_percent.round(2).to_s %> %</td>
-              <td><%= source_file.total_branches.count %></td>
-              <td><%= source_file.covered_branches.count %></td>
-              <td><%= source_file.missed_branches.count %></td>
+              <td class="<%= coverage_css_class(source_file.branches_coverage_percent) %> strong cell--number t-file__branch-coverage"><%= sprintf("%.2f", source_file.branches_coverage_percent.round(2)) %> %</td>
+              <td class="cell--number"><%= source_file.total_branches.count %></td>
+              <td class="cell--number"><%= source_file.covered_branches.count %></td>
+              <td class="cell--number"><%= source_file.missed_branches.count %></td>
             <% end %>
           </tr>
         <% end %>

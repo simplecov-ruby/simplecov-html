@@ -708,6 +708,9 @@ td {
   td.strong {
     font-weight: bold; }
 
+.cell--number {
+  text-align: right; }
+
 .source_table h3, .source_table h4 {
   padding: 0;
   margin: 0;
