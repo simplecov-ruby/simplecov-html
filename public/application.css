@@ -703,6 +703,9 @@ td {
   td.strong {
     font-weight: bold; }
 
+th.number, td.number {
+  text-align: right; }
+
 .source_table h3, .source_table h4 {
   padding: 0;
   margin: 0;

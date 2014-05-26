@@ -20,24 +20,24 @@
     <thead>
       <tr>
         <th>File</th>
-        <th>% covered</th>
-        <th>Lines</th>
-        <th>Relevant Lines</th>
-        <th>Lines covered</th>
-        <th>Lines missed</th>
-        <th>Avg. Hits / Line</th>
+        <th class="number">% covered</th>
+        <th class="number">Lines</th>
+        <th class="number">Relevant Lines</th>
+        <th class="number">Lines covered</th>
+        <th class="number">Lines missed</th>
+        <th class="number">Avg. Hits / Line</th>
       </tr>
     </thead>
     <tbody>
       <% source_files.each do |source_file| %>
       <tr>
         <td class="strong"><%= link_to_source_file(source_file) %></td>
-        <td class="<%= coverage_css_class(source_file.covered_percent) %> strong"><%= source_file.covered_percent.round(2).to_s %> %</td>
-        <td><%= source_file.lines.count %></td>
-        <td><%= source_file.covered_lines.count + source_file.missed_lines.count %></td>
-        <td><%= source_file.covered_lines.count %></td>
-        <td><%= source_file.missed_lines.count %></td>
-        <td><%= source_file.covered_strength %></td>
+        <td class="<%= coverage_css_class(source_file.covered_percent) %> strong number"><%= source_file.covered_percent.round(2).to_s %> %</td>
+        <td class="number"><%= source_file.lines.count %></td>
+        <td class="number"><%= source_file.covered_lines.count + source_file.missed_lines.count %></td>
+        <td class="number"><%= source_file.covered_lines.count %></td>
+        <td class="number"><%= source_file.missed_lines.count %></td>
+        <td class="number"><%= source_file.covered_strength %></td>
       </tr>
       <% end %>
     </tbody>
