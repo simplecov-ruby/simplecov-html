@@ -11,9 +11,10 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/colszowka/simplecov-html"
   s.summary     = %Q{Default HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
   s.description = %Q{Default HTML formatter for SimpleCov code coverage tool for ruby 1.9+}
+  s.license     = "MIT"
 
   s.rubyforge_project = "simplecov-html"
-  
+
   s.add_development_dependency 'rake'
   s.add_development_dependency 'sprockets'
   s.add_development_dependency 'sass'
