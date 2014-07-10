@@ -15,10 +15,22 @@ class SimpleCov::Formatter::HTMLFormatter
       FileUtils.cp_r(path, asset_output_path)
     end
 
-    File.open(File.join(output_path, "index.html"), "w+") do |file|
+    File.open(File.join(output_path, "index.html"), file_mode_format) do |file|
       file.puts template('layout').result(binding)
     end
     puts output_message(result)
+  end
+  
+  def file_mode_format
+    format = 'w+'
+
+    # On JRuby/Windows it tries to convert all \n into \r\n in w+ mode.
+    # b mode is binary and outputs "as is".
+    if defined?(JRUBY_VERSION) && !!(RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/i)
+      format = 'wb+'
+    end
+
+    format
   end
 
   def output_message(result)
