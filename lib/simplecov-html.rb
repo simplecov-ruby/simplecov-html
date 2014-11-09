@@ -67,8 +67,21 @@ class SimpleCov::Formatter::HTMLFormatter
   # Returns a table containing the given source files
   def formatted_file_list(title, source_files)
     title_id = title.gsub(/^[^a-zA-Z]+/, '').gsub(/[^a-zA-Z0-9\-\_]/, '')
-    title_id # Ruby will give a warning when we do not use this except via the binding :( FIXME
-    template('file_list').result(binding)
+    data = FileListData.new(title, title_id, source_files)
+    template('file_list').result(data.instance_eval { binding })
+  end
+
+  FileListData = Class.new(BasicObject) do
+    attr_reader :title, :title_id, :source_files
+    def initialize(title, title_id, source_files)
+      @title = title
+      @title_id = title_id
+      @source_files = source_files
+    end
+
+    def binding
+      ::Kernel.binding
+    end
   end
 
   def coverage_css_class(covered_percent)
