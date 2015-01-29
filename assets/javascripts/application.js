@@ -64,6 +64,15 @@ $(document).ready(function() {
     }
   });
 
+  // Makes back button work when clicking on source file
+  $(window).hashchange(function(){
+    var notSourceFile = function() { return location.hash.match(/(#_.*)/) && RegExp.$1 }
+
+    if (notSourceFile()) {
+      $.colorbox.close();
+    }
+  })
+
   // Hide src files and file list container after load
   $('.source_files').hide();
   $('.file_list_container').hide();
