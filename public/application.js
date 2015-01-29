@@ -1632,7 +1632,7 @@ $(document).ready(function() {
       window.location.hash = curr_anchor;
     },
     onCleanup: function() {
-      if (prev_anchor) {
+      if (prev_anchor && prev_anchor != curr_anchor) {
         $('a[href="#'+prev_anchor+'"]').click();
         curr_anchor = prev_anchor;
       } else {
@@ -1643,6 +1643,16 @@ $(document).ready(function() {
       window.location.hash = curr_anchor;
     }
   });
+
+  window.onpopstate = function(event){
+    if (location.hash == "#_AllFiles") {
+      $.colorbox.close();
+    } else {
+      if ($('#colorbox').is(':hidden')) {
+        $('a.src_link[href="'+location.hash+'"]').colorbox({ open: true });
+      }
+    }
+  };
 
   // Hide src files and file list container after load
   $('.source_files').hide();
