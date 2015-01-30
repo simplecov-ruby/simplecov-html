@@ -45,9 +45,7 @@ $(document).ready(function() {
     width: "95%",
     height: "95%",
     onLoad: function() {
-      if (prev_anchor) {
-        prev_anchor = jQuery.url.attr('anchor');
-      }
+      prev_anchor = curr_anchor ? curr_anchor : jQuery.url.attr('anchor');
       curr_anchor = this.href.split('#')[1];
       window.location.hash = curr_anchor;
     },
@@ -65,8 +63,9 @@ $(document).ready(function() {
   });
 
   window.onpopstate = function(event){
-    if (location.hash == "#_AllFiles") {
+    if (location.hash.substring(0,2) == "#_") {
       $.colorbox.close();
+      curr_anchor = jQuery.url.attr('anchor');
     } else {
       if ($('#colorbox').is(':hidden')) {
         $('a.src_link[href="'+location.hash+'"]').colorbox({ open: true });
