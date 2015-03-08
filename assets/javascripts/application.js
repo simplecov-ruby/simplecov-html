@@ -40,6 +40,7 @@ $(document).ready(function() {
   // Set-up of popup for source file views
   $("a.src_link").colorbox({
     transition: "none",
+    fadeOut: 0,
     inline: true,
     opacity: 1,
     width: "95%",
