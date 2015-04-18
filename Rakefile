@@ -16,7 +16,16 @@ Rake::TestTask.new(:test) do |test|
   test.verbose = true
 end
 
-task :default => :test
+begin
+  require "rubocop/rake_task"
+  RuboCop::RakeTask.new
+rescue LoadError
+  task :rubocop do
+    $stderr.puts "Rubocop is disabled"
+  end
+end
+
+task :default => [:test, :rubocop]
 
 namespace :assets do
   desc "Compiles all assets"
