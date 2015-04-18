@@ -1,4 +1,4 @@
-require 'helper'
+require "helper"
 
 class TestSimpleCovHtml < Test::Unit::TestCase
   def test_defined

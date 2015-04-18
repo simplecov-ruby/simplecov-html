@@ -1,23 +1,22 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 gemspec
 
-gem 'rake'
+gem "rake"
 
 # Use local copy of simplecov in development when checked out, fetch from git otherwise
-if File.directory?(File.dirname(__FILE__) + '/../simplecov')
-  gem 'simplecov', :path => File.dirname(__FILE__) + '/../simplecov'
+if File.directory?(File.dirname(__FILE__) + "/../simplecov")
+  gem "simplecov", :path => File.dirname(__FILE__) + "/../simplecov"
 else
-  gem 'simplecov', :git => 'https://github.com/colszowka/simplecov'
+  gem "simplecov", :git => "https://github.com/colszowka/simplecov"
 end
 
 group :test do
-  gem 'test-unit'
+  gem "test-unit"
 end
 
 group :development do
-  gem 'guard-bundler'
-  gem 'guard-rake'
-  gem 'sass'
-  gem 'sprockets'
+  gem "rubocop"
+  gem "sass"
+  gem "sprockets"
 end
