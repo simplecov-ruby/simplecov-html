@@ -48,6 +48,8 @@ $(document).ready(function() {
       prev_anchor = curr_anchor ? curr_anchor : jQuery.url.attr('anchor');
       curr_anchor = this.href.split('#')[1];
       window.location.hash = curr_anchor;
+
+      $('.file_list_container').hide();
     },
     onCleanup: function() {
       if (prev_anchor && prev_anchor != curr_anchor) {
@@ -59,6 +61,9 @@ $(document).ready(function() {
         curr_anchor = "#_AllFiles";
       }
       window.location.hash = curr_anchor;
+
+      var active_group = $('.group_tabs li.active a').attr('class');
+      $("#" + active_group + ".file_list_container").show();
     }
   });
 
