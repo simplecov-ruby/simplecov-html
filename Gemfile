@@ -16,7 +16,7 @@ else
 end
 
 group :test do
-  gem "test-unit"
+  gem "minitest"
 end
 
 group :development do
