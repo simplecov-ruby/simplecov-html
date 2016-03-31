@@ -37,6 +37,10 @@ Style/FileName:
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
 
+Style/MutableConstant:
+  Exclude:
+    - 'lib/simplecov-html/version.rb'
+
 Style/RegexpLiteral:
   Enabled: false
 
@@ -46,5 +50,5 @@ Style/SpaceInsideHashLiteralBraces:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
-Style/TrailingComma:
+Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: 'comma'

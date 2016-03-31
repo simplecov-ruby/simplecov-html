@@ -7,7 +7,7 @@ require "time"
 # Ensure we are using a compatible version of SimpleCov
 major, minor, patch = SimpleCov::VERSION.scan(/\d+/).first(3).map(&:to_i)
 if major < 0 || minor < 9 || patch < 0
-  fail "The version of SimpleCov you are using is too old. "\
+  raise "The version of SimpleCov you are using is too old. "\
   "Please update with `gem install simplecov` or `bundle update simplecov`"
 end
 
