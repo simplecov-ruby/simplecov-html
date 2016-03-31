@@ -2,7 +2,11 @@ source "https://rubygems.org"
 
 gemspec
 
-gem "rake"
+if RUBY_VERSION == "1.8.7"
+  gem "rake", "~> 10.5"
+else
+  gem "rake", ">= 11"
+end
 
 # Use local copy of simplecov in development when checked out, fetch from git otherwise
 if File.directory?(File.dirname(__FILE__) + "/../simplecov")
