@@ -15,11 +15,11 @@ else
   gem "simplecov", :git => "https://github.com/colszowka/simplecov"
 end
 
-platform :ruby_18, :ruby_19 do
+platforms :ruby_18, :ruby_19 do
   gem "json", "~> 1.8"
 end
 
-platform :ruby_18, :ruby_19, :ruby_20, :ruby_21 do
+platforms :ruby_18, :ruby_19, :ruby_20, :ruby_21 do
   gem "rack", "~> 1.6"
 end
 
