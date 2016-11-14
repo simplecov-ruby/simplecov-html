@@ -15,6 +15,10 @@ else
   gem "simplecov", :git => "https://github.com/colszowka/simplecov"
 end
 
+platform :ruby_18, :ruby_19 do
+  gem "json", "~> 1.8"
+end
+
 group :test do
   gem "minitest"
 end
