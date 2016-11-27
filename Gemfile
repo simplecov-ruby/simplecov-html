@@ -31,4 +31,6 @@ group :development do
   gem "rubocop"
   gem "sass"
   gem "sprockets"
+  gem "uglifier"
+  gem "yui-compressor"
 end

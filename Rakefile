@@ -32,9 +32,12 @@ namespace :assets do
   task :compile do
     puts "Compiling assets"
     require "sprockets"
-    assets = Sprockets::Environment.new
-    assets.append_path "assets/javascripts"
-    assets.append_path "assets/stylesheets"
+    assets = Sprockets::Environment.new do |env|
+      env.append_path "assets/javascripts"
+      env.append_path "assets/stylesheets"
+      env.js_compressor = :uglify
+      env.css_compressor = :yui
+    end
     assets["application.js"].write_to("public/application.js")
     assets["application.css"].write_to("public/application.css")
   end
