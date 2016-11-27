@@ -91,10 +91,10 @@ $(document).ready(function() {
   });
 
   // Make sure tabs don't get ugly focus borders when active
-  $('.group_tabs a').live('focus', function() { $(this).blur(); });
+  $('.group_tabs').on('focus', 'a', function() { $(this).blur(); });
 
   var favicon_path = $('link[rel="shortcut icon"]').attr('href');
-  $('.group_tabs a').live('click', function(){
+  $('.group_tabs').on('click', 'a', function(){
     if (!$(this).parent().hasClass('active')) {
       $('.group_tabs a').parent().removeClass('active');
       $(this).parent().addClass('active');
