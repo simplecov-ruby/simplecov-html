@@ -22,4 +22,6 @@ group :development do
   gem "sass"
   # sprockets 4.0 requires ruby 2.5+
   gem "sprockets", "~> 3.7"
+  gem "uglifier"
+  gem "yui-compressor"
 end

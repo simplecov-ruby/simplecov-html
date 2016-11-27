@@ -47,7 +47,7 @@ $(document).ready(function () {
     width: "95%",
     height: "95%",
     onLoad: function () {
-      prev_anchor = curr_anchor ? curr_anchor : jQuery.url.attr('anchor');
+      prev_anchor = curr_anchor ? curr_anchor : window.location.hash.substring(1);
       curr_anchor = this.href.split('#')[1];
       window.location.hash = curr_anchor;
 
@@ -69,13 +69,13 @@ $(document).ready(function () {
     }
   });
 
-  window.onpopstate = function (event) {
-    if (location.hash.substring(0, 2) == "#_") {
+  window.onpopstate = function(event){
+    if (window.location.hash.substring(0,2) == "#_") {
       $.colorbox.close();
-      curr_anchor = jQuery.url.attr('anchor');
+      curr_anchor = window.location.hash.substring(1);
     } else {
       if ($('#colorbox').is(':hidden')) {
-        $('a.src_link[href="' + location.hash + '"]').colorbox({ open: true });
+        $('a.src_link[href="'+window.location.hash+'"]').colorbox({ open: true });
       }
     }
   };
@@ -98,10 +98,10 @@ $(document).ready(function () {
   });
 
   // Make sure tabs don't get ugly focus borders when active
-  $('.group_tabs a').live('focus', function () { $(this).blur(); });
+  $('.group_tabs').on('focus', 'a', function() { $(this).blur(); });
 
   var favicon_path = $('link[rel="shortcut icon"]').attr('href');
-  $('.group_tabs a').live('click', function () {
+  $('.group_tabs').on('click', 'a', function(){
     if (!$(this).parent().hasClass('active')) {
       $('.group_tabs a').parent().removeClass('active');
       $(this).parent().addClass('active');
@@ -117,8 +117,8 @@ $(document).ready(function () {
     return false;
   });
 
-  if (jQuery.url.attr('anchor')) {
-    var anchor = jQuery.url.attr('anchor')
+  if (window.location.hash) {
+    var anchor = window.location.hash.substring(1);
     if (anchor.length == 40) {
       $('a.src_link[href=#' + anchor + ']').click();
     } else {
