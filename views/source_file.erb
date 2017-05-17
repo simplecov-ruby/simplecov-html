@@ -11,7 +11,7 @@
   
   <pre>
     <ol>
-      <% source_file.lines.each_with_index do |line| %>
+      <% source_file.lines.each_with_index do |line, _index| %>
         <li class="<%= line.status %>" data-hits="<%= line.coverage ? line.coverage : '' %>" data-linenumber="<%= line.number %>">
           <% if line.covered? %><span class="hits"><%= line.coverage %></span><% end %>
           <% if line.skipped? %><span class="hits">skipped</span><% end %>
