@@ -1,7 +1,7 @@
 module SimpleCov
   module Formatter
     class HTMLFormatter
-      VERSION = "0.10.1"
+      VERSION = "0.10.1".dup
 
       def VERSION.to_a
         split(".").map(&:to_i)
