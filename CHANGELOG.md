@@ -1,3 +1,10 @@
+0.10.2 unreleased
+========
+
+## Bugfixes
+
+* Allow usage with frozen-string-literal-enabled. See [#56](https://github.com/colszowka/simplecov-html/pull/56) (thanks @pat)
+
 0.10.1 2017-05-17 
 ========
 
