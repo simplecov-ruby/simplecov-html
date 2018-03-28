@@ -54,6 +54,8 @@ module SimpleCov
       # Returns the html for the given source_file
       def formatted_source_file(source_file)
         template("source_file").result(binding)
+      rescue Encoding::CompatibilityError => e
+        puts "Encoding problems with file #{source_file.filename}. Simplecov/ERB can't handle non ASCII characters in filenames. Error: #{e.message}."
       end
 
       # Returns a table containing the given source files
