@@ -50,5 +50,8 @@ Style/SpaceInsideHashLiteralBraces:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: 'comma'
+
+Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: 'comma'
