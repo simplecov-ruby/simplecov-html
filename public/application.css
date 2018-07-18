@@ -532,6 +532,7 @@ pre .tex .formula {
     ColorBox Core Style:
     The following CSS is consistent between example themes and should not be altered.
 */
+
 #colorbox, #cboxOverlay, #cboxWrapper{position:absolute; top:0; left:0; z-index:9999; overflow:hidden;}
 #cboxOverlay{position:fixed; width:100%; height:100%;}
 #cboxMiddleLeft, #cboxBottomLeft{clear:left;}
@@ -586,19 +587,19 @@ pre .tex .formula {
   top: 50%; }
 
 a {
-  color: #333333;
+  color: #333;
   text-decoration: none; }
   a:hover {
-    color: black;
+    color: #000;
     text-decoration: underline; }
 
 body {
   font-family: "Lucida Grande", Helvetica, "Helvetica Neue", Arial, sans-serif;
   padding: 12px;
-  background-color: #333333; }
+  background-color: #333; }
 
 h1, h2, h3, h4 {
-  color: #1c2324;
+  color: #1C2324;
   margin: 0;
   padding: 0;
   margin-bottom: 12px; }
@@ -609,8 +610,8 @@ table {
 #content {
   clear: left;
   background-color: white;
-  border: 2px solid #dddddd;
-  border-top: 8px solid #dddddd;
+  border: 2px solid #ddd;
+  border-top: 8px solid #ddd;
   padding: 18px;
   -webkit-border-bottom-left-radius: 5px;
   -webkit-border-bottom-right-radius: 5px;
@@ -632,7 +633,7 @@ abbr.timeago {
 
 .timestamp {
   float: right;
-  color: #dddddd; }
+  color: #ddd; }
 
 .group_tabs {
   list-style: none;
@@ -648,13 +649,13 @@ abbr.timeago {
       float: left;
       text-decoration: none;
       padding: 4px 8px;
-      background-color: #aaaaaa;
+      background-color: #aaa;
       background: -webkit-gradient(linear, 0 0, 0 bottom, from(#dddddd), to(#aaaaaa));
       background: -moz-linear-gradient(#dddddd, #aaaaaa);
       background: linear-gradient(#dddddd, #aaaaaa);
       text-shadow: #e5e5e5 1px 1px 0px;
       border-bottom: none;
-      color: #333333;
+      color: #333;
       font-weight: bold;
       margin-right: 8px;
       border-top: 1px solid #efefef;
@@ -665,7 +666,7 @@ abbr.timeago {
       border-top-left-radius: 2px;
       border-top-right-radius: 2px; }
       .group_tabs li a:hover {
-        background-color: #cccccc;
+        background-color: #ccc;
         background: -webkit-gradient(linear, 0 0, 0 bottom, from(#eeeeee), to(#aaaaaa));
         background: -moz-linear-gradient(#eeeeee, #aaaaaa);
         background: linear-gradient(#eeeeee, #aaaaaa); }
@@ -674,8 +675,8 @@ abbr.timeago {
         padding-bottom: 3px; }
     .group_tabs li.active a {
       color: black;
-      text-shadow: white 1px 1px 0px;
-      background-color: #dddddd;
+      text-shadow: #fff 1px 1px 0px;
+      background-color: #ddd;
       background: -webkit-gradient(linear, 0 0, 0 bottom, from(white), to(#dddddd));
       background: -moz-linear-gradient(white, #dddddd);
       background: linear-gradient(white, #dddddd); }
@@ -713,13 +714,13 @@ td {
   margin: 0;
   padding: 0;
   white-space: normal;
-  color: black;
+  color: #000;
   font-family: "Monaco", "Inconsolata", "Consolas", monospace; }
 .source_table code {
-  color: black;
+  color: #000;
   font-family: "Monaco", "Inconsolata", "Consolas", monospace; }
 .source_table pre {
-  background-color: #333333; }
+  background-color: #333; }
   .source_table pre ol {
     margin: 0px;
     padding: 0px;
@@ -737,7 +738,7 @@ td {
     float: right;
     margin-left: 10px;
     padding: 2px 4px;
-    background-color: #444444;
+    background-color: #444;
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#222222), to(#666666));
     background: -moz-linear-gradient(#222222, #666666);
     background: linear-gradient(#222222, #666666);
@@ -749,51 +750,60 @@ td {
     border-radius: 6px; }
 
 #footer {
-  color: #dddddd;
+  color: #ddd;
   font-size: 12px;
   font-weight: bold;
   margin-top: 12px;
   text-align: right; }
   #footer a {
-    color: #eeeeee;
+    color: #eee;
     text-decoration: underline; }
     #footer a:hover {
-      color: white;
+      color: #fff;
       text-decoration: none; }
 
 .green {
-  color: #009900; }
+  color: #090; }
 
 .red {
-  color: #990000; }
+  color: #900; }
 
 .yellow {
-  color: #ddaa00; }
+  color: #da0; }
+
+.blue {
+  color: blue; }
 
 .source_table .covered {
-  border-color: #009900; }
+  border-color: #090; }
 .source_table .missed {
-  border-color: #990000; }
+  border-color: #900; }
 .source_table .never {
   border-color: black; }
 .source_table .skipped {
-  border-color: #ffcc00; }
+  border-color: #fc0; }
+.source_table .missed-branch {
+  border-color: #bf0000; }
 .source_table .covered:nth-child(odd) {
-  background-color: #cdf2cd; }
+  background-color: #CDF2CD; }
 .source_table .covered:nth-child(even) {
-  background-color: #dbf2db; }
+  background-color: #DBF2DB; }
 .source_table .missed:nth-child(odd) {
-  background-color: #f7c0c0; }
+  background-color: #F7C0C0; }
 .source_table .missed:nth-child(even) {
-  background-color: #f7cfcf; }
+  background-color: #F7CFCF; }
 .source_table .never:nth-child(odd) {
   background-color: #efefef; }
 .source_table .never:nth-child(even) {
   background-color: #f4f4f4; }
 .source_table .skipped:nth-child(odd) {
-  background-color: #fbf0c0; }
+  background-color: #FBF0C0; }
 .source_table .skipped:nth-child(even) {
-  background-color: #fbffcf; }
+  background-color: #FBFfCf; }
+.source_table .missed-branch:nth-child(odd) {
+  background-color: #cc8e8e; }
+.source_table .missed-branch:nth-child(even) {
+  background-color: #cc6e6e; }
 
 
 

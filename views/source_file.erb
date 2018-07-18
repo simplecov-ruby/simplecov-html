@@ -1,22 +1,57 @@
 <div class="source_table" id="<%= id source_file %>">
   <div class="header">
     <h3><%= shortened_filename source_file %></h3>
-    <h4><span class="<%= coverage_css_class(source_file.covered_percent) %>"><%= source_file.covered_percent.round(2).to_s %> %</span> covered</h4>
+    <h4>
+      <span class="<%= coverage_css_class(source_file.covered_percent) %>">
+        <%= source_file.covered_percent.round(2).to_s %> %
+      </span>
+      lines covered
+    </h4>
+
+    <% if branchable_result? %>
+      <h4>
+        <span class="<%= coverage_css_class(source_file.branches_coverage_precent) %>">
+          <%= source_file.branches_coverage_precent.round(2).to_s %> %
+        </span>
+        branches covered
+      </h4>
+    <% end %>
+
     <div>
-      <b><%= source_file.lines_of_code %></b> relevant lines. 
+      <b><%= source_file.lines_of_code %></b> relevant lines.
       <span class="green"><b><%= source_file.covered_lines.count %></b> lines covered</span> and
       <span class="red"><b><%= source_file.missed_lines.count %></b> lines missed.</span>
     </div>
+
+    <div>
+      <% if branchable_result? %>
+        <span><b><%= source_file.total_branches.count %></b> total branches, </span>
+        <span class="green"><b><%= source_file.covered_branches.count %></b> branches covered</span> and
+        <span class="red"><b><%= source_file.missed_branches.count %></b> branches missed.</span>
+      <% end %>
+    </div>
+
   </div>
-  
+
   <pre>
     <ol>
       <% source_file.lines.each do |line| %>
-        <li class="<%= line.status %>" data-hits="<%= line.coverage ? line.coverage : '' %>" data-linenumber="<%= line.number %>">
-          <% if line.covered? %><span class="hits"><%= line.coverage %></span><% end %>
-          <% if line.skipped? %><span class="hits">skipped</span><% end %>
-          <code class="ruby"><%= CGI.escapeHTML(line.src.chomp) %></code>
-        </li>
+        <div>
+          <li class="<%= line_status?(source_file, line) %>" data-hits="<%= line.coverage ? line.coverage : '' %>" data-linenumber="<%= line.number %>">
+            <% if line.covered? %><span class="hits"><%= line.coverage %></span><% end %>
+            <% if line.skipped? %><span class="hits">skipped</span><% end %>
+
+            <% if branchable_result? %>
+              <% if source_file.branchable_line?(line.number) %>
+                <span class="hits">
+                  <%= source_file.branch_per_line(line.number) %>
+                </span>
+              <% end %>
+            <% end %>
+
+            <code class="ruby"><%= CGI.escapeHTML(line.src.chomp) %></code>
+          </li>
+        </div>
       <% end %>
     </ol>
   </pre>
