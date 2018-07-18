@@ -1587,16 +1587,7 @@ $(document).ready(function() {
   $('.file_list').dataTable({
     "aaSorting": [[ 1, "asc" ]],
     "bPaginate": false,
-    "bJQueryUI": true,
-    "aoColumns": [
-      null,
-      { "sType": "percent" },
-      null,
-      null,
-      null,
-      null,
-      null
-    ]
+    "bJQueryUI": true
   });
 
   // Syntax highlight all files up front - deactivated

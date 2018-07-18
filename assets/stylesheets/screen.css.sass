@@ -188,6 +188,8 @@ td
 
 .yellow
   color: #da0
+.blue
+  color: blue
 
 .source_table
   .covered
@@ -198,6 +200,8 @@ td
     border-color: black
   .skipped
     border-color: #fc0
+  .missed-branch
+    border-color: #bf0000
   .covered
     &:nth-child(odd)
       background-color: #CDF2CD
@@ -218,3 +222,8 @@ td
       background-color: #FBF0C0
     &:nth-child(even)
       background-color: #FBFfCf
+  .missed-branch
+    &:nth-child(odd)
+      background-color: #cc8e8e
+    &:nth-child(even)
+      background-color: #cc6e6e

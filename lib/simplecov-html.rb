@@ -15,6 +15,7 @@ module SimpleCov
   module Formatter
     class HTMLFormatter
       def format(result)
+
         Dir[File.join(File.dirname(__FILE__), "../public/*")].each do |path|
           FileUtils.cp_r(path, asset_output_path)
         end
@@ -27,6 +28,20 @@ module SimpleCov
 
       def output_message(result)
         "Coverage report generated for #{result.command_name} to #{output_path}. #{result.covered_lines} / #{result.total_lines} LOC (#{result.covered_percent.round(2)}%) covered."
+      end
+
+      # Check if branchable results supported or not
+      # Try used here to escape exceptions
+      def branchable_result?
+        defined?(SimpleCov::branchable_report) ? SimpleCov::branchable_report : false
+      end
+
+      def line_status?(source_file, line)
+        if branchable_result? && source_file.line_with_missed_branch?(line.number)
+          "missed-branch"
+        else
+          line.status
+        end
       end
 
     private
