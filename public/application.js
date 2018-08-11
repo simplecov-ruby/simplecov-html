@@ -1704,4 +1704,5 @@ $(document).ready(function() {
   $("abbr.timeago").timeago();
   $('#loading').fadeOut();
   $('#wrapper').show();
+  $('.dataTables_filter input').focus()
 });
