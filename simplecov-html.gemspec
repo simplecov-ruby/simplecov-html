@@ -13,7 +13,7 @@ Gem::Specification.new do |gem|
   gem.license     = "MIT"
 
   gem.required_ruby_version = ">= 1.8.7"
-  gem.add_development_dependency "bundler", "~> 1.9"
+  gem.add_development_dependency "bundler"
 
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
