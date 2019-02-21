@@ -1,3 +1,9 @@
+Layout/AccessModifierIndentation:
+  EnforcedStyle: outdent
+
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
 Metrics/BlockNesting:
   Max: 2
 
@@ -13,8 +19,10 @@ Metrics/ParameterLists:
   Max: 4
   CountKeywordArgs: true
 
-Style/AccessModifierIndentation:
-  EnforcedStyle: outdent
+Naming/FileName:
+  Exclude:
+    - 'lib/simplecov-html.rb'
+    - 'test/test_simple_cov-html.rb'
 
 Style/CollectionMethods:
   PreferredMethods:
@@ -29,11 +37,6 @@ Style/Documentation:
 Style/DoubleNegation:
   Enabled: false
 
-Style/FileName:
-  Exclude:
-    - 'lib/simplecov-html.rb'
-    - 'test/test_simple_cov-html.rb'
-
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
 
@@ -43,9 +46,6 @@ Style/MutableConstant:
 
 Style/RegexpLiteral:
   Enabled: false
-
-Style/SpaceInsideHashLiteralBraces:
-  EnforcedStyle: no_space
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
