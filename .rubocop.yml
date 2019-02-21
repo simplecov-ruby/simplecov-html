@@ -2,6 +2,12 @@ AllCops:
   TargetRubyVersion: 2.6
   DisplayCopNames: true
 
+Bundler/DuplicatedGem:
+  Enabled: false
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
 
@@ -41,6 +47,12 @@ Style/Documentation:
 Style/DoubleNegation:
   Enabled: false
 
+Style/ExpandPathArguments:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
 
@@ -48,11 +60,17 @@ Style/MutableConstant:
   Exclude:
     - 'lib/simplecov-html/version.rb'
 
+Style/NumericPredicate:
+  Enabled: false
+
 Style/RegexpLiteral:
   Enabled: false
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
+Style/SymbolArray:
+  Enabled: false
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: 'comma'
