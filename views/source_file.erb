@@ -10,8 +10,8 @@
 
     <% if branchable_result? %>
       <h4>
-        <span class="<%= coverage_css_class(source_file.branches_coverage_precent) %>">
-          <%= source_file.branches_coverage_precent.round(2).to_s %> %
+        <span class="<%= coverage_css_class(source_file.branches_coverage_percent) %>">
+          <%= source_file.branches_coverage_percent.round(2).to_s %> %
         </span>
         branches covered
       </h4>
