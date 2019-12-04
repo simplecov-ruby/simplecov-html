@@ -31,15 +31,15 @@ Metrics/ParameterLists:
 
 Naming/FileName:
   Exclude:
-    - 'lib/simplecov-html.rb'
-    - 'test/test_simple_cov-html.rb'
+    - "lib/simplecov-html.rb"
+    - "test/test_simple_cov-html.rb"
 
 Style/CollectionMethods:
   PreferredMethods:
-    map:      'collect'
-    reduce:   'inject'
-    find:     'detect'
-    find_all: 'select'
+    map: "collect"
+    reduce: "inject"
+    find: "detect"
+    find_all: "select"
 
 Style/Documentation:
   Enabled: false
@@ -58,7 +58,7 @@ Style/HashSyntax:
 
 Style/MutableConstant:
   Exclude:
-    - 'lib/simplecov-html/version.rb'
+    - "lib/simplecov-html/version.rb"
 
 Style/NumericPredicate:
   Enabled: false
@@ -73,7 +73,7 @@ Style/SymbolArray:
   Enabled: false
 
 Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: 'comma'
+  EnforcedStyleForMultiline: "comma"
 
 Style/TrailingCommaInArrayLiteral:
-  EnforcedStyleForMultiline: 'comma'
+  EnforcedStyleForMultiline: "comma"

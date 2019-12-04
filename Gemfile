@@ -28,7 +28,7 @@ group :test do
 end
 
 group :development do
-  gem "rubocop"
+  gem "rubocop", "~> 0.62.0"
   gem "sass"
   gem "sprockets"
 end

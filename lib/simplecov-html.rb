@@ -15,7 +15,6 @@ module SimpleCov
   module Formatter
     class HTMLFormatter
       def format(result)
-
         Dir[File.join(File.dirname(__FILE__), "../public/*")].each do |path|
           FileUtils.cp_r(path, asset_output_path)
         end
@@ -33,7 +32,9 @@ module SimpleCov
       # Check if branchable results supported or not
       # Try used here to escape exceptions
       def branchable_result?
+        # rubocop:disable Style/ColonMethodCall
         defined?(SimpleCov::branchable_report) ? SimpleCov::branchable_report : false
+        # rubocop:enable Style/ColonMethodCall
       end
 
       def line_status?(source_file, line)
