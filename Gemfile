@@ -18,5 +18,6 @@ end
 group :development do
   gem "rubocop", "~> 0.62.0"
   gem "sass"
-  gem "sprockets"
+  # sprockets 4.0 requires ruby 2.5+
+  gem "sprockets", "~> 3.7"
 end
