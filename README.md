@@ -3,7 +3,7 @@ Default HTML formatter for SimpleCov
 
 ***Note: To learn more about SimpleCov, check out the main repo at https://github.com/colszowka/simplecov***
 
-Generates a nice HTML report of your SimpleCov ruby code coverage results on Ruby 1.9 using client-side Javascript
+Generates a nice HTML report of your SimpleCov ruby code coverage results on Ruby 2.4+ using client-side Javascript
 quite extensively.
 
 
@@ -17,7 +17,7 @@ modify the formatter, please make sure the simplecov test suites still pass by d
   * `cd` there, run `bundle`
   * You should end up with all dev dependencies installed and simplecov-html being used from your disk
   * Run the tests (units and features)
-  
+
 Please remember to add tests if you add functionality.
 
 **Important:** If you modify the JS/CSS assets, you'll have to precompile them using `rake assets:compile` - otherwise,
