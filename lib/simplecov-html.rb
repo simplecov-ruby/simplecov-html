@@ -32,9 +32,7 @@ module SimpleCov
       # Check if branchable results supported or not
       # Try used here to escape exceptions
       def branchable_result?
-        # rubocop:disable Style/ColonMethodCall
-        defined?(SimpleCov::branchable_report) ? SimpleCov::branchable_report : false
-        # rubocop:enable Style/ColonMethodCall
+        SimpleCov.branch_coverage?
       end
 
       def line_status?(source_file, line)
