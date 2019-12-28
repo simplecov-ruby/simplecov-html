@@ -1,14 +1,14 @@
 PATH
   remote: .
   specs:
-    simplecov-html (0.10.2)
+    simplecov-html (0.11.0.pre.dev)
 
 PATH
   remote: /home/tobi/github/simplecov
   specs:
     simplecov (0.18.0.pre.dev)
       docile (~> 1.1)
-      simplecov-html (~> 0.10.0)
+      simplecov-html (~> 0.11.0.pre.dev)
 
 GEM
   remote: https://rubygems.org/
