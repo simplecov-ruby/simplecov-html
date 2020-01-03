@@ -51,7 +51,7 @@ Style/ExpandPathArguments:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
-  Enabled: false
+  Enabled: true
 
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
