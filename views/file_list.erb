@@ -21,14 +21,14 @@
     <b><%= source_files.length %></b> files in total.
   </div>
 
-  <div>
+  <div id="t-line-summary">
     <b><%= source_files.lines_of_code %></b> relevant lines,
     <span class="green"><b><%= source_files.covered_lines %></b> lines covered</span> and
     <span class="red"><b><%= source_files.missed_lines %></b> lines missed. </span>
   </div>
 
   <% if branchable_result? %>
-    <div>
+    <div id="t-branch-summary">
       <span><b><%= source_files.total_branches %></b> total branches, </span>
       <span class="green"><b><%= source_files.covered_branches %></b> branches covered</span> and
       <span class="red"><b><%= source_files.missed_branches %></b> branches missed.</span>
