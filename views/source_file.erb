@@ -42,9 +42,10 @@
             <% if line.skipped? %><span class="hits">skipped</span><% end %>
 
             <% if branchable_result? %>
-              <% if source_file.branchable_line?(line.number) %>
-                <span class="hits">
-                  <%= source_file.branch_per_line(line.number) %>
+              <% source_file.branches_for_line(line.number).each do |hit_count, indicator| %>
+                <% positive_or_negative =  indicator == "+" ? "positive" : "negative" %>
+                <span class="hits" title="<%= positive_or_negative%> branch hit <%= hit_count %> times">
+                  <%= hit_count %>, <%= indicator %>
                 </span>
               <% end %>
             <% end %>
