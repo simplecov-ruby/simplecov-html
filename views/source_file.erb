@@ -17,19 +17,19 @@
       </h4>
     <% end %>
 
-    <div>
+    <div class="t-line-summary">
       <b><%= source_file.lines_of_code %></b> relevant lines.
       <span class="green"><b><%= source_file.covered_lines.count %></b> lines covered</span> and
       <span class="red"><b><%= source_file.missed_lines.count %></b> lines missed.</span>
     </div>
 
-    <div>
-      <% if branchable_result? %>
-        <span><b><%= source_file.total_branches.count %></b> total branches, </span>
-        <span class="green"><b><%= source_file.covered_branches.count %></b> branches covered</span> and
-        <span class="red"><b><%= source_file.missed_branches.count %></b> branches missed.</span>
-      <% end %>
-    </div>
+    <% if branchable_result? %>
+      <div class="t-branch-summary">
+          <span><b><%= source_file.total_branches.count %></b> total branches, </span>
+          <span class="green"><b><%= source_file.covered_branches.count %></b> branches covered</span> and
+          <span class="red"><b><%= source_file.missed_branches.count %></b> branches missed.</span>
+      </div>
+    <% end %>
 
   </div>
 
