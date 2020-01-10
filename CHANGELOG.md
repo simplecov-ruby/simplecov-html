@@ -1,3 +1,9 @@
+0.11.0.beta2 (unreleased)
+=======
+
+## Bugfixes
+* Fixed sorting of percent column (regression in previous release)
+
 0.11.0.beta1 (2020-01-05)
 ========
 
