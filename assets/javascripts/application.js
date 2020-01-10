@@ -6,6 +6,9 @@ $(document).ready(function () {
   branchCoverageActivated = $("body").data("branch-coverage") == true;
 
   // Configuration for fancy sortable tables for source file groups
+  // For what these columns are, cecl out file_list.erb - null basically
+  // does normal/number style sorting which fine for hit/missed lines only
+  // percentages like "covered percent" need special sorting arguments.
   lineColumns = [null, { "sType": "percent" }, null, null, null, null, null];
   branchColumns = [{ "sType": "percent" }, null, null, null];
 
