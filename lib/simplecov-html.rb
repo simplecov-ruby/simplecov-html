@@ -16,6 +16,10 @@ end
 module SimpleCov
   module Formatter
     class HTMLFormatter
+      def initialize
+        @branchable_result = SimpleCov.branch_coverage?
+      end
+
       def format(result)
         Dir[File.join(File.dirname(__FILE__), "../public/*")].each do |path|
           FileUtils.cp_r(path, asset_output_path)
@@ -31,10 +35,11 @@ module SimpleCov
         "Coverage report generated for #{result.command_name} to #{output_path}. #{result.covered_lines} / #{result.total_lines} LOC (#{result.covered_percent.round(2)}%) covered."
       end
 
-      # Check if branchable results supported or not
-      # Try used here to escape exceptions
       def branchable_result?
-        SimpleCov.branch_coverage?
+        # cached in initialize because we truly look it up a whole bunch of times
+        # and it's easier to cache here then in SimpleCov because there we might
+        # still enable/disable branch coverage criterion
+        @branchable_result
       end
 
       def line_status?(source_file, line)
