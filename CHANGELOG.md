@@ -1,5 +1,9 @@
-0.11.0.beta2 (unreleased)
+0.11.0.beta2 (2020-01-19)
 =======
+
+## Enhancements
+* changed display of branch coverage to be `branch_type: hit_count` which should be more expressive and more intuitive
+* Cached lookup of whether we're doing branch coverage or not (should be faster)
 
 ## Bugfixes
 * Fixed sorting of percent column (regression in previous release)
