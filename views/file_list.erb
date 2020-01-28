@@ -31,7 +31,7 @@
       <span><b><%= source_files.total_branches %></b> total branches, </span>
       <span class="green"><b><%= source_files.covered_branches %></b> branches covered</span> and
       <span class="red"><b><%= source_files.missed_branches %></b> branches missed.</span>
-      (<%= covered_percent(source_files.branches_coverage_percent) %>)
+      (<%= covered_percent(source_files.branch_covered_percent) %>)
     </div>
   <% end %>
 
@@ -62,7 +62,7 @@
           <td><%= source_file.covered_lines.count + source_file.missed_lines.count %></td>
           <td><%= source_file.covered_lines.count %></td>
           <td><%= source_file.missed_lines.count %></td>
-          <td><%= source_file.covered_strength %></td>
+          <td><%= source_file.covered_strength.round(2) %></td>
           <% if branchable_result? %>
             <td class="<%= coverage_css_class(source_file.branches_coverage_percent) %> strong t-file__branch-coverage"><%= source_file.branches_coverage_percent.round(2).to_s %> %</td>
             <td><%= source_file.total_branches.count %></td>
