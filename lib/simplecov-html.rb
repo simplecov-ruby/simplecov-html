@@ -90,6 +90,10 @@ module SimpleCov
         template("file_list").result(binding)
       end
 
+      def covered_percent(percent)
+        template("covered_percent").result(binding)
+      end
+
       def coverage_css_class(covered_percent)
         if covered_percent > 90
           "green"
