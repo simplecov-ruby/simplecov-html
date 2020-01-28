@@ -1,3 +1,11 @@
+0.11.0 (2020-01-28)
+=======
+
+This release goes together with simplecov 0.18 to bring branch coverage support to you. Please also check the notes of the beta releases.
+
+## Enhancements
+* Display total branch coverage percentage in the overview (if branch coverage enabled)
+
 0.11.0.beta2 (2020-01-19)
 =======
 
