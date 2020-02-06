@@ -101,8 +101,10 @@ abbr.timeago
 .file_list
   margin-bottom: 18px
 
-.file_list-responsive
-  overflow-x: scroll
+.file_list--responsive
+  overflow-x: auto
+  // not the nicest fix for the y scrollbar coming up, but workable :shrug:
+  overflow-y: hidden
 
 a.src_link
   background: url('./magnify.png') no-repeat left 50%
