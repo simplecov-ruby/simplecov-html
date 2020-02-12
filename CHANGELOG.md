@@ -1,3 +1,20 @@
+0.12.0 (2020-02-12)
+==================
+
+This release is basically a collection of long standing PRs finally merged.
+Yes it looks different, no it's not a redesign - just a side effect of lots of dependency updates to improve CSP compatibility.
+
+## Enhancements
+* The HTML should now be servable with CSP settings of `default-src 'none'; script-src 'self'; img-src 'self'; style-src 'self';`
+* File list is horizontally scrollable if the space doesn't suffice
+* numbers are now right aligned and displayed with the same number of decimals for easier comparison and reading.
+
+## Bugfixes
+* Make sorting icons appear again
+* close link tag which could cause problems when parsing as xhtml/xml
+* make sure encoding errors won't crash the formatter
+* When viewing a short source file while you have a big file list you will no longer be able to scroll on after the source file has ended
+
 0.11.0 (2020-01-28)
 =======
 
