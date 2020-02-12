@@ -5,20 +5,8 @@
 $(document).ready(function () {
   branchCoverageActivated = $("body").data("branch-coverage") == true;
 
-  // Configuration for fancy sortable tables for source file groups
-  // For what these columns are, cecl out file_list.erb - null basically
-  // does normal/number style sorting which fine for hit/missed lines only
-  // percentages like "covered percent" need special sorting arguments.
-  lineColumns = [null, { "sType": "percent" }, null, null, null, null, null];
-  branchColumns = [{ "sType": "percent" }, null, null, null];
-
-  dataColumns = branchCoverageActivated ? lineColumns.concat(branchColumns) : lineColumns;
-
   $('.file_list').dataTable({
-    "aaSorting": [[1, "asc"]],
-    "bPaginate": false,
-    "bJQueryUI": true,
-    "aoColumns": dataColumns
+    "aaSorting": [[1, "asc"]]
   });
 
   // Syntax highlight all files up front - deactivated
@@ -69,13 +57,13 @@ $(document).ready(function () {
     }
   });
 
-  window.onpopstate = function(event){
-    if (window.location.hash.substring(0,2) == "#_") {
+  window.onpopstate = function (event) {
+    if (window.location.hash.substring(0, 2) == "#_") {
       $.colorbox.close();
       curr_anchor = window.location.hash.substring(1);
     } else {
       if ($('#colorbox').is(':hidden')) {
-        $('a.src_link[href="'+window.location.hash+'"]').colorbox({ open: true });
+        $('a.src_link[href="' + window.location.hash + '"]').colorbox({ open: true });
       }
     }
   };
@@ -98,10 +86,10 @@ $(document).ready(function () {
   });
 
   // Make sure tabs don't get ugly focus borders when active
-  $('.group_tabs').on('focus', 'a', function() { $(this).blur(); });
+  $('.group_tabs').on('focus', 'a', function () { $(this).blur(); });
 
   var favicon_path = $('link[rel="shortcut icon"]').attr('href');
-  $('.group_tabs').on('click', 'a', function(){
+  $('.group_tabs').on('click', 'a', function () {
     if (!$(this).parent().hasClass('active')) {
       $('.group_tabs a').parent().removeClass('active');
       $(this).parent().addClass('active');
