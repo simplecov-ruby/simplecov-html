@@ -45,7 +45,7 @@
               <% end %>
             <% end %>
 
-            <code class="ruby"><%= CGI.escapeHTML(line.src.chomp.encode('UTF-8', invalid: :replace, undef: :replace)) %></code>
+            <code class="ruby"><%= CGI.escapeHTML(line.src.chomp) %></code>
           </li>
         </div>
       <% end %>
