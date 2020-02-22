@@ -6,7 +6,8 @@ $(document).ready(function () {
   branchCoverageActivated = $("body").data("branch-coverage") == true;
 
   $('.file_list').dataTable({
-    "aaSorting": [[1, "asc"]]
+    "aaSorting": [[1, "asc"]],
+    paging: false
   });
 
   // Syntax highlight all files up front - deactivated
