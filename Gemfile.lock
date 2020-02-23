@@ -6,7 +6,7 @@ PATH
 PATH
   remote: /home/tobi/github/simplecov
   specs:
-    simplecov (0.18.2)
+    simplecov (0.18.3)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
 
