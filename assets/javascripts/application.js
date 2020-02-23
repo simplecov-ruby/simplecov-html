@@ -3,10 +3,8 @@
 //= require_self
 
 $(document).ready(function () {
-  branchCoverageActivated = $("body").data("branch-coverage") == true;
-
   $('.file_list').dataTable({
-    "aaSorting": [[1, "asc"]],
+    order: [[1, "asc"]],
     paging: false
   });
 
