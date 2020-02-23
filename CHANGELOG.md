@@ -1,3 +1,12 @@
+0.12.1 (2020-02-23)
+==================
+
+Bugfix release to fix huge bugs that sadly test suit and maintainters didn't catch.
+
+## Bugfixes
+* Disable pagination and with it all files on 2nd page+ being broken/not able to open
+* Fix display of non ASCII characters, for this you have to upgrade to simplecov 0.18.3 though (it's handled in there)
+
 0.12.0 (2020-02-12)
 ==================
 
