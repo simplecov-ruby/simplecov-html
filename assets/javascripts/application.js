@@ -107,7 +107,7 @@ $(document).ready(function () {
   if (window.location.hash) {
     var anchor = window.location.hash.substring(1);
     if (anchor.length == 40) {
-      $('a.src_link[href=#' + anchor + ']').click();
+      $('a.src_link[href="#' + anchor + '"]').click();
     } else {
       $('.group_tabs a.' + anchor.replace('_', '')).click();
     }
