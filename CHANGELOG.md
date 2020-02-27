@@ -1,3 +1,9 @@
+0.12.2 (2020-02-27)
+==================
+
+## Bugfixes
+* Refreshing the page while a source file is open works again. Thanks [@HansBug](https://github.com/HansBug) for the report [#94](https://github.com/colszowka/simplecov-html/issues/94) and [@Tietew](https://github.com/Tietew) for the fix!
+
 0.12.1 (2020-02-23)
 ==================
 
