@@ -32,8 +32,8 @@
   <pre>
     <ol>
       <% source_file.lines.each do |line| %>
-        <div>
-          <li class="<%= line_status?(source_file, line) %>" data-hits="<%= line.coverage ? line.coverage : '' %>" data-linenumber="<%= line.number %>">
+        <div class="<%= line_status?(source_file, line) %>">
+          <li data-hits="<%= line.coverage ? line.coverage : '' %>" data-linenumber="<%= line.number %>">
             <% if line.covered? %><span class="hits"><%= line.coverage %></span><% end %>
             <% if line.skipped? %><span class="hits">skipped</span><% end %>
 
