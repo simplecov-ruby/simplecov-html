@@ -19,7 +19,6 @@ end
 
 group :development do
   gem "rubocop"
-  gem "sass"
   # sprockets 4.0 requires ruby 2.5+
   gem "sprockets", "~> 3.7"
   gem "uglifier"
