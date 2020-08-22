@@ -17,7 +17,8 @@ module SimpleCov
   module Formatter
     class HTMLFormatter
       def initialize
-        @branchable_result = SimpleCov.branch_coverage?
+        @branch_coverage = SimpleCov.branch_coverage?
+        @method_coverage = SimpleCov.method_coverage?
       end
 
       def format(result)
@@ -32,18 +33,31 @@ module SimpleCov
       end
 
       def output_message(result)
-        "Coverage report generated for #{result.command_name} to #{output_path}. #{result.covered_lines} / #{result.total_lines} LOC (#{result.covered_percent.round(2)}%) covered."
+        parts = []
+        parts << "Coverage report generated for #{result.command_name} to #{output_path}"
+        parts << "Line coverage: #{render_stats(result, :line)}"
+        parts << "Branch coverage: #{render_stats(result, :branch)}" if branch_coverage?
+        parts << "Method coverage: #{render_stats(result, :method)}" if method_coverage?
+
+        parts.join("\n")
       end
 
-      def branchable_result?
+      def branch_coverage?
         # cached in initialize because we truly look it up a whole bunch of times
         # and it's easier to cache here then in SimpleCov because there we might
         # still enable/disable branch coverage criterion
-        @branchable_result
+        @branch_coverage
+      end
+
+      def method_coverage?
+        # cached in initialize because we truly look it up a whole bunch of times
+        # and it's easier to cache here then in SimpleCov because there we might
+        # still enable/disable branch coverage criterion
+        @method_coverage
       end
 
       def line_status?(source_file, line)
-        if branchable_result? && source_file.line_with_missed_branch?(line.number)
+        if branch_coverage? && source_file.line_with_missed_branch?(line.number)
           "missed-branch"
         else
           line.status
@@ -129,6 +143,11 @@ module SimpleCov
 
       def link_to_source_file(source_file)
         %(<a href="##{id source_file}" class="src_link" title="#{shortened_filename source_file}">#{shortened_filename source_file}</a>)
+      end
+
+      def render_stats(result, criterion)
+        stats = result.coverage_statistics.fetch(criterion)
+        sprintf("%d / %d (%.2f%%)", stats.covered, stats.total, stats.percent)
       end
     end
   end

@@ -6,7 +6,7 @@
       lines covered
     </h4>
 
-    <% if branchable_result? %>
+    <% if branch_coverage? %>
       <h4>
         <%= covered_percent(source_file.branches_coverage_percent) %>
         branches covered
@@ -19,7 +19,7 @@
       <span class="red"><b><%= source_file.missed_lines.count %></b> lines missed.</span>
     </div>
 
-    <% if branchable_result? %>
+    <% if branch_coverage? %>
       <div class="t-branch-summary">
           <span><b><%= source_file.total_branches.count %></b> total branches, </span>
           <span class="green"><b><%= source_file.covered_branches.count %></b> branches covered</span> and
@@ -37,7 +37,7 @@
             <% if line.covered? %><span class="hits"><%= line.coverage %></span><% end %>
             <% if line.skipped? %><span class="hits">skipped</span><% end %>
 
-            <% if branchable_result? %>
+            <% if branch_coverage? %>
               <% source_file.branches_for_line(line.number).each do |branch_type, hit_count| %>
                 <span class="hits" title="<%= branch_type%> branch hit <%= hit_count %> times">
                   <%= branch_type %>: <%= hit_count %>

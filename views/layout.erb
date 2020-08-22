@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" href="<%= assets_path('favicon.png') %>" />
   </head>
 
-  <body<%= ' data-branch-coverage=true' if branchable_result? %>>
+  <body<%= ' data-branch-coverage=true' if branch_coverage? %>>
     <div id="loading">
       <img src="<%= assets_path('loading.gif') %>" alt="loading"/>
     </div>
