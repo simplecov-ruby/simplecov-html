@@ -18,7 +18,7 @@
     </script>
   </head>
 
-  <body<%= ' data-branch-coverage=true' if branchable_result? %>>
+  <body<%= ' data-branch-coverage=true' if branch_coverage? %>>
     <button id="dark-mode-toggle"></button>
     <div id="loading">
       <img src="<%= assets_path('loading.gif') %>" alt="loading"/>
