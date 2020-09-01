@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.summary     = gem.description
   gem.license     = "MIT"
 
-  gem.required_ruby_version = "~> 2.4"
+  gem.required_ruby_version = ">= 2.4"
 
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
