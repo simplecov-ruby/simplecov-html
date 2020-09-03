@@ -488,3 +488,8 @@ thead th {
 #dark-mode-toggle:hover {
   opacity: 0.8;
 }
+
+.t-missed-method-summary ul {
+  margin: 0;
+  padding-left: 2em;
+}
