@@ -13,6 +13,14 @@
       </h4>
     <% end %>
 
+    <% if method_coverage? %>
+      <h4>
+        <%= covered_percent(source_file.methods_coverage_percent) %>
+        methods covered
+      </h4>
+    <% end %>
+
+
     <div class="t-line-summary">
       <b><%= source_file.lines_of_code %></b> relevant lines.
       <span class="green"><b><%= source_file.covered_lines.count %></b> lines covered</span> and
@@ -24,6 +32,25 @@
           <span><b><%= source_file.total_branches.count %></b> total branches, </span>
           <span class="green"><b><%= source_file.covered_branches.count %></b> branches covered</span> and
           <span class="red"><b><%= source_file.missed_branches.count %></b> branches missed.</span>
+      </div>
+    <% end %>
+
+    <% if method_coverage? %>
+      <div class="t-method-summary">
+          <span><b><%= source_file.total_methods.count %></b> total methods, </span>
+          <span class="green"><b><%= source_file.covered_methods.count %></b> methods covered</span> and
+          <span class="red"><b><%= source_file.missed_methods.count %></b> methods missed.</span>
+      </div>
+    <% end %>
+
+    <% if method_coverage? && source_file.missed_methods.any? %>
+      <div class="t-missed-method-summary">
+        <span>Missed methods:</span>
+        <ul>
+        <% source_file.missed_methods.each do |missed_method| %>
+          <li><tt><%= CGI.escapeHTML(missed_method.to_s) %></tt></li>
+        <% end %>
+        </ul>
       </div>
     <% end %>
 

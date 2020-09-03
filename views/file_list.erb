@@ -35,6 +35,15 @@
     </div>
   <% end %>
 
+  <% if method_coverage? %>
+    <div class="t-method-summary">
+      <span><b><%= source_files.total_methods %></b> total methods, </span>
+      <span class="green"><b><%= source_files.covered_methods %></b> methods covered</span> and
+      <span class="red"><b><%= source_files.missed_methods %></b> methods missed.</span>
+      (<%= covered_percent(source_files.method_covered_percent) %>)
+    </div>
+  <% end %>
+
   <div class="file_list--responsive">
     <table class="file_list">
       <thead>
@@ -51,6 +60,12 @@
             <th class="cell--number">Branches</th>
             <th class="cell--number">Covered branches</th>
             <th class="cell--number">Missed branches </th>
+          <% end %>
+          <% if method_coverage? %>
+            <th class="cell--number">Method Coverage</th>
+            <th class="cell--number">Methods</th>
+            <th class="cell--number">Covered methods</th>
+            <th class="cell--number">Missed methods </th>
           <% end %>
         </tr>
       </thead>
@@ -69,6 +84,12 @@
               <td class="cell--number"><%= source_file.total_branches.count %></td>
               <td class="cell--number"><%= source_file.covered_branches.count %></td>
               <td class="cell--number"><%= source_file.missed_branches.count %></td>
+            <% end %>
+            <% if method_coverage? %>
+              <td class="<%= coverage_css_class(source_file.methods_coverage_percent) %> strong cell--number t-file__method-coverage"><%= sprintf("%.2f", source_file.methods_coverage_percent.round(2)) %> %</td>
+              <td class="cell--number"><%= source_file.total_methods.count %></td>
+              <td class="cell--number"><%= source_file.covered_methods.count %></td>
+              <td class="cell--number"><%= source_file.missed_methods.count %></td>
             <% end %>
           </tr>
         <% end %>

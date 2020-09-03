@@ -314,3 +314,8 @@ thead th {
 .source_table .missed-branch:nth-child(even) {
   background-color: #cc6e6e;
 }
+
+.t-missed-method-summary ul {
+  margin: 0;
+  padding-left: 2em;
+}
