@@ -8,7 +8,7 @@
 ==================
 
 ## Bugfixes
-* Refreshing the page while a source file is open works again. Thanks [@HansBug](https://github.com/HansBug) for the report [#94](https://github.com/colszowka/simplecov-html/issues/94) and [@Tietew](https://github.com/Tietew) for the fix!
+* Refreshing the page while a source file is open works again. Thanks [@HansBug](https://github.com/HansBug) for the report [#94](https://github.com/simplecov-ruby/simplecov-html/issues/94) and [@Tietew](https://github.com/Tietew) for the fix!
 
 0.12.1 (2020-02-23)
 ==================
@@ -71,11 +71,11 @@ Changes ruby support to 2.4+, adds branch coverage support. Meant to be used wit
 
 ## Bugfixes
 
-* Allow usage with frozen-string-literal-enabled. See [#56](https://github.com/colszowka/simplecov-html/pull/56) (thanks @pat)
+* Allow usage with frozen-string-literal-enabled. See [#56](https://github.com/simplecov-ruby/simplecov-html/pull/56) (thanks @pat)
 
 0.10.1 (2017-05-17)
 ========
 
 ## Bugfixes
 
-* circumvent a regression that happens in the new JRuby 9.1.9.0 release. See [#53](https://github.com/colszowka/simplecov-html/pull/53) thanks @koic
+* circumvent a regression that happens in the new JRuby 9.1.9.0 release. See [#53](https://github.com/simplecov-ruby/simplecov-html/pull/53) thanks @koic
