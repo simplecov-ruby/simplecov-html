@@ -10,7 +10,7 @@ gem "rake", ">= 11"
 if File.directory?(File.dirname(__FILE__) + "/../simplecov")
   gem "simplecov", :path => File.dirname(__FILE__) + "/../simplecov"
 else
-  gem "simplecov", :github => "colszowka/simplecov"
+  gem "simplecov", :github => "simplecov-ruby/simplecov"
 end
 
 group :test do
