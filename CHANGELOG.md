@@ -1,3 +1,9 @@
+0.12.3 (2020-09-23)
+==================
+
+## Bugfixes
+* Relax ruby version requirement to work with Ruby 3.0 (next version, current `ruby-head`). Thanks [@byroot](https://github.com/byroot).
+
 0.12.2 (2020-02-27)
 ==================
 
