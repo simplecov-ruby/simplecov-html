@@ -10,5 +10,5 @@ guard "bundler" do
 end
 
 guard "rake", :task => "assets:compile" do
-  watch(%r{^assets\/})
+  watch(%r{^assets/})
 end
