@@ -18,6 +18,7 @@ module SimpleCov
     class HTMLFormatter
       def initialize
         @branchable_result = SimpleCov.branch_coverage?
+        @templates = {}
       end
 
       def format(result)
@@ -54,7 +55,7 @@ module SimpleCov
 
       # Returns the an erb instance for the template of given name
       def template(name)
-        ERB.new(File.read(File.join(File.dirname(__FILE__), "../views/", "#{name}.erb")))
+        @templates[name] ||= ERB.new(File.read(File.join(File.dirname(__FILE__), "../views/", "#{name}.erb")))
       end
 
       def output_path
