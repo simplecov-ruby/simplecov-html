@@ -20,7 +20,7 @@ GEM
     docile (1.4.0)
     execjs (2.7.0)
     jaro_winkler (1.5.4)
-    minitest (5.14.0)
+    minitest (5.15.0)
     parallel (1.19.1)
     parser (2.7.0.2)
       ast (~> 2.4.0)
@@ -58,4 +58,4 @@ DEPENDENCIES
   yui-compressor
 
 BUNDLED WITH
-   2.1.4
+   2.3.10
