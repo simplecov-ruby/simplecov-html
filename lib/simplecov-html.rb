@@ -82,7 +82,7 @@ module SimpleCov
 
       # Returns a table containing the given source files
       def formatted_file_list(title, source_files)
-        title_id = title.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-\_]/, "")
+        title_id = title.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, "")
         template("file_list").result(binding)
       end
 
