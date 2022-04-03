@@ -1,10 +1,11 @@
 GIT
-  remote: https://github.com/simplecov-ruby/simplecov.git
-  revision: 80700ec9f9b5ae426c22d06f62620f7e7b71ff42
+  remote: https://github.com/simplecov-ruby/simplecov
+  revision: 0260b1f309e76c8ed87731ebbc348b05d753b8a2
   specs:
-    simplecov (0.18.5)
+    simplecov (0.20.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
 
 PATH
   remote: .
@@ -16,7 +17,7 @@ GEM
   specs:
     ast (2.4.0)
     concurrent-ruby (1.1.5)
-    docile (1.3.2)
+    docile (1.4.0)
     execjs (2.7.0)
     jaro_winkler (1.5.4)
     minitest (5.14.0)
@@ -34,6 +35,7 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
     ruby-progressbar (1.10.1)
+    simplecov_json_formatter (0.1.4)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
