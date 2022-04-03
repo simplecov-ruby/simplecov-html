@@ -9,6 +9,6 @@ guard "bundler" do
   # watch(/^.+\.gemspec/)
 end
 
-guard "rake", :task => "assets:compile" do
+guard "rake", task: "assets:compile" do
   watch(%r{^assets\/})
 end
