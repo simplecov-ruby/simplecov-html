@@ -1,9 +1,4 @@
 # frozen_string_literal: true
 
-module SimpleCov
-  module Formatter
-    class HTMLFormatter
-      VERSION = "0.12.3"
-    end
-  end
-end
+# NOTE: This is here for backwards compatibility
+require "simplecov/formatter/html_formatter/version"

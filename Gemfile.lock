@@ -19,6 +19,7 @@ GEM
     concurrent-ruby (1.1.5)
     docile (1.4.0)
     execjs (2.7.0)
+    ffi (1.15.5)
     minitest (5.15.0)
     parallel (1.22.1)
     parser (3.1.1.0)
@@ -26,6 +27,9 @@ GEM
     rack (2.2.3)
     rainbow (3.1.1)
     rake (13.0.1)
+    rb-fsevent (0.11.1)
+    rb-inotify (0.10.1)
+      ffi (~> 1.0)
     regexp_parser (2.2.1)
     rexml (3.2.5)
     rubocop (1.26.1)
@@ -40,6 +44,11 @@ GEM
     rubocop-ast (1.16.0)
       parser (>= 3.1.1.0)
     ruby-progressbar (1.11.0)
+    sass (3.7.4)
+      sass-listen (~> 4.0.0)
+    sass-listen (4.0.0)
+      rb-fsevent (~> 0.9, >= 0.9.4)
+      rb-inotify (~> 0.9, >= 0.9.7)
     simplecov_json_formatter (0.1.4)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
@@ -47,7 +56,6 @@ GEM
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (2.1.0)
-    yui-compressor (0.12.0)
 
 PLATFORMS
   ruby
@@ -56,11 +64,11 @@ DEPENDENCIES
   minitest
   rake (>= 11)
   rubocop
+  sass
   simplecov!
   simplecov-html!
   sprockets (~> 3.7)
   uglifier
-  yui-compressor
 
 BUNDLED WITH
    2.3.10
