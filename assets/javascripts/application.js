@@ -58,11 +58,18 @@ $(document).ready(function () {
       var hash = a.el.hash
       var sourceCode = $(hash)
       var minDistance = 0
-      var maxDistance = sourceCode.height();
-      var distance = 100
+      var maxDistance
+      var sourceCodeHeight = sourceCode.height();
+      if (sourceCodeHeight > 500) {
+        maxDistance = sourceCodeHeight - 500
+      } else {
+        maxDistance = sourceCodeHeight
+      }
+      var step = 22
+      var distance = step * 4
       var onScroll = function(event) {
         distance = $(hash).position().top * -1
-        console.log('set distance', distance, event.isDefaultPrevented())
+        console.log('set distance', distance)
       }
       var $parentDiv = $('#cboxLoadedContent')
 
@@ -70,17 +77,20 @@ $(document).ready(function () {
 
       var scrollDown = function () {
         $parentDiv.off('scroll')
-        if (distance >= maxDistance) {
-          distance = maxDistance + 100
-        }
-        if (distance < 100) {
-          distance = 100
+        if (distance > maxDistance) {
+          return
+        } else if (distance < step) {
+          distance = step
         }
         console.log('down', distance, maxDistance)
 
         $parentDiv.animate({ scrollTop:  distance }, { duration: 0, complete: function () {
-          console.log('down done', distance)
-          distance += 100;
+          if (distance + step > maxDistance) {
+            distance = maxDistance;
+          } else {
+            distance += step;
+          }
+
           setTimeout(function() {
             $parentDiv.on('scroll', onScroll)
           }, 1000)
@@ -88,15 +98,23 @@ $(document).ready(function () {
       }
 
       var scrollUp = function () {
+        console.log('up', distance, minDistance, maxDistance)
         $parentDiv.off('scroll')
-        if (distance <= minDistance) {
-          distance = 0
+        if (distance == 0) {
           return
+        } else if (distance <= minDistance + 100) {
+          distance = 0
+        } else if (distance == maxDistance) {
+          distance -= (step * 2)
         }
 
         $parentDiv.animate({ scrollTop:  distance }, { duration: 0, complete: function () {
           console.log('up done', distance)
-          distance -= 100;
+          if (distance + 100 < minDistance) {
+            distance = minDistance
+          } else {
+            distance -= step;
+          }
           setTimeout(function() {
             $parentDiv.on('scroll', onScroll)
           }, 1000)
