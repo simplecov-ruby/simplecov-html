@@ -53,6 +53,69 @@ $(document).ready(function () {
 
       var active_group = $('.group_tabs li.active a').attr('class');
       $("#" + active_group + ".file_list_container").show();
+    },
+    onComplete: function (a, b, c) {
+      var hash = a.el.hash
+      var sourceCode = $(hash)
+      var minDistance = 0
+      var maxDistance = sourceCode.height();
+      var distance = 100
+      var onScroll = function(event) {
+        distance = $(hash).position().top * -1
+        console.log('set distance', distance, event.isDefaultPrevented())
+      }
+      var $parentDiv = $('#cboxLoadedContent')
+
+      $parentDiv.on('scroll', onScroll)
+
+      var scrollDown = function () {
+        $parentDiv.off('scroll')
+        if (distance >= maxDistance) {
+          distance = maxDistance + 100
+        }
+        if (distance < 100) {
+          distance = 100
+        }
+        console.log('down', distance, maxDistance)
+
+        $parentDiv.animate({ scrollTop:  distance }, { duration: 0, complete: function () {
+          console.log('down done', distance)
+          distance += 100;
+          setTimeout(function() {
+            $parentDiv.on('scroll', onScroll)
+          }, 1000)
+        }});
+      }
+
+      var scrollUp = function () {
+        $parentDiv.off('scroll')
+        if (distance <= minDistance) {
+          distance = 0
+          return
+        }
+
+        $parentDiv.animate({ scrollTop:  distance }, { duration: 0, complete: function () {
+          console.log('up done', distance)
+          distance -= 100;
+          setTimeout(function() {
+            $parentDiv.on('scroll', onScroll)
+          }, 1000)
+        }});
+      }
+
+      $('#colorbox').on('keydown', function (evt) {
+        if (evt.keyCode == 40) { // down arrow
+          evt.preventDefault(); // prevents the usual scrolling behaviour
+          scrollDown()
+        } else if (evt.keyCode == 38) { // up arrow
+          evt.preventDefault();
+          scrollUp()
+        }
+      })
+    },
+    onClosed: function (a, b, c) {
+      $('#colorbox').off('keydown')
+      $('#cboxLoadedContent').off('scroll')
     }
   });
 
