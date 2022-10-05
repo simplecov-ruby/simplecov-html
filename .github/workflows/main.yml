@@ -3,7 +3,7 @@ name: test
 on: [push, pull_request]
 
 jobs:
-  lint:
+  eslint:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
