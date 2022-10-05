@@ -7,10 +7,11 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
-    - run: |
+    - name: Install ESLint
+      run: |
         npm init --yes
         npm init @eslint/config
-    - run: eslint .
+    - run: ./node_modules/.bin/eslint .
       
   tests:
     runs-on: ubuntu-latest
