@@ -3,6 +3,12 @@ name: test
 on: [push, pull_request]
 
 jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - run: eslint .
+      
   tests:
     runs-on: ubuntu-latest
     strategy:
