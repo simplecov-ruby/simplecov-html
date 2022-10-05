@@ -8,7 +8,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: |
-        npm init
+        npm init --yes
         npm init @eslint/config
     - run: eslint .
       
