@@ -10,7 +10,7 @@ require "time"
 major, minor, patch = SimpleCov::VERSION.scan(/\d+/).first(3).map(&:to_i)
 if major < 0 || minor < 9 || patch < 0
   raise "The version of SimpleCov you are using is too old. "\
-  "Please update with `gem install simplecov` or `bundle update simplecov`"
+        "Please update with `gem install simplecov` or `bundle update simplecov`"
 end
 
 module SimpleCov
@@ -146,9 +146,9 @@ module SimpleCov
 
         Kernel.format(
           "%<covered>d / %<total>d (%<percent>.2f%%)",
-          :covered => stats.covered,
-          :total => stats.total,
-          :percent => stats.percent
+          covered: stats.covered,
+          total: stats.total,
+          percent: stats.percent
         )
       end
     end

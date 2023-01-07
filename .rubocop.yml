@@ -75,3 +75,6 @@ Style/TrailingCommaInHashLiteral:
 
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: "comma"
+
+Gemspec/RequireMFA:
+  Enabled: false
