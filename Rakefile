@@ -27,7 +27,7 @@ rescue LoadError
   end
 end
 
-task :default => [:test, :rubocop]
+task default: [:test, :rubocop]
 
 namespace :assets do
   desc "Compiles all assets"

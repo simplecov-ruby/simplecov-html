@@ -97,10 +97,6 @@ module SimpleCov
       # Returns a table containing the given source files
       def formatted_file_list(title, source_files)
         title_id = title.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, "")
-        # Silence a warning by using the following variable to assign to itself:
-        # "warning: possibly useless use of a variable in void context"
-        # The variable is used by ERB via binding.
-        title_id = title_id # rubocop:disable Lint/SelfAssignment
         template("file_list").result(binding)
       end
 

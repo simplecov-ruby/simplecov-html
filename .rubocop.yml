@@ -54,9 +54,6 @@ Style/ExpandPathArguments:
 Style/FrozenStringLiteralComment:
   Enabled: true
 
-Style/HashSyntax:
-  EnforcedStyle: hash_rockets
-
 Style/MutableConstant:
   Exclude:
     - "lib/simplecov-html/version.rb"

@@ -1,8 +1,8 @@
 GIT
-  remote: https://github.com/simplecov-ruby/simplecov.git
-  revision: 441d8ca6249c07275202880f3ff604272a4a3b76
+  remote: https://github.com/simplecov-ruby/simplecov
+  revision: 0260b1f309e76c8ed87731ebbc348b05d753b8a2
   specs:
-    simplecov (0.21.2)
+    simplecov (0.20.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
@@ -16,37 +16,37 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
-    concurrent-ruby (1.1.8)
-    docile (1.3.5)
+    concurrent-ruby (1.1.5)
+    docile (1.4.0)
     execjs (2.7.0)
-    minitest (5.14.4)
-    parallel (1.20.1)
-    parser (3.0.1.0)
+    minitest (5.15.0)
+    parallel (1.22.1)
+    parser (3.1.1.0)
       ast (~> 2.4.1)
     rack (2.2.3)
-    rainbow (3.0.0)
-    rake (13.0.3)
-    regexp_parser (2.1.1)
+    rainbow (3.1.1)
+    rake (13.0.1)
+    regexp_parser (2.2.1)
     rexml (3.2.5)
-    rubocop (1.13.0)
+    rubocop (1.26.1)
       parallel (~> 1.10)
-      parser (>= 3.0.0.0)
+      parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml
-      rubocop-ast (>= 1.2.0, < 2.0)
+      rubocop-ast (>= 1.16.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.4.1)
-      parser (>= 2.7.1.5)
+    rubocop-ast (1.16.0)
+      parser (>= 3.1.1.0)
     ruby-progressbar (1.11.0)
-    simplecov_json_formatter (0.1.2)
+    simplecov_json_formatter (0.1.4)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
-    unicode-display_width (2.0.0)
+    unicode-display_width (2.1.0)
     yui-compressor (0.12.0)
 
 PLATFORMS
@@ -63,4 +63,4 @@ DEPENDENCIES
   yui-compressor
 
 BUNDLED WITH
-   2.2.16
+   2.4.3
