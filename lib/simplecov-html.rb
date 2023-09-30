@@ -20,7 +20,7 @@ module SimpleCov
       def initialize
         @branchable_result = SimpleCov.branch_coverage?
         @templates = {}
-        @inline_assets = !ENV['SIMPLECOV_INLINE_ASSETS'].nil?
+        @inline_assets = !ENV["SIMPLECOV_INLINE_ASSETS"].nil?
         @public_assets_dir = File.join(File.dirname(__FILE__), "../public/")
       end
 
