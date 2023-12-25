@@ -21,8 +21,10 @@ GEM
     execjs (2.7.0)
     minitest (5.15.0)
     parallel (1.22.1)
-    parser (3.1.1.0)
+    parser (3.2.2.4)
       ast (~> 2.4.1)
+      racc
+    racc (1.7.3)
     rack (2.2.6.4)
     rainbow (3.1.1)
     rake (13.0.1)
