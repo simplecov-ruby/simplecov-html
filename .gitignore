@@ -24,3 +24,5 @@ coverage
 rdoc
 pkg
 .sass-cache
+
+.ruby-version
