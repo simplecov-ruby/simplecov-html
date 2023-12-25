@@ -196,6 +196,11 @@ td.strong {
   border-left: 5px solid white;
 }
 
+.source_table pre li:hover {
+  cursor: pointer;
+  text-decoration: underline black;
+}
+
 .source_table pre li code {
   white-space: pre;
   white-space: pre-wrap;

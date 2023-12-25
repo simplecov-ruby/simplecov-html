@@ -56,13 +56,29 @@ $(document).ready(function () {
     }
   });
 
+  // Set-up of anchor of linenumber
+  $('.source_table li[data-linenumber]').click(function () {
+    $('#cboxLoadedContent').scrollTop(this.offsetTop);
+    var new_anchor = curr_anchor.replace(/-.*/, '') + '-L' + $(this).data('linenumber');
+    window.location.replace(window.location.href.replace(/#.*/, '#' + new_anchor));
+    curr_anchor = new_anchor;
+    return false;
+  });
+
   window.onpopstate = function (event) {
     if (window.location.hash.substring(0, 2) == "#_") {
       $.colorbox.close();
       curr_anchor = window.location.hash.substring(1);
     } else {
       if ($('#colorbox').is(':hidden')) {
-        $('a.src_link[href="' + window.location.hash + '"]').colorbox({ open: true });
+        var anchor = window.location.hash.substring(1);
+        var ary = anchor.split('-L');
+        var source_file_id = ary[0];
+        var linenumber = ary[1];
+        $('a.src_link[href="#' + source_file_id + '"]').colorbox({ open: true });
+        if (linenumber !== undefined) {
+          $('#cboxLoadedContent').scrollTop($('#cboxLoadedContent .source_table li[data-linenumber="' + linenumber + '"]')[0].offsetTop);
+        }
       }
     }
   };
@@ -106,8 +122,15 @@ $(document).ready(function () {
 
   if (window.location.hash) {
     var anchor = window.location.hash.substring(1);
-    if (anchor.length == 40) {
+    if (anchor.length === 40) {
       $('a.src_link[href="#' + anchor + '"]').click();
+    } else if (anchor.length > 40) {
+      var ary = anchor.split('-L');
+      var source_file_id = ary[0];
+      var linenumber = ary[1];
+      $('a.src_link[href="#' + source_file_id + '"]').colorbox({ open: true });
+      // Scroll to anchor of linenumber
+      $('#' + source_file_id + ' li[data-linenumber="' + linenumber + '"]').click();
     } else {
       $('.group_tabs a.' + anchor.replace('_', '')).click();
     }
