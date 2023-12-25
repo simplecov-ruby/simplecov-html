@@ -110,7 +110,7 @@ module SimpleCov
           ".css" => "text/css",
         }[File.extname(name)]
 
-        base64_content = Base64.strict_encode64 File.open(path).read
+        base64_content = Base64.strict_encode64 File.read(path)
         "data:#{content_type};base64,#{base64_content}"
       end
 
