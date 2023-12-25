@@ -1,4 +1,4 @@
-<div class="file_list_container" id="<%= title_id %>">
+<div class="file_list_container" id="<%= to_id(title) %>">
   <h2>
     <span class="group_name"><%= title %></span>
     (<span class="covered_percent">
@@ -13,7 +13,7 @@
     )
   </h2>
 
-  <a name="<%= title_id %>"></a>
+  <a name="<%= to_id(title) %>"></a>
 
   <div>
     <b><%= source_files.length %></b> files in total.

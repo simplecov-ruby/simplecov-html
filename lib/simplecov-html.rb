@@ -95,6 +95,10 @@ module SimpleCov
         File.join("./assets", SimpleCov::Formatter::HTMLFormatter::VERSION, name)
       end
 
+      def to_id(value)
+        value.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, "")
+      end
+
       def asset_inline(name)
         path = File.join(@public_assets_dir, name)
 
@@ -119,7 +123,6 @@ module SimpleCov
 
       # Returns a table containing the given source files
       def formatted_file_list(title, source_files)
-        title_id = title.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, "")
         template("file_list").result(binding)
       end
 
