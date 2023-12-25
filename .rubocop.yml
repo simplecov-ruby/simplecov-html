@@ -17,6 +17,9 @@ Layout/SpaceInsideHashLiteralBraces:
 Metrics/BlockNesting:
   Max: 2
 
+Metrics/ClassLength:
+  Enabled: false
+
 Layout/LineLength:
   AllowURI: true
   Enabled: false
