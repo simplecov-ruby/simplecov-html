@@ -68,6 +68,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bundler (~> 2.4.0)
   minitest
   rake (>= 11)
   rubocop
@@ -81,4 +82,4 @@ DEPENDENCIES
   yui-compressor
 
 BUNDLED WITH
-   2.5.3
+   2.4.22

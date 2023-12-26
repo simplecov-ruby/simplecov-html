@@ -4,6 +4,7 @@ source "https://rubygems.org"
 
 gemspec
 
+gem "bundler", "~> 2.4.0"
 gem "rake", ">= 11"
 
 # Use local copy of simplecov in development if you want to
