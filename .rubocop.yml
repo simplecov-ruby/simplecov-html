@@ -1,3 +1,8 @@
+require:
+ - rubocop-minitest
+ - rubocop-performance
+ - rubocop-rake
+
 AllCops:
   DisplayCopNames: true
   NewCops: enable
