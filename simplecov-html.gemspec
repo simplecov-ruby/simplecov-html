@@ -16,7 +16,12 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = ">= 2.4"
 
-  gem.files         = `git ls-files`.split("\n")
+  gem.files = Dir.chdir(__dir__) do
+    `git ls-files -z`.split("\x0").reject do |f|
+      (File.expand_path(f) == __FILE__) ||
+        f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile])
+    end
+  end
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   gem.require_paths = ["lib"]
