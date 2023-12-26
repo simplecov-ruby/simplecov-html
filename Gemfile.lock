@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/simplecov-ruby/simplecov
-  revision: 0260b1f309e76c8ed87731ebbc348b05d753b8a2
+  revision: 1d8f692d772c101c56f3f4e94945e898ad7b3769
   specs:
-    simplecov (0.20.0)
+    simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
@@ -16,42 +16,47 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
-    concurrent-ruby (1.1.5)
+    concurrent-ruby (1.2.2)
     docile (1.4.0)
-    execjs (2.7.0)
-    minitest (5.15.0)
-    parallel (1.22.1)
+    execjs (2.9.1)
+    json (2.7.1)
+    language_server-protocol (3.17.0.3)
+    minitest (5.20.0)
+    parallel (1.24.0)
     parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
     racc (1.7.3)
-    rack (2.2.6.4)
+    rack (3.0.8)
     rainbow (3.1.1)
-    rake (13.0.1)
-    regexp_parser (2.2.1)
-    rexml (3.2.5)
-    rubocop (1.26.1)
+    rake (13.1.0)
+    regexp_parser (2.8.3)
+    rexml (3.2.6)
+    rubocop (1.59.0)
+      json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.1.0.0)
+      parser (>= 3.2.2.4)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
-      rexml
-      rubocop-ast (>= 1.16.0, < 2.0)
+      rexml (>= 3.2.5, < 4.0)
+      rubocop-ast (>= 1.30.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 3.0)
-    rubocop-ast (1.16.0)
-      parser (>= 3.1.1.0)
-    ruby-progressbar (1.11.0)
+      unicode-display_width (>= 2.4.0, < 3.0)
+    rubocop-ast (1.30.0)
+      parser (>= 3.2.1.0)
+    ruby-progressbar (1.13.0)
     simplecov_json_formatter (0.1.4)
-    sprockets (3.7.2)
+    sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
-      rack (> 1, < 3)
+      rack (>= 2.2.4, < 4)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
-    unicode-display_width (2.1.0)
+    unicode-display_width (2.5.0)
     yui-compressor (0.12.0)
 
 PLATFORMS
+  arm64-darwin-22
   ruby
 
 DEPENDENCIES
@@ -60,9 +65,9 @@ DEPENDENCIES
   rubocop
   simplecov!
   simplecov-html!
-  sprockets (~> 3.7)
+  sprockets
   uglifier
   yui-compressor
 
 BUNDLED WITH
-   2.3.10
+   2.5.3

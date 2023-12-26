@@ -16,8 +16,7 @@ end
 
 group :development do
   gem "rubocop"
-  # sprockets 4.0 requires ruby 2.5+
-  gem "sprockets", "~> 3.7"
+  gem "sprockets"
   gem "uglifier"
   gem "yui-compressor"
 end
