@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
         f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile assets .rubocop.yml Guardfile])
     end
   end
-  gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   gem.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   gem.require_paths = ["lib"]
+  gem.metadata["rubygems_mfa_required"] = "true"
 end

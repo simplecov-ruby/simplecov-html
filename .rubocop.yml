@@ -1,6 +1,7 @@
 AllCops:
-  TargetRubyVersion: 2.5
   DisplayCopNames: true
+  NewCops: enable
+  TargetRubyVersion: 2.5
 
 Bundler/DuplicatedGem:
   Enabled: false
