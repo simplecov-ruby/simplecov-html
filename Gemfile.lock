@@ -21,6 +21,7 @@ GEM
     execjs (2.9.1)
     json (2.7.1)
     json (2.7.1-java)
+    language_server-protocol (3.17.0.3)
     minitest (5.20.0)
     parallel (1.24.0)
     parser (3.2.2.4)
@@ -33,14 +34,15 @@ GEM
     rake (13.1.0)
     regexp_parser (2.8.3)
     rexml (3.2.6)
-    rubocop (1.50.2)
+    rubocop (1.59.0)
       json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.0.0)
+      parser (>= 3.2.2.4)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.28.0, < 2.0)
+      rubocop-ast (>= 1.30.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.30.0)
@@ -72,7 +74,7 @@ DEPENDENCIES
   bundler (~> 2.4.0)
   minitest
   rake (>= 11)
-  rubocop (~> 1.50.2)
+  rubocop
   rubocop-minitest
   rubocop-performance
   rubocop-rake
