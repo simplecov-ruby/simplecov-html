@@ -3,6 +3,16 @@ name: test
 on: [push, pull_request]
 
 jobs:
+  eslint:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install ESLint
+      run: |
+        npm init --yes
+        npm init @eslint/config
+    - run: ./node_modules/.bin/eslint .
+      
   tests:
     runs-on: ubuntu-latest
     strategy:
