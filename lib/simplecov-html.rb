@@ -27,7 +27,7 @@ module SimpleCov
       def format(result)
         unless @inline_assets
           Dir[File.join(@public_assets_dir, "*")].each do |path|
-            FileUtils.cp_r(path, asset_output_path)
+            FileUtils.cp_r(path, asset_output_path, remove_destination: true)
           end
         end
 
