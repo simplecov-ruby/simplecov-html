@@ -15,7 +15,7 @@ group :test do
 end
 
 group :development do
-  gem "rubocop", "~> 1.50.2"
+  gem "rubocop"
   gem "rubocop-minitest"
   gem "rubocop-performance"
   gem "rubocop-rake"
