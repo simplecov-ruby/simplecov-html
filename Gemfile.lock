@@ -72,7 +72,6 @@ PLATFORMS
   universal-java-1.8
 
 DEPENDENCIES
-  bundler (~> 2.4.0)
   minitest
   rake (>= 11)
   rubocop (~> 1.50.2)
@@ -86,4 +85,4 @@ DEPENDENCIES
   yui-compressor
 
 BUNDLED WITH
-   2.4.22
+   2.5.3

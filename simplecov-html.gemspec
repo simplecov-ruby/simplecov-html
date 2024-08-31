@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.summary     = gem.description
   gem.license     = "MIT"
 
-  gem.required_ruby_version = ">= 2.6"
+  gem.required_ruby_version = ">= 2.5"
 
   gem.files = Dir.chdir(__dir__) do
     `git ls-files -z`.split("\x0").reject do |f|

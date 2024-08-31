@@ -6,7 +6,7 @@ require:
 AllCops:
   DisplayCopNames: true
   NewCops: enable
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.5
 
 Bundler/DuplicatedGem:
   Enabled: false
