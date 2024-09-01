@@ -27,3 +27,5 @@ group :development do
   gem "uglifier"
   gem "yui-compressor"
 end
+
+gem "base64" if RUBY_VERSION >= "3.4"
