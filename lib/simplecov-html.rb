@@ -84,18 +84,20 @@ module SimpleCov
         File.join("./assets", SimpleCov::Formatter::HTMLFormatter::VERSION, name)
       end
 
+      # Only have a few content types, just hardcode them
+      CONTENT_TYPES = {
+        ".js" => "text/javascript",
+        ".png" => "image/png",
+        ".gif" => "image/gif",
+        ".css" => "text/css",
+      }.freeze
+
       def asset_inline(name)
         path = File.join(@public_assets_dir, name)
-
-        # Only have a few content types, just hardcode them
-        content_type = {
-          ".js" => "text/javascript",
-          ".png" => "image/png",
-          ".gif" => "image/gif",
-          ".css" => "text/css",
-        }[File.extname(name)]
-
         base64_content = Base64.strict_encode64 File.read(path)
+
+        content_type = CONTENT_TYPES[File.extname(name)]
+
         "data:#{content_type};base64,#{base64_content}"
       end
 
