@@ -36,6 +36,10 @@ namespace :assets do
     require "sprockets"
     require "sprockets/sass_processor"
 
+    Sprockets.register_processor("text/css") do |input|
+      {data: input[:data].gsub(/(?<!-|_)url\(['"]?(.+?)['"]?\)/) { "asset-data-url(\"#{Regexp.last_match(1)}\")" }}
+    end
+
     Sprockets.register_processor "text/css", Sprockets::ScssProcessor
 
     assets = Sprockets::Environment.new do |env|
