@@ -23,9 +23,9 @@ group :development do
   gem "rubocop-minitest"
   gem "rubocop-performance"
   gem "rubocop-rake"
+  gem "sass"
   gem "sprockets"
   gem "uglifier"
-  gem "yui-compressor"
 end
 
 gem "base64" if RUBY_VERSION >= "3.3"
