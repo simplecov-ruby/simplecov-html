@@ -34,11 +34,20 @@ namespace :assets do
   task :compile do
     puts "Compiling assets"
     require "sprockets"
+    require "sprockets/sass_processor"
+
+    Sprockets.register_processor("text/css") do |input|
+      {data: input[:data].gsub(/(?<!-|_)url\(['"]?(.+?)['"]?\)/) { "asset-data-url(\"#{Regexp.last_match(1)}\")" }}
+    end
+
+    Sprockets.register_processor "text/css", Sprockets::ScssProcessor
+
     assets = Sprockets::Environment.new do |env|
       env.append_path "assets/javascripts"
       env.append_path "assets/stylesheets"
+      env.append_path "public"
       env.js_compressor = :uglify
-      env.css_compressor = :yui
+      env.css_compressor = :scss
     end
     assets["application.js"].write_to("public/application.js")
     assets["application.css"].write_to("public/application.css")

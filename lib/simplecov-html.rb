@@ -27,7 +27,7 @@ module SimpleCov
       def format(result)
         unless @inline_assets
           Dir[File.join(@public_assets_dir, "*")].each do |path|
-            FileUtils.cp_r(path, asset_output_path)
+            FileUtils.cp_r(path, asset_output_path, remove_destination: true)
           end
         end
 
@@ -37,11 +37,7 @@ module SimpleCov
         puts output_message(result)
       end
 
-      def output_message(result)
-        str = "Coverage report generated for #{result.command_name} to #{output_path}. #{result.covered_lines} / #{result.total_lines} LOC (#{result.covered_percent.round(2)}%) covered."
-        str += " #{result.covered_branches} / #{result.total_branches} branches (#{result.coverage_statistics[:branch].percent.round(2)}%) covered." if branchable_result?
-        str
-      end
+    private
 
       def branchable_result?
         # cached in initialize because we truly look it up a whole bunch of times
@@ -58,7 +54,12 @@ module SimpleCov
         end
       end
 
-    private
+      def output_message(result)
+        output = "Coverage report generated for #{result.command_name} to #{output_path}."
+        output += "\nLine Coverage: #{result.covered_percent.round(2)}% (#{result.covered_lines} / #{result.total_lines})"
+        output += "\nBranch Coverage: #{result.coverage_statistics[:branch].percent.round(2)}% (#{result.covered_branches} / #{result.total_branches})" if branchable_result?
+        output
+      end
 
       # Returns the an erb instance for the template of given name
       def template(name)
@@ -83,18 +84,20 @@ module SimpleCov
         File.join("./assets", SimpleCov::Formatter::HTMLFormatter::VERSION, name)
       end
 
+      # Only have a few content types, just hardcode them
+      CONTENT_TYPES = {
+        ".js" => "text/javascript",
+        ".png" => "image/png",
+        ".gif" => "image/gif",
+        ".css" => "text/css",
+      }.freeze
+
       def asset_inline(name)
         path = File.join(@public_assets_dir, name)
-
-        # Only have a few content types, just hardcode them
-        content_type = {
-          ".js" => "text/javascript",
-          ".png" => "image/png",
-          ".gif" => "image/gif",
-          ".css" => "text/css",
-        }[File.extname(name)]
-
         base64_content = Base64.strict_encode64 File.read(path)
+
+        content_type = CONTENT_TYPES[File.extname(name)]
+
         "data:#{content_type};base64,#{base64_content}"
       end
 
