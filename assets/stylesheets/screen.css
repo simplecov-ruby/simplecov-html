@@ -125,7 +125,7 @@ abbr.timeago {
 }
 
 a.src_link {
-  background: url("./magnify.png") no-repeat left 50%;
+  background: url("magnify.png") no-repeat left 50%;
   padding-left: 18px;
 }
 
