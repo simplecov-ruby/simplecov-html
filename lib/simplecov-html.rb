@@ -5,7 +5,6 @@ require "cgi"
 require "fileutils"
 require "digest/sha1"
 require "time"
-require "base64"
 
 # Ensure we are using a compatible version of SimpleCov
 major, minor, patch = SimpleCov::VERSION.scan(/\d+/).first(3).map(&:to_i)
@@ -94,7 +93,7 @@ module SimpleCov
 
       def asset_inline(name)
         path = File.join(@public_assets_dir, name)
-        base64_content = Base64.strict_encode64 File.read(path)
+        base64_content = [File.read(path)].pack("m0")
 
         content_type = CONTENT_TYPES[File.extname(name)]
 
