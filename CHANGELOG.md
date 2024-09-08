@@ -1,3 +1,22 @@
+0.13.0 (2024-09-08)
+==================
+
+## Enhancements
+* Cache erb templates when generating report. See [#114](https://github.com/simplecov-ruby/simplecov-html/pull/114) (thanks [@fatkodima](https://github.com/fatkodima)).
+* Print branch coverage with line coverage. See [#103](https://github.com/simplecov-ruby/simplecov-html/pull/103) (thanks [@jeremyevans](https://github.com/jeremyevans)).
+* Add line number anchors. Thanks [@jantman](https://github.com/jantman) for the proposal [#49](https://github.com/simplecov-ruby/simplecov-html/issues/49) and [@nishidayuya](https://github.com/nishidayuya) for the patch [#106](https://github.com/simplecov-ruby/simplecov-html/pull/106)!
+* Add inline assets option. See [#107](https://github.com/simplecov-ruby/simplecov-html/pull/107) (thanks [@frankh](https://github.com/frankh)).
+* Make close button look better. See [#140](https://github.com/simplecov-ruby/simplecov-html/pull/140) (thanks [@anthony0030](https://github.com/anthony0030)).
+* Avoid "permission denied" errors by removing the destination before copying assets [#135](https://github.com/simplecov-ruby/simplecov-html/pull/135) (thanks [@tomeon](https://github.com/tomeon)).
+* Improve clarity of line and branch coverage format. See [#125](https://github.com/simplecov-ruby/simplecov-html/pull/125) (thanks [@joshuapinter](https://github.com/joshuapinter)).
+
+## Bugfixes
+* Avoid loading favicon.png that does not exist. See [#123](https://github.com/simplecov-ruby/simplecov-html/pull/123) (thanks [@yyamanoi1222](https://github.com/yyamanoi1222)).
+
+## Misc
+* Reduced gem size by not including development-only files.
+* Bundle jQuery 3.7.1. See [#108](https://github.com/simplecov-ruby/simplecov-html/issues/108) (thanks [@jgarland79](https://github.com/jgarland79) for reporting the issue).
+
 0.12.3 (2020-09-23)
 ==================
 
@@ -35,6 +54,8 @@ Yes it looks different, no it's not a redesign - just a side effect of lots of d
 * close link tag which could cause problems when parsing as xhtml/xml
 * make sure encoding errors won't crash the formatter
 * When viewing a short source file while you have a big file list you will no longer be able to scroll on after the source file has ended
+
+
 
 0.11.0 (2020-01-28)
 =======
