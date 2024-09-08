@@ -28,5 +28,4 @@ group :development do
   gem "uglifier"
 end
 
-gem "base64" if RUBY_VERSION >= "3.3"
 gem "logger" if RUBY_VERSION >= "3.4"
