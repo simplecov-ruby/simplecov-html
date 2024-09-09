@@ -1,3 +1,9 @@
+0.13.1 (2024-09-09)
+==================
+
+## Misc
+* Drop base64 dependency. See [#144](https://github.com/simplecov-ruby/simplecov-html/pull/144) (thanks [@Earlopain](https://github.com/Earlopain)).
+
 0.13.0 (2024-09-08)
 ==================
 
