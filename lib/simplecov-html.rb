@@ -93,6 +93,7 @@ module SimpleCov
 
       def asset_inline(name)
         path = File.join(@public_assets_dir, name)
+        # Equivalent to `Base64.strict_encode64(File.read(path))` but without depending on Base64
         base64_content = [File.read(path)].pack("m0")
 
         content_type = CONTENT_TYPES[File.extname(name)]
