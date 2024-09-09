@@ -19,7 +19,7 @@ Gem::Specification.new do |gem|
   gem.files = Dir.chdir(__dir__) do
     `git ls-files -z`.split("\x0").reject do |f|
       (File.expand_path(f) == __FILE__) ||
-        f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile Gemfile.lock assets .rubocop.yml Guardfile])
+        f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile Gemfile.lock assets .rubocop.yml Guardfile .tool-versions])
     end
   end
   gem.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
