@@ -170,28 +170,28 @@ class TestSimpleCovHtml < Minitest::Test
                                 "uneven_nocovs.rb" => coverage_for_uneven_nocov_rb,
                               })
 
-    # All Files ( 74.12% covered at 0.84 hits/line )
+    # All Files ( 74.11% covered at 0.83 hits/line )
     header_line_coverage = html_doc.at_css("div#AllFiles span.covered_percent span").content.strip
 
-    assert_equal("74.12%", header_line_coverage)
+    assert_equal("74.11%", header_line_coverage)
 
-    # 85 relevant lines, 63 lines covered and 22 lines missed. ( 74.12% )
+    # 85 relevant lines, 63 lines covered and 22 lines missed. ( 74.11% )
     subheader_line_coverage = html_doc.at_css("div#AllFiles div.t-line-summary span:last-child").content.strip
 
-    assert_equal("74.12%", subheader_line_coverage)
+    assert_equal("74.11%", subheader_line_coverage)
 
     if RUBY_ENGINE != "jruby"
-      # 58 total branches, 28 branches covered and 30 branches missed. ( 48.28% )
+      # 58 total branches, 28 branches covered and 30 branches missed. ( 48.27% )
       subheader_branch_coverage = html_doc.at_css("div#AllFiles div.t-branch-summary span:last-child").content.strip
 
-      assert_equal("48.28%", subheader_branch_coverage)
+      assert_equal("48.27%", subheader_branch_coverage)
     end
 
     sorted_line_coverages = [
       "57.14%",
-      "64.29%",
-      "66.67%",
-      "66.67%",
+      "64.28%",
+      "66.66%",
+      "66.66%",
       "80.00%",
       "85.71%",
       "85.71%",
@@ -229,7 +229,7 @@ class TestSimpleCovHtml < Minitest::Test
       assert_equal sorted_branch_coverages, all_files_table_branch_coverages.sort_by(&:to_f)
     end
 
-    # 66.67 lines covered
+    # 66.66 lines covered
     single_file_page_line_coverages = html_doc.css("div.source_files div.header h4:nth-child(2) span").map { |m| m.content.strip }
 
     assert_equal(sorted_line_coverages, single_file_page_line_coverages.sort_by(&:to_f))

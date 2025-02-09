@@ -55,8 +55,9 @@ module SimpleCov
 
       def output_message(result)
         output = "Coverage report generated for #{result.command_name} to #{output_path}."
-        output += "\nLine Coverage: #{result.covered_percent.round(2)}% (#{result.covered_lines} / #{result.total_lines})"
-        output += "\nBranch Coverage: #{result.coverage_statistics[:branch].percent.round(2)}% (#{result.covered_branches} / #{result.total_branches})" if branchable_result?
+        output += "\nLine Coverage: #{result.covered_percent.floor(2)}% (#{result.covered_lines} / #{result.total_lines})"
+
+        output += "\nBranch Coverage: #{result.coverage_statistics[:branch].percent.floor(2)}% (#{result.covered_branches} / #{result.total_branches})" if branchable_result?
         output
       end
 
