@@ -180,10 +180,12 @@ class TestSimpleCovHtml < Minitest::Test
 
     assert_equal("74.12%", subheader_line_coverage)
 
-    # 58 total branches, 28 branches covered and 30 branches missed. ( 48.28% )
-    subheader_branch_coverage = html_doc.at_css("div#AllFiles div.t-branch-summary span:last-child").content.strip
+    if RUBY_ENGINE != "jruby"
+      # 58 total branches, 28 branches covered and 30 branches missed. ( 48.28% )
+      subheader_branch_coverage = html_doc.at_css("div#AllFiles div.t-branch-summary span:last-child").content.strip
 
-    assert_equal("48.28%", subheader_branch_coverage)
+      assert_equal("48.28%", subheader_branch_coverage)
+    end
 
     sorted_line_coverages = [
       "57.14%",
@@ -220,20 +222,24 @@ class TestSimpleCovHtml < Minitest::Test
 
     assert_equal(sorted_line_coverages, all_files_table_line_coverages.sort_by(&:to_f))
 
-    # Branch Coverage
-    all_files_table_branch_coverages = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__branch-coverage").map { |m| m.content.strip }
+    if RUBY_ENGINE != "jruby"
+      # Branch Coverage
+      all_files_table_branch_coverages = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__branch-coverage").map { |m| m.content.strip }
 
-    assert_equal sorted_branch_coverages, all_files_table_branch_coverages.sort_by(&:to_f)
+      assert_equal sorted_branch_coverages, all_files_table_branch_coverages.sort_by(&:to_f)
+    end
 
     # 66.67 lines covered
     single_file_page_line_coverages = html_doc.css("div.source_files div.header h4:nth-child(2) span").map { |m| m.content.strip }
 
     assert_equal(sorted_line_coverages, single_file_page_line_coverages.sort_by(&:to_f))
 
-    # 25.0% branches covered
-    single_file_page_branch_coverages = html_doc.css("div.source_files div.header h4:nth-child(3) span").map { |m| m.content.strip }
+    if RUBY_ENGINE != "jruby" # rubocop:disable Style/GuardClause
+      # 25.0% branches covered
+      single_file_page_branch_coverages = html_doc.css("div.source_files div.header h4:nth-child(3) span").map { |m| m.content.strip }
 
-    assert_equal sorted_branch_coverages, single_file_page_branch_coverages.sort_by(&:to_f)
+      assert_equal sorted_branch_coverages, single_file_page_branch_coverages.sort_by(&:to_f)
+    end
   end
 
 private
