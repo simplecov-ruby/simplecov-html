@@ -7,6 +7,11 @@ AllCops:
   DisplayCopNames: true
   NewCops: enable
   TargetRubyVersion: 2.5
+  Exclude:
+    - "test/fixtures/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
+    - ".git/**/*"
 
 Bundler/DuplicatedGem:
   Enabled: false

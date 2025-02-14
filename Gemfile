@@ -19,6 +19,7 @@ group :test do
 end
 
 group :development do
+  gem "nokogiri"
   gem "rubocop"
   gem "rubocop-minitest"
   gem "rubocop-performance"
