@@ -26,6 +26,10 @@ GEM
     lint_roller (1.1.0)
     logger (1.7.0)
     minitest (5.25.5)
+    nokogiri (1.19.2-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.19.2-java)
+      racc (~> 1.4)
     parallel (1.27.0)
     parser (3.3.8.0)
       ast (~> 2.4.1)
@@ -84,12 +88,12 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
-  ruby
   universal-java-1.8
 
 DEPENDENCIES
   logger
   minitest
+  nokogiri
   rake (>= 11)
   rubocop
   rubocop-minitest
@@ -102,4 +106,4 @@ DEPENDENCIES
   uglifier
 
 BUNDLED WITH
-   2.3.15
+  4.0.9
