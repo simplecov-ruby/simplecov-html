@@ -2,87 +2,103 @@
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>
 */
 
+/* Syntax highlighting styles */
 pre code {
+  color: var(--text-color-light);
+  font-family: "Monaco", "Inconsolata", "Consolas", monospace;
 }
 
+/* Comments */
 pre .comment,
 pre .template_comment,
 pre .diff .header,
 pre .javadoc {
-  color: #998;
-  font-style: italic
+  color: var(--text-color);
+  opacity: 0.7;
+  font-style: italic;
 }
 
+/* Keywords */
 pre .keyword,
 pre .css .rule .keyword,
 pre .winutils,
 pre .javascript .title,
 pre .lisp .title {
-  color: #000;
-  font-weight: bold
+  color: var(--text-color-light);
+  font-weight: bold;
 }
 
+/* Numbers */
 pre .number,
 pre .hexcolor {
-  color: #458
+  color: var(--blue-color);
 }
 
-
+/* Strings */
 pre .string,
 pre .tag .value,
 pre .phpdoc,
 pre .tex .formula {
-  color: #d14
+  color: var(--red-color);
 }
 
+/* Substitutions */
 pre .subst {
-  color: #712;
+  color: var(--text-color-light);
 }
 
+/* Constants and titles */
 pre .constant,
 pre .title,
 pre .id {
-  color: #900;
-  font-weight: bold
+  color: var(--green-color);
+  font-weight: bold;
 }
 
+/* JavaScript and Lisp titles */
 pre .javascript .title,
 pre .lisp .title,
 pre .subst {
-  font-weight: normal
+  font-weight: normal;
 }
 
+/* Classes */
 pre .class .title,
 pre .haskell .label,
 pre .tex .command {
-  color: #458;
-  font-weight: bold
+  color: var(--blue-color);
+  font-weight: bold;
 }
 
+/* Tags */
 pre .tag,
 pre .tag .title,
 pre .rules .property,
 pre .django .tag .keyword {
-  color: #000080;
-  font-weight: normal
+  color: var(--text-color-light);
+  font-weight: normal;
 }
 
+/* Attributes and variables */
 pre .attribute,
 pre .variable,
 pre .instancevar,
 pre .lisp .body {
-  color: #008080
+  color: var(--yellow-color);
 }
 
+/* Regular expressions */
 pre .regexp {
-  color: #009926
+  color: var(--green-color);
 }
 
+/* Classes */
 pre .class {
-  color: #458;
-  font-weight: bold
+  color: var(--blue-color);
+  font-weight: bold;
 }
 
+/* Symbols */
 pre .symbol,
 pre .ruby .symbol .string,
 pre .ruby .symbol .keyword,
@@ -90,40 +106,149 @@ pre .ruby .symbol .keymethods,
 pre .lisp .keyword,
 pre .tex .special,
 pre .input_number {
-  color: #990073
+  color: var(--yellow-color);
 }
 
+/* Built-ins */
 pre .builtin,
 pre .built_in,
 pre .lisp .title {
-  color: #0086b3
+  color: var(--blue-color);
 }
 
+/* Preprocessor */
 pre .preprocessor,
 pre .pi,
 pre .doctype,
 pre .shebang,
 pre .cdata {
-  color: #999;
-  font-weight: bold
+  color: var(--text-color);
+  opacity: 0.7;
+  font-weight: bold;
 }
 
+/* Diff changes */
 pre .deletion {
-  background: #fdd
+  background: var(--missed-bg-odd);
 }
 
 pre .addition {
-  background: #dfd
+  background: var(--covered-bg-odd);
 }
 
 pre .diff .change {
-  background: #0086b3
+  background: var(--blue-color);
+  opacity: 0.3;
 }
 
 pre .chunk {
-  color: #aaa
+  color: var(--text-color);
+  opacity: 0.5;
 }
 
 pre .tex .formula {
   opacity: 0.5;
+}
+
+/* Dark mode specific overrides */
+.dark-mode {
+  pre code {
+    color: var(--text-color-light);
+  }
+  
+  pre .comment,
+  pre .template_comment,
+  pre .diff .header,
+  pre .javadoc {
+    color: var(--text-color);
+    opacity: 0.7;
+  }
+  
+  pre .keyword,
+  pre .css .rule .keyword,
+  pre .winutils,
+  pre .javascript .title,
+  pre .lisp .title {
+    color: var(--text-color-light);
+  }
+  
+  pre .number,
+  pre .hexcolor {
+    color: var(--blue-color);
+  }
+  
+  pre .string,
+  pre .tag .value,
+  pre .phpdoc,
+  pre .tex .formula {
+    color: var(--red-color);
+  }
+  
+  pre .subst {
+    color: var(--text-color-light);
+  }
+  
+  pre .constant,
+  pre .title,
+  pre .id {
+    color: var(--green-color);
+  }
+  
+  pre .attribute,
+  pre .variable,
+  pre .instancevar,
+  pre .lisp .body {
+    color: var(--yellow-color);
+  }
+  
+  pre .regexp {
+    color: var(--green-color);
+  }
+  
+  pre .class {
+    color: var(--blue-color);
+  }
+  
+  pre .symbol,
+  pre .ruby .symbol .string,
+  pre .ruby .symbol .keyword,
+  pre .ruby .symbol .keymethods,
+  pre .lisp .keyword,
+  pre .tex .special,
+  pre .input_number {
+    color: var(--yellow-color);
+  }
+  
+  pre .builtin,
+  pre .built_in,
+  pre .lisp .title {
+    color: var(--blue-color);
+  }
+  
+  pre .preprocessor,
+  pre .pi,
+  pre .doctype,
+  pre .shebang,
+  pre .cdata {
+    color: var(--text-color);
+    opacity: 0.7;
+  }
+  
+  pre .deletion {
+    background: var(--missed-bg-odd);
+  }
+  
+  pre .addition {
+    background: var(--covered-bg-odd);
+  }
+  
+  pre .diff .change {
+    background: var(--blue-color);
+    opacity: 0.3;
+  }
+  
+  pre .chunk {
+    color: var(--text-color);
+    opacity: 0.5;
+  }
 }

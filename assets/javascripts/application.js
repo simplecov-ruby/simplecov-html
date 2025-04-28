@@ -2,6 +2,36 @@
 //= require_directory ./plugins/
 //= require_self
 
+var isLightTheme = true;
+
+document.addEventListener('DOMContentLoaded', function() {
+  var button = document.getElementById('dark-mode-toggle');
+  
+  // Check if there's a saved preference in localStorage
+  if (localStorage.getItem('darkMode') === 'true') {
+    isLightTheme = false;
+    document.body.classList.add('dark-mode');
+    button.textContent = 'Light Mode';
+  } else {
+    button.textContent = 'Dark Mode';
+  }
+  
+  button.addEventListener('click', function() {
+    isLightTheme = !isLightTheme;
+    
+    // Toggle dark mode class on body
+    if (isLightTheme) {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('darkMode', 'false');
+      button.textContent = 'Dark Mode';
+    } else {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('darkMode', 'true');
+      button.textContent = 'Light Mode';
+    }
+  });
+});
+
 $(document).ready(function () {
   $('.file_list').dataTable({
     order: [[1, "asc"]],
