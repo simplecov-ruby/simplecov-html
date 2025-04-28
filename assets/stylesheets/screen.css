@@ -163,45 +163,6 @@ h1, h2, h3, h4 {
   margin-bottom: 12px;
 }
 
-table {
-  width: 100%;
-  color: var(--text-color);
-}
-
-th {
-  background-color: var(--table-header-bg);
-  color: var(--text-color);
-  border-color: var(--table-border);
-  white-space: nowrap;
-}
-
-th.ui-state-default {
-  cursor: pointer;
-}
-
-th span.ui-icon {
-  float: left;
-}
-
-tr, td {
-  margin: 0;
-  padding: 0;
-}
-
-td {
-  padding: 4px 8px;
-  background-color: var(--table-bg);
-  border-color: var(--table-border);
-}
-
-tr:nth-child(even) td {
-  background-color: var(--table-bg-even);
-}
-
-tr:hover td {
-  background-color: var(--table-bg-hover);
-}
-
 td.strong {
   font-weight: bold;
 }
@@ -225,17 +186,6 @@ td.strong {
   -moz-border-radius-bottomleft: var(--border-radius-md);
   -moz-border-radius-bottomright: var(--border-radius-md);
   -moz-border-radius-topright: var(--border-radius-md);
-}
-
-.dataTables_filter, .dataTables_info {
-  padding: 2px 6px;
-  color: var(--text-color);
-}
-
-.dataTables_filter input {
-  background-color: var(--table-header-bg);
-  color: var(--text-color);
-  border: 1px solid var(--table-border);
 }
 
 abbr.timeago {
@@ -472,11 +422,6 @@ a.src_link {
 .red { color: var(--red-color); }
 .yellow { color: var(--yellow-color); }
 .blue { color: var(--blue-color); }
-
-/* Coverage styling */
-thead th {
-  background-color: var(--thead-th-bg);
-}
 
 /* Source table coverage states */
 .source_table .covered { border-color: var(--covered-border); }
