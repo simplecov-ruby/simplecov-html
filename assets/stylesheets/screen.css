@@ -6,6 +6,7 @@
   --text-color-heading: #1C2324;
   --link-color: #333;
   --link-hover-color: #000;
+  --link-visited-color: #333;
   --content-bg: white;
   --border-color: #ddd;
   --footer-color: #ddd;
@@ -50,6 +51,22 @@
   --border-radius-md: 5px;
   --border-radius-lg: 6px;
   --border-radius-circle: 100%;
+  
+  /* Table colors */
+  --table-header-bg: white;
+  --thead-th-bg: #c3d9ff;
+  --table-border: #ddd;
+  --table-bg: white;
+  --table-bg-even: #f9f9f9;
+  --table-bg-hover: #f5f5f5;
+  
+  /* ColorBox colors */
+  --colorbox-bg: white;
+  --colorbox-border: #ccc;
+  --colorbox-overlay: rgba(0, 0, 0, 0.5);
+  --colorbox-close-bg: #000;
+  --colorbox-close-border: #fff;
+  --colorbox-close-color: #fff;
 }
 
 /* Dark mode variables */
@@ -60,6 +77,7 @@
   --text-color-heading: #e1e1e1;
   --link-color: #93c5fd;
   --link-hover-color: #bfdbfe;
+  --link-visited-color: #6b8caf;
   --content-bg: #1e1e1e;
   --border-color: #333;
   --footer-color: #888;
@@ -98,6 +116,7 @@
   
   /* Table colors */
   --table-header-bg: #333;
+  --thead-th-bg: #2a4366;
   --table-border: #444;
   --table-bg: #1e1e1e;
   --table-bg-even: #252525;
@@ -107,6 +126,9 @@
   --colorbox-bg: #1e1e1e;
   --colorbox-border: #444;
   --colorbox-overlay: rgba(0, 0, 0, 0.8);
+  --colorbox-close-bg: #333;
+  --colorbox-close-border: #555;
+  --colorbox-close-color: #fff;
 }
 
 #loading {
@@ -122,6 +144,9 @@ a {
 a:hover {
   color: var(--link-hover-color);
   text-decoration: underline;
+}
+a:visited {
+  color: var(--link-visited-color);
 }
 
 body {
@@ -140,6 +165,49 @@ h1, h2, h3, h4 {
 
 table {
   width: 100%;
+  color: var(--text-color);
+}
+
+th {
+  background-color: var(--table-header-bg);
+  color: var(--text-color);
+  border-color: var(--table-border);
+  white-space: nowrap;
+}
+
+th.ui-state-default {
+  cursor: pointer;
+}
+
+th span.ui-icon {
+  float: left;
+}
+
+tr, td {
+  margin: 0;
+  padding: 0;
+}
+
+td {
+  padding: 4px 8px;
+  background-color: var(--table-bg);
+  border-color: var(--table-border);
+}
+
+tr:nth-child(even) td {
+  background-color: var(--table-bg-even);
+}
+
+tr:hover td {
+  background-color: var(--table-bg-hover);
+}
+
+td.strong {
+  font-weight: bold;
+}
+
+.cell--number {
+  text-align: right;
 }
 
 #content {
@@ -161,6 +229,13 @@ table {
 
 .dataTables_filter, .dataTables_info {
   padding: 2px 6px;
+  color: var(--text-color);
+}
+
+.dataTables_filter input {
+  background-color: var(--table-header-bg);
+  color: var(--text-color);
+  border: 1px solid var(--table-border);
 }
 
 abbr.timeago {
@@ -225,6 +300,7 @@ abbr.timeago {
 
 .file_list {
   margin-bottom: 18px;
+  color: var(--text-color);
 }
 
 .file_list--responsive {
@@ -235,36 +311,6 @@ abbr.timeago {
 a.src_link {
   background: url("magnify.png") no-repeat left 50%;
   padding-left: 18px;
-}
-
-/* Table styles */
-tr, td {
-  margin: 0;
-  padding: 0;
-}
-
-th {
-  white-space: nowrap;
-}
-
-th.ui-state-default {
-  cursor: pointer;
-}
-
-th span.ui-icon {
-  float: left;
-}
-
-td {
-  padding: 4px 8px;
-}
-
-td.strong {
-  font-weight: bold;
-}
-
-.cell--number {
-  text-align: right;
 }
 
 /* Source table styles */
@@ -330,26 +376,77 @@ td.strong {
 }
 
 /* ColorBox styling */
+#colorbox,
+#cboxWrapper,
+#cboxContent {
+  background-color: var(--colorbox-bg);
+}
+
+#cboxLoadedContent {
+  background-color: var(--colorbox-bg);
+  color: var(--text-color);
+  border-color: var(--table-border);
+  border: 1px solid var(--colorbox-border);
+}
+
+#cboxLoadedContent .source_table {
+  background-color: var(--colorbox-bg);
+}
+
+#cboxLoadedContent .source_table .header {
+  background-color: var(--table-bg-even);
+  color: var(--text-color);
+  border-bottom: 1px solid var(--table-border);
+}
+
+#cboxLoadedContent h3,
+#cboxLoadedContent h4 {
+  color: var(--text-color);
+}
+
 #cboxClose {
   position: absolute;
   top: -14px;
   right: -14px;
   width: 30px;
   height: 30px;
-  background: #000;
-  border: 4px solid #fff;
+  background: var(--colorbox-close-bg);
+  border: 4px solid var(--colorbox-close-border);
   border-radius: var(--border-radius-circle);
 }
 
 #cboxClose::before {
   text-indent: 0;
   content: '×';
-  color: #fff;
+  color: var(--colorbox-close-color);
   font-size: 23px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+#cboxTitle {
+  color: var(--text-color);
+  background-color: var(--colorbox-bg);
+}
+
+#cboxOverlay {
+  background-color: #000;
+  opacity: 0.8 !important;
+}
+
+#cboxContent {
+  border-color: var(--colorbox-border);
+  box-shadow: 0 0 10px var(--colorbox-overlay);
+}
+
+#cboxPrevious,
+#cboxNext,
+#cboxSlideshow {
+  color: var(--text-color);
+  background-color: var(--table-header-bg);
+  border: 1px solid var(--colorbox-border);
 }
 
 #footer {
@@ -378,11 +475,7 @@ td.strong {
 
 /* Coverage styling */
 thead th {
-  background: white;
-}
-
-.dark-mode thead th {
-  background-color: var(--table-header-bg);
+  background-color: var(--thead-th-bg);
 }
 
 /* Source table coverage states */
@@ -402,116 +495,3 @@ thead th {
 .source_table .skipped:nth-child(even) { background-color: var(--skipped-bg-even); }
 .source_table .missed-branch:nth-child(odd) { background-color: var(--missed-branch-bg-odd); }
 .source_table .missed-branch:nth-child(even) { background-color: var(--missed-branch-bg-even); }
-
-/* Dark mode specific overrides for table elements */
-.dark-mode table {
-  color: var(--text-color);
-}
-
-.dark-mode th {
-  background-color: var(--table-header-bg);
-  color: var(--text-color);
-  border-color: var(--table-border);
-}
-
-.dark-mode td {
-  background-color: var(--table-bg);
-  border-color: var(--table-border);
-}
-
-.dark-mode tr:nth-child(even) td {
-  background-color: var(--table-bg-even);
-}
-
-.dark-mode tr:hover td {
-  background-color: var(--table-bg-hover);
-}
-
-.dark-mode .file_list {
-  color: var(--text-color);
-}
-
-.dark-mode .dataTables_info,
-.dark-mode .dataTables_filter {
-  color: var(--text-color);
-}
-
-.dark-mode .dataTables_filter input {
-  background-color: var(--table-header-bg);
-  color: var(--text-color);
-  border: 1px solid var(--table-border);
-}
-
-/* Dark mode ColorBox styling */
-.dark-mode #colorbox,
-.dark-mode #cboxWrapper,
-.dark-mode #cboxContent {
-  background-color: var(--colorbox-bg);
-}
-
-.dark-mode #cboxLoadedContent {
-  background-color: var(--colorbox-bg);
-  color: var(--text-color);
-  border-color: var(--table-border);
-}
-
-.dark-mode #cboxLoadedContent .source_table {
-  background-color: var(--colorbox-bg);
-}
-
-.dark-mode #cboxLoadedContent .source_table .header {
-  background-color: var(--table-bg-even);
-  color: var(--text-color);
-  border-bottom: 1px solid var(--table-border);
-}
-
-.dark-mode #cboxLoadedContent h3,
-.dark-mode #cboxLoadedContent h4 {
-  color: var(--text-color);
-}
-
-.dark-mode #cboxClose {
-  background-color: var(--table-header-bg);
-  border-color: #555;
-}
-
-.dark-mode #cboxTitle {
-  color: var(--text-color);
-  background-color: var(--colorbox-bg);
-}
-
-.dark-mode #cboxOverlay {
-  background-color: #000;
-  opacity: 0.8 !important;
-}
-
-.dark-mode #cboxContent {
-  border-color: var(--colorbox-border);
-  box-shadow: 0 0 10px var(--colorbox-overlay);
-}
-
-.dark-mode #cboxLoadedContent {
-  border: 1px solid var(--colorbox-border);
-}
-
-.dark-mode #cboxPrevious,
-.dark-mode #cboxNext,
-.dark-mode #cboxSlideshow {
-  color: var(--text-color);
-  background-color: var(--table-header-bg);
-  border: 1px solid var(--colorbox-border);
-}
-
-.dark-mode a {
-  color: var(--link-color);
-  text-decoration: none;
-}
-
-.dark-mode a:hover {
-  color: var(--link-hover-color);
-  text-decoration: underline;
-}
-
-.dark-mode a:visited {
-  color: #6b8caf;
-}
