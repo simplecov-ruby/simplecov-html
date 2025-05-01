@@ -16,6 +16,14 @@ end
 module SimpleCov
   module Formatter
     class HTMLFormatter
+      # Only have a few content types, just hardcode them
+      CONTENT_TYPES = {
+        ".js" => "text/javascript",
+        ".png" => "image/png",
+        ".gif" => "image/gif",
+        ".css" => "text/css",
+      }.freeze
+
       def initialize
         @branchable_result = SimpleCov.branch_coverage?
         @templates = {}
@@ -82,14 +90,6 @@ module SimpleCov
 
         File.join("./assets", SimpleCov::Formatter::HTMLFormatter::VERSION, name)
       end
-
-      # Only have a few content types, just hardcode them
-      CONTENT_TYPES = {
-        ".js" => "text/javascript",
-        ".png" => "image/png",
-        ".gif" => "image/gif",
-        ".css" => "text/css",
-      }.freeze
 
       def asset_inline(name)
         path = File.join(@public_assets_dir, name)
