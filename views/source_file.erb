@@ -48,7 +48,7 @@
               <% end %>
             <% end %>
 
-            <code class="ruby"><%= CGI.escapeHTML(line.src.chomp) %></code>
+            <code class="ruby"><%= ERB::Util.html_escape(line.src.chomp) %></code>
           </li>
         </div>
       <% end %>
