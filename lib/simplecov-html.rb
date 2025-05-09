@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "erb"
-require "cgi"
 require "fileutils"
 require "digest/sha1"
 require "time"
