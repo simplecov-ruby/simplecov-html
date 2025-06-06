@@ -9,6 +9,9 @@
   </head>
 
   <body<%= ' data-branch-coverage=true' if branchable_result? %>>
+    <button id="dark-mode-toggle">
+      Toggle Dark/Light Mode
+    </button>
     <div id="loading">
       <img src="<%= assets_path('loading.gif') %>" alt="loading"/>
     </div>
