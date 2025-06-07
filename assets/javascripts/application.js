@@ -53,6 +53,87 @@ $(document).ready(function () {
 
       var active_group = $('.group_tabs li.active a').attr('class');
       $("#" + active_group + ".file_list_container").show();
+    },
+    onComplete: function (a, b, c) {
+      var hash = a.el.hash
+      var sourceCode = $(hash)
+      var minDistance = 0
+      var maxDistance
+      var sourceCodeHeight = sourceCode.height();
+      if (sourceCodeHeight > 500) {
+        maxDistance = sourceCodeHeight - 500
+      } else {
+        maxDistance = sourceCodeHeight
+      }
+      var step = 22
+      var distance = step * 4
+      var onScroll = function(event) {
+        distance = $(hash).position().top * -1
+        console.log('set distance', distance)
+      }
+      var $parentDiv = $('#cboxLoadedContent')
+
+      $parentDiv.on('scroll', onScroll)
+
+      var scrollDown = function () {
+        $parentDiv.off('scroll')
+        if (distance > maxDistance) {
+          return
+        } else if (distance < step) {
+          distance = step
+        }
+        console.log('down', distance, maxDistance)
+
+        $parentDiv.animate({ scrollTop:  distance }, { duration: 0, complete: function () {
+          if (distance + step > maxDistance) {
+            distance = maxDistance;
+          } else {
+            distance += step;
+          }
+
+          setTimeout(function() {
+            $parentDiv.on('scroll', onScroll)
+          }, 1000)
+        }});
+      }
+
+      var scrollUp = function () {
+        console.log('up', distance, minDistance, maxDistance)
+        $parentDiv.off('scroll')
+        if (distance == 0) {
+          return
+        } else if (distance <= minDistance + 100) {
+          distance = 0
+        } else if (distance == maxDistance) {
+          distance -= (step * 2)
+        }
+
+        $parentDiv.animate({ scrollTop:  distance }, { duration: 0, complete: function () {
+          console.log('up done', distance)
+          if (distance + 100 < minDistance) {
+            distance = minDistance
+          } else {
+            distance -= step;
+          }
+          setTimeout(function() {
+            $parentDiv.on('scroll', onScroll)
+          }, 1000)
+        }});
+      }
+
+      $('#colorbox').on('keydown', function (evt) {
+        if (evt.keyCode == 40) { // down arrow
+          evt.preventDefault(); // prevents the usual scrolling behaviour
+          scrollDown()
+        } else if (evt.keyCode == 38) { // up arrow
+          evt.preventDefault();
+          scrollUp()
+        }
+      })
+    },
+    onClosed: function (a, b, c) {
+      $('#colorbox').off('keydown')
+      $('#cboxLoadedContent').off('scroll')
     }
   });
 
