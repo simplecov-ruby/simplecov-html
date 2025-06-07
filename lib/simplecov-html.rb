@@ -6,6 +6,7 @@ require "digest/sha1"
 require "time"
 
 # Ensure we are using a compatible version of SimpleCov
+require "simplecov/version"
 major, minor, patch = SimpleCov::VERSION.scan(/\d+/).first(3).map(&:to_i)
 if major < 0 || minor < 9 || patch < 0
   raise "The version of SimpleCov you are using is too old. " \
