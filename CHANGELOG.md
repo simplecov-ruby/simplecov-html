@@ -1,3 +1,9 @@
+0.13.2 (2025-07-16)
+==================
+
+## Misc
+* Stop requiring cgi for Ruby 3.5 compatibility. See [#149](https://github.com/simplecov-ruby/simplecov-html/pull/149) (thanks [@Earlopain](https://github.com/Earlopain)).
+
 0.13.1 (2024-09-09)
 ==================
 
