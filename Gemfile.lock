@@ -33,7 +33,7 @@ GEM
     prism (1.4.0)
     racc (1.8.1)
     racc (1.8.1-java)
-    rack (3.1.17)
+    rack (3.1.18)
     rainbow (3.1.1)
     rake (13.3.0)
     rb-fsevent (0.11.2)
