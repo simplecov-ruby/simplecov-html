@@ -19,8 +19,8 @@
     Change the following styles to modify the appearance of ColorBox.  They are
     ordered & tabbed in a way that represents the nesting of the generated HTML.
 */
-#cboxOverlay{background:#000;}
-#colorbox{}
+#cboxOverlay{background:var(--colorbox-overlay);}
+#colorbox{background-color:var(--colorbox-bg);}
     #cboxTopLeft{width:14px; height:14px; background:url(colorbox/controls.png) no-repeat 0 0;}
     #cboxTopCenter{height:14px; background:url(colorbox/border.png) repeat-x top left;}
     #cboxTopRight{width:14px; height:14px; background:url(colorbox/controls.png) no-repeat -36px 0;}
@@ -29,14 +29,14 @@
     #cboxBottomRight{width:14px; height:43px; background:url(colorbox/controls.png) no-repeat -36px -32px;}
     #cboxMiddleLeft{width:14px; background:url(colorbox/controls.png) repeat-y -175px 0;}
     #cboxMiddleRight{width:14px; background:url(colorbox/controls.png) repeat-y -211px 0;}
-    #cboxContent{background:#fff; overflow:visible;}
-        .cboxIframe{background:#fff;}
-        #cboxError{padding:50px; border:1px solid #ccc;}
+    #cboxContent{background:var(--colorbox-bg); overflow:visible;}
+        .cboxIframe{background:var(--colorbox-bg);}
+        #cboxError{padding:50px; border:1px solid var(--colorbox-border);}
         #cboxLoadedContent{margin-bottom:5px;}
         #cboxLoadingOverlay{background:url(colorbox/loading_background.png) no-repeat center center;}
         #cboxLoadingGraphic{background:url(colorbox/loading.gif) no-repeat center center;}
-        #cboxTitle{position:absolute; bottom:-25px; left:0; text-align:center; width:100%; font-weight:bold; color:#7C7C7C;}
-        #cboxCurrent{position:absolute; bottom:-25px; left:58px; font-weight:bold; color:#7C7C7C;}
+        #cboxTitle{position:absolute; bottom:-25px; left:0; text-align:center; width:100%; font-weight:bold; color:var(--text-color);}
+        #cboxCurrent{position:absolute; bottom:-25px; left:58px; font-weight:bold; color:var(--text-color);}
 
         #cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow{position:absolute; bottom:-29px; background:url(colorbox/controls.png) no-repeat 0px 0px; width:23px; height:23px; text-indent:-9999px;}
         #cboxPrevious{left:0px; background-position: -51px -25px;}
