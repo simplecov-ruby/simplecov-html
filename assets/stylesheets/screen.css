@@ -125,7 +125,7 @@ abbr.timeago {
 }
 
 a.src_link {
-  background: url("./magnify.png") no-repeat left 50%;
+  background: url("magnify.png") no-repeat left 50%;
   padding-left: 18px;
 }
 
@@ -220,6 +220,28 @@ td.strong {
   font-weight: bold;
   text-align: center;
   border-radius: 6px;
+}
+
+#cboxClose {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 30px;
+  height: 30px;
+  background: #000;
+  border: 4px solid #fff;
+  border-radius: 100%;
+}
+
+#cboxClose::before {
+  text-indent: 0;
+  content: '×';
+  color: #fff;
+  font-size: 23px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #footer {

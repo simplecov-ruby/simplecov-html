@@ -103,7 +103,7 @@ $(document).ready(function () {
   // Make sure tabs don't get ugly focus borders when active
   $('.group_tabs').on('focus', 'a', function () { $(this).blur(); });
 
-  var favicon_path = $('link[rel="shortcut icon"]').attr('href');
+  var favicon_path = $('link[rel="icon"]').attr('href');
   $('.group_tabs').on('click', 'a', function () {
     if (!$(this).parent().hasClass('active')) {
       $('.group_tabs a').parent().removeClass('active');
@@ -114,8 +114,8 @@ $(document).ready(function () {
 
       // Force favicon reload - otherwise the location change containing anchor would drop the favicon...
       // Works only on firefox, but still... - Anyone know a better solution to force favicon on local file?
-      $('link[rel="shortcut icon"]').remove();
-      $('head').append('<link rel="shortcut icon" type="image/png" href="' + favicon_path + '" />');
+      $('link[rel="icon"]').remove();
+      $('head').append('<link rel="icon" type="image/png" href="' + favicon_path + '" />');
     };
     return false;
   });
