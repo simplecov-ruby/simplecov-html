@@ -8,19 +8,31 @@ $(document).ready(function () {
     paging: false
   });
 
-  // Syntax highlight all files up front - deactivated
-  // $('.source_table pre code').each(function(i, e) {hljs.highlightBlock(e, '  ')});
+  // Materialize a source file from its <template> tag into the .source_files container.
+  // Returns the materialized element, or the existing one if already materialized.
+  function materializeSourceFile(sourceFileId) {
+    var existing = document.getElementById(sourceFileId);
+    if (existing) return $(existing);
+
+    var tmpl = document.getElementById('tmpl-' + sourceFileId);
+    if (!tmpl) return null;
+
+    var clone = document.importNode(tmpl.content, true);
+    $('.source_files').append(clone);
+
+    var el = $('#' + sourceFileId);
+
+    // Apply syntax highlighting on first materialization
+    el.find('pre code').each(function (i, e) { hljs.highlightBlock(e, '  ') });
+    el.addClass('highlighted');
+
+    return el;
+  }
 
   // Syntax highlight source files on first toggle of the file view popup
   $("a.src_link").click(function () {
-    // Get the source file element that corresponds to the clicked element
-    var source_table = $($(this).attr('href'));
-
-    // If not highlighted yet, do it!
-    if (!source_table.hasClass('highlighted')) {
-      source_table.find('pre code').each(function (i, e) { hljs.highlightBlock(e, '  ') });
-      source_table.addClass('highlighted');
-    };
+    var sourceFileId = $(this).attr('href').substring(1);
+    materializeSourceFile(sourceFileId);
   });
 
   var prev_anchor;
@@ -36,6 +48,10 @@ $(document).ready(function () {
     onLoad: function () {
       prev_anchor = curr_anchor ? curr_anchor : window.location.hash.substring(1);
       curr_anchor = this.href.split('#')[1];
+
+      // Ensure the source file is materialized before colorbox tries to inline it
+      materializeSourceFile(curr_anchor.replace(/-L.*/, ''));
+
       window.location.hash = curr_anchor;
 
       $('.file_list_container').hide();
@@ -56,8 +72,8 @@ $(document).ready(function () {
     }
   });
 
-  // Set-up of anchor of linenumber
-  $('.source_table li[data-linenumber]').click(function () {
+  // Event delegation for line number clicks (works with template-materialized elements)
+  $(document).on('click', '.source_table li[data-linenumber]', function () {
     $('#cboxLoadedContent').scrollTop(this.offsetTop);
     var new_anchor = curr_anchor.replace(/-.*/, '') + '-L' + $(this).data('linenumber');
     window.location.replace(window.location.href.replace(/#.*/, '#' + new_anchor));
@@ -75,6 +91,10 @@ $(document).ready(function () {
         var ary = anchor.split('-L');
         var source_file_id = ary[0];
         var linenumber = ary[1];
+
+        // Materialize before opening colorbox
+        materializeSourceFile(source_file_id);
+
         $('a.src_link[href="#' + source_file_id + '"]').colorbox({ open: true });
         if (linenumber !== undefined) {
           $('#cboxLoadedContent').scrollTop($('#cboxLoadedContent .source_table li[data-linenumber="' + linenumber + '"]')[0].offsetTop);
@@ -123,11 +143,17 @@ $(document).ready(function () {
   if (window.location.hash) {
     var anchor = window.location.hash.substring(1);
     if (anchor.length === 40) {
+      // Materialize before clicking
+      materializeSourceFile(anchor);
       $('a.src_link[href="#' + anchor + '"]').click();
     } else if (anchor.length > 40) {
       var ary = anchor.split('-L');
       var source_file_id = ary[0];
       var linenumber = ary[1];
+
+      // Materialize before opening colorbox
+      materializeSourceFile(source_file_id);
+
       $('a.src_link[href="#' + source_file_id + '"]').colorbox({ open: true });
       // Scroll to anchor of linenumber
       $('#' + source_file_id + ' li[data-linenumber="' + linenumber + '"]').click();
