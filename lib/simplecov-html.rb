@@ -70,7 +70,7 @@ module SimpleCov
 
       # Returns the an erb instance for the template of given name
       def template(name)
-        @templates[name] ||= ERB.new(File.read(File.join(File.dirname(__FILE__), "../views/", "#{name}.erb")))
+        @templates[name] ||= ERB.new(File.read(File.join(File.dirname(__FILE__), "../views/", "#{name}.erb")), trim_mode: "-")
       end
 
       def output_path

@@ -18,10 +18,9 @@
 
       <div id="content">
         <%= formatted_file_list("All Files", result.source_files) %>
-
-        <% result.groups.each do |name, files| %>
-          <%= formatted_file_list(name, files) %>
-        <% end %>
+<%- result.groups.each do |name, files| -%>
+        <%= formatted_file_list(name, files) %>
+<%- end -%>
       </div>
 
       <div id="footer">
@@ -31,9 +30,11 @@
       </div>
 
       <div class="source_files">
-      <% result.source_files.each do |source_file| %>
-        <%= formatted_source_file(source_file) %>
-      <% end %>
+<%- result.source_files.each do |source_file| -%>
+        <template id="tmpl-<%= id(source_file) %>">
+          <%= formatted_source_file(source_file) %>
+        </template>
+<%- end -%>
       </div>
     </div>
   </body>
