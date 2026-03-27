@@ -22,7 +22,7 @@ jobs:
           - jruby-head
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - run: rm Gemfile.lock
 
