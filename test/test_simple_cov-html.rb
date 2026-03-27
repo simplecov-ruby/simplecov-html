@@ -15,13 +15,19 @@ class TestSimpleCovHtml < Minitest::Test
   ].freeze
 
   def setup
+    @original_coverage_dir = SimpleCov.coverage_dir
+    @original_criteria = SimpleCov.coverage_criteria.dup
+    @original_filters = SimpleCov.filters.dup
     SimpleCov.coverage_dir(output_path)
     SimpleCov.enable_coverage(:branch)
+    SimpleCov.filters.clear
   end
 
   def teardown
-    SimpleCov.coverage_dir(nil)
+    SimpleCov.coverage_dir(@original_coverage_dir)
     SimpleCov.clear_coverage_criteria
+    @original_criteria.each { |criterion| SimpleCov.enable_coverage(criterion) }
+    SimpleCov.filters.replace(@original_filters)
   end
 
   def test_defined
@@ -36,52 +42,101 @@ class TestSimpleCovHtml < Minitest::Test
     assert_branch_coverages(html_doc) if RUBY_ENGINE != "jruby"
   end
 
+  def test_output_without_branch_coverage
+    SimpleCov.clear_coverage_criteria
+    html_doc = format_results("sample.rb" => CoverageFixtures::SAMPLE_RB)
+
+    assert_nil html_doc.at_css("div#AllFiles div.t-branch-summary")
+
+    stdout, = capture_io { format_results("sample.rb" => CoverageFixtures::SAMPLE_RB) }
+
+    refute_match(/Branch Coverage/, stdout)
+  end
+
+  def test_inline_assets
+    FileUtils.rm_rf(output_path)
+    ENV["SIMPLECOV_INLINE_ASSETS"] = "true"
+    html = generate_inline_html
+
+    assert_match(%r{data:text/javascript;base64,}, html)
+    assert_match(%r{data:text/css;base64,}, html)
+    refute_path_exists output_path.join("assets").to_s
+  ensure
+    ENV.delete("SIMPLECOV_INLINE_ASSETS")
+    FileUtils.rm_rf(output_path)
+  end
+
+  def test_encoding_error_handling
+    formatter = SimpleCov::Formatter::HTMLFormatter.new
+    bad_template = Object.new
+    def bad_template.result(_binding)
+      raise Encoding::CompatibilityError, "incompatible encoding"
+    end
+    formatter.instance_variable_get(:@templates)["source_file"] = bad_template
+
+    source_file = SimpleCov::SourceFile.new(fixtures_path.join("sample.rb").to_s, CoverageFixtures::SAMPLE_RB)
+    output, = capture_io { formatter.send(:formatted_source_file, source_file) }
+
+    assert_match(/Encoding problems with file/, output)
+  end
+
+  def test_strength_css_classes
+    formatter = SimpleCov::Formatter::HTMLFormatter.new
+
+    assert_equal "green", formatter.send(:strength_css_class, 2)
+    assert_equal "yellow", formatter.send(:strength_css_class, 1)
+    assert_equal "red", formatter.send(:strength_css_class, 0)
+  end
+
 private
 
   def assert_header_coverage(html_doc)
-    header_line_coverage = html_doc.at_css("div#AllFiles span.covered_percent span").content.strip
+    header = html_doc.at_css("div#AllFiles span.covered_percent span").content.strip
 
-    assert_equal("74.11%", header_line_coverage)
+    assert_equal("74.11%", header)
 
-    subheader_line_coverage = html_doc.at_css("div#AllFiles div.t-line-summary span:last-child").content.strip
+    subheader = html_doc.at_css("div#AllFiles div.t-line-summary span:last-child").content.strip
 
-    assert_equal("74.11%", subheader_line_coverage)
+    assert_equal("74.11%", subheader)
 
     return if RUBY_ENGINE == "jruby"
 
-    subheader_branch_coverage = html_doc.at_css("div#AllFiles div.t-branch-summary span:last-child").content.strip
+    branch = html_doc.at_css("div#AllFiles div.t-branch-summary span:last-child").content.strip
 
-    assert_equal("48.27%", subheader_branch_coverage)
+    assert_equal("48.27%", branch)
   end
 
   def assert_line_coverages(html_doc)
-    table_coverages = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__coverage").map { |m| m.content.strip }
+    table = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__coverage").map { |m| m.content.strip }
 
-    assert_equal(EXPECTED_LINE_COVERAGES, table_coverages.sort_by(&:to_f))
+    assert_equal(EXPECTED_LINE_COVERAGES, table.sort_by(&:to_f))
 
-    page_coverages = html_doc.css("div.source_files div.header h4:nth-child(2) span").map { |m| m.content.strip }
+    pages = html_doc.css("div.source_files div.header h4:nth-child(2) span").map { |m| m.content.strip }
 
-    assert_equal(EXPECTED_LINE_COVERAGES, page_coverages.sort_by(&:to_f))
+    assert_equal(EXPECTED_LINE_COVERAGES, pages.sort_by(&:to_f))
   end
 
   def assert_branch_coverages(html_doc)
-    table_coverages = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__branch-coverage").map { |m| m.content.strip }
+    table = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__branch-coverage").map { |m| m.content.strip }
 
-    assert_equal(EXPECTED_BRANCH_COVERAGES, table_coverages.sort_by(&:to_f))
+    assert_equal(EXPECTED_BRANCH_COVERAGES, table.sort_by(&:to_f))
 
-    page_coverages = html_doc.css("div.source_files div.header h4:nth-child(3) span").map { |m| m.content.strip }
+    pages = html_doc.css("div.source_files div.header h4:nth-child(3) span").map { |m| m.content.strip }
 
-    assert_equal(EXPECTED_BRANCH_COVERAGES, page_coverages.sort_by(&:to_f))
+    assert_equal(EXPECTED_BRANCH_COVERAGES, pages.sort_by(&:to_f))
+  end
+
+  def generate_inline_html
+    formatter = SimpleCov::Formatter::HTMLFormatter.new
+    result = SimpleCov::Result.new({fixtures_path.join("sample.rb").to_s => CoverageFixtures::SAMPLE_RB})
+    capture_io { formatter.format(result) }
+    output_path.join("index.html").read
   end
 
   def format_results(coverage_results)
-    coverage_results = coverage_results.transform_keys do |fixture_file_name|
-      fixtures_path.join(fixture_file_name).to_s
-    end
+    coverage_results = coverage_results.transform_keys { |name| fixtures_path.join(name).to_s }
     result = SimpleCov::Result.new(coverage_results)
     capture_io { SimpleCov::Formatter::HTMLFormatter.new.format(result) }
-
-    # Return an HTML doc instance
     output_path.join("index.html").open { |f| Nokogiri::HTML(f) }
   end
 

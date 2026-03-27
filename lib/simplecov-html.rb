@@ -6,11 +6,9 @@ require "digest/sha1"
 require "time"
 
 # Ensure we are using a compatible version of SimpleCov
-major, minor, patch = SimpleCov::VERSION.scan(/\d+/).first(3).map(&:to_i)
-if major < 0 || minor < 9 || patch < 0 # rubocop:disable Style/NumericPredicate
-  raise "The version of SimpleCov you are using is too old. " \
-        "Please update with `gem install simplecov` or `bundle update simplecov`"
-end
+# :nocov:
+raise "The version of SimpleCov you are using is too old." unless Gem::Version.new(SimpleCov::VERSION) >= Gem::Version.new("0.9.0")
+# :nocov:
 
 module SimpleCov
   module Formatter
