@@ -152,7 +152,7 @@ module SimpleCov
       end
 
       def shortened_filename(source_file)
-        source_file.filename.sub(SimpleCov.root, ".").gsub(/^\.\//, "")
+        source_file.filename.sub(SimpleCov.root, ".").gsub(%r{^\./}, "")
       end
 
       def link_to_source_file(source_file)
