@@ -13,12 +13,6 @@ AllCops:
     - "vendor/**/*"
     - ".git/**/*"
 
-Bundler/DuplicatedGem:
-  Enabled: false
-
-Gemspec/RequiredRubyVersion:
-  Enabled: false
-
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
 
@@ -29,19 +23,18 @@ Metrics/BlockNesting:
   Max: 2
 
 Metrics/ClassLength:
-  Enabled: false
+  CountAsOne:
+    - array
+    - hash
+
+Metrics/ModuleLength:
+  CountAsOne:
+    - array
+    - hash
 
 Layout/LineLength:
   AllowURI: true
-  Enabled: false
-
-Metrics/MethodLength:
-  CountComments: false
-  Max: 10
-
-Metrics/ParameterLists:
-  Max: 4
-  CountKeywordArgs: true
+  Max: 160
 
 Naming/FileName:
   Exclude:
@@ -55,33 +48,11 @@ Style/CollectionMethods:
     find: "detect"
     find_all: "select"
 
-Style/Documentation:
-  Enabled: false
-
-Style/DoubleNegation:
-  Enabled: false
-
-Style/ExpandPathArguments:
-  Enabled: false
-
 Style/FrozenStringLiteralComment:
   Enabled: true
 
-Style/MutableConstant:
-  Exclude:
-    - "lib/simplecov-html/version.rb"
-
-Style/NumericPredicate:
-  Enabled: false
-
-Style/RegexpLiteral:
-  Enabled: false
-
 Style/StringLiterals:
   EnforcedStyle: double_quotes
-
-Style/SymbolArray:
-  Enabled: false
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: "comma"

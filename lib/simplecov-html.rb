@@ -7,13 +7,14 @@ require "time"
 
 # Ensure we are using a compatible version of SimpleCov
 major, minor, patch = SimpleCov::VERSION.scan(/\d+/).first(3).map(&:to_i)
-if major < 0 || minor < 9 || patch < 0
+if major < 0 || minor < 9 || patch < 0 # rubocop:disable Style/NumericPredicate
   raise "The version of SimpleCov you are using is too old. " \
         "Please update with `gem install simplecov` or `bundle update simplecov`"
 end
 
 module SimpleCov
   module Formatter
+    # Generates an HTML coverage report from SimpleCov results.
     class HTMLFormatter
       # Only have a few content types, just hardcode them
       CONTENT_TYPES = {
@@ -53,18 +54,16 @@ module SimpleCov
       end
 
       def line_status?(source_file, line)
-        if branchable_result? && source_file.line_with_missed_branch?(line.number)
-          "missed-branch"
-        else
-          line.status
-        end
+        branchable_result? && source_file.line_with_missed_branch?(line.number) ? "missed-branch" : line.status
       end
 
       def output_message(result)
         output = "Coverage report generated for #{result.command_name} to #{output_path}."
         output += "\nLine Coverage: #{result.covered_percent.floor(2)}% (#{result.covered_lines} / #{result.total_lines})"
 
-        output += "\nBranch Coverage: #{result.coverage_statistics[:branch].percent.floor(2)}% (#{result.covered_branches} / #{result.total_branches})" if branchable_result?
+        if branchable_result?
+          output += "\nBranch Coverage: #{result.coverage_statistics[:branch].percent.floor(2)}% (#{result.covered_branches} / #{result.total_branches})"
+        end
         output
       end
 
@@ -78,11 +77,9 @@ module SimpleCov
       end
 
       def asset_output_path
-        return @asset_output_path if defined?(@asset_output_path) && @asset_output_path
-
-        @asset_output_path = File.join(output_path, "assets", SimpleCov::Formatter::HTMLFormatter::VERSION)
-        FileUtils.mkdir_p(@asset_output_path)
-        @asset_output_path
+        @asset_output_path ||= File.join(output_path, "assets", SimpleCov::Formatter::HTMLFormatter::VERSION).tap do |path|
+          FileUtils.mkdir_p(path)
+        end
       end
 
       def assets_path(name)
@@ -95,10 +92,7 @@ module SimpleCov
         path = File.join(@public_assets_dir, name)
         # Equivalent to `Base64.strict_encode64(File.read(path))` but without depending on Base64
         base64_content = [File.read(path)].pack("m0")
-
-        content_type = CONTENT_TYPES[File.extname(name)]
-
-        "data:#{content_type};base64,#{base64_content}"
+        "data:#{CONTENT_TYPES[File.extname(name)]};base64,#{base64_content}"
       end
 
       # Returns the html for the given source_file
