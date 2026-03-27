@@ -335,9 +335,9 @@ thead th {
 }
 
 .source_table .missed-branch:nth-child(odd) {
-  background-color: #cc8e8e;
+  background-color: #ffddbb;
 }
 
 .source_table .missed-branch:nth-child(even) {
-  background-color: #cc6e6e;
+  background-color: #ffccaa;
 }
