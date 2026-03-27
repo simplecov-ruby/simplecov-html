@@ -20,6 +20,7 @@ GEM
     docile (1.4.1)
     execjs (2.10.0)
     ffi (1.17.2)
+    ffi (1.17.2-arm64-darwin)
     json (2.12.2)
     json (2.12.2-java)
     language_server-protocol (3.17.0.5)
@@ -88,6 +89,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  arm64-darwin-25
   universal-java-1.8
 
 DEPENDENCIES

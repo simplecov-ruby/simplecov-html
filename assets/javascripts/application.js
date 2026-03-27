@@ -2,6 +2,42 @@
 //= require_directory ./plugins/
 //= require_self
 
+(function() {
+  var toggle = document.getElementById('dark-mode-toggle');
+  if (!toggle) return;
+
+  function isDark() {
+    return document.documentElement.classList.contains('dark-mode') ||
+      (!document.documentElement.classList.contains('light-mode') &&
+       window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+
+  function updateLabel() {
+    toggle.textContent = isDark() ? '\u2600\uFE0F Light' : '\uD83C\uDF19 Dark';
+  }
+
+  updateLabel();
+
+  toggle.addEventListener('click', function() {
+    if (isDark()) {
+      document.documentElement.classList.remove('dark-mode');
+      document.documentElement.classList.add('light-mode');
+      localStorage.setItem('simplecov-dark-mode', 'light');
+    } else {
+      document.documentElement.classList.remove('light-mode');
+      document.documentElement.classList.add('dark-mode');
+      localStorage.setItem('simplecov-dark-mode', 'dark');
+    }
+    updateLabel();
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+    if (!localStorage.getItem('simplecov-dark-mode')) {
+      updateLabel();
+    }
+  });
+})();
+
 $(document).ready(function () {
   $('.file_list').dataTable({
     order: [[1, "asc"]],

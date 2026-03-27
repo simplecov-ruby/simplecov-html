@@ -6,9 +6,20 @@
     <script src='<%= assets_path('application.js') %>' type='text/javascript'></script>
     <link href='<%= assets_path('application.css') %>' media='screen, projection, print' rel='stylesheet' type='text/css' />
     <link rel="icon" type="image/png" href="<%= assets_path("favicon_#{coverage_css_class(result.source_files.covered_percent)}.png") %>" />
+    <script type="text/javascript">
+      (function() {
+        var pref = localStorage.getItem('simplecov-dark-mode');
+        if (pref === 'dark') {
+          document.documentElement.classList.add('dark-mode');
+        } else if (pref === 'light') {
+          document.documentElement.classList.add('light-mode');
+        }
+      })();
+    </script>
   </head>
 
   <body<%= ' data-branch-coverage=true' if branchable_result? %>>
+    <button id="dark-mode-toggle"></button>
     <div id="loading">
       <img src="<%= assets_path('loading.gif') %>" alt="loading"/>
     </div>
