@@ -245,8 +245,8 @@ class TestSimpleCovHtml < Minitest::Test
 private
 
   def format_results(coverage_results)
-    coverage_results = coverage_results.to_h do |fixture_file_name, coverage|
-      [fixtures_path.join(fixture_file_name).to_s, coverage]
+    coverage_results = coverage_results.transform_keys do |fixture_file_name|
+      fixtures_path.join(fixture_file_name).to_s
     end
     result = SimpleCov::Result.new(coverage_results)
     capture_io { SimpleCov::Formatter::HTMLFormatter.new.format(result) }
