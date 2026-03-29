@@ -1,0 +1,13 @@
+usage: opensource
+integration:
+  name: minitest
+includes:
+  - lib
+  - test
+requires:
+  - simplecov
+  - simplecov-html
+matcher:
+  subjects:
+    - SimpleCov::Formatter::HTMLFormatter#coverage_css_class
+    - SimpleCov::Formatter::HTMLFormatter#strength_css_class
