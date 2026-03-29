@@ -42,6 +42,15 @@ class TestSimpleCovHtml < Minitest::Test
     assert_branch_coverages(html_doc) if RUBY_ENGINE != "jruby"
   end
 
+  def test_output_with_method_coverage
+    return unless SimpleCov.method_coverage_supported?
+
+    SimpleCov.enable_coverage(:method)
+    html_doc = format_results("sample.rb" => CoverageFixtures::SAMPLE_RB)
+
+    assert html_doc.at_css("div#AllFiles div.t-method-summary")
+  end
+
   def test_output_without_branch_coverage
     SimpleCov.clear_coverage_criteria
     html_doc = format_results("sample.rb" => CoverageFixtures::SAMPLE_RB)

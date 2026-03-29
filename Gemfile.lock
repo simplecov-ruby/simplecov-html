@@ -1,10 +1,10 @@
 GIT
   remote: https://github.com/simplecov-ruby/simplecov
-  revision: 6bc01182d366be51cbe3a590bede1bd41ac71db8
+  revision: 3d8d723874ff14b06f30dee5d1453f9acc92fdf9
   specs:
     simplecov (0.22.0)
       docile (~> 1.1)
-      simplecov-html (~> 0.11)
+      simplecov-html (~> 0.12)
       simplecov_json_formatter (~> 0.1)
 
 PATH
