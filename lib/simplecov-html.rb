@@ -160,7 +160,7 @@ module SimpleCov
 
       def render_stats(result, criterion)
         stats = result.coverage_statistics.fetch(criterion)
-        sprintf("%d / %d (%.2f%%)", stats.covered, stats.total, stats.percent)
+        Kernel.format("%<covered>d / %<total>d (%<percent>.2f%%)", covered: stats.covered, total: stats.total, percent: stats.percent)
       end
     end
   end
