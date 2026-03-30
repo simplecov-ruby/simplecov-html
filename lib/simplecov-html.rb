@@ -22,11 +22,11 @@ module SimpleCov
         ".css" => "text/css",
       }.freeze
 
-      def initialize(silent: false)
+      def initialize(silent: false, inline_assets: false)
         @branch_coverage = SimpleCov.branch_coverage?
         @method_coverage = SimpleCov.method_coverage?
         @templates = {}
-        @inline_assets = !ENV["SIMPLECOV_INLINE_ASSETS"].nil?
+        @inline_assets = inline_assets || !ENV["SIMPLECOV_INLINE_ASSETS"].nil?
         @public_assets_dir = File.join(File.dirname(__FILE__), "../public/")
         @silent = silent
       end
