@@ -20,9 +20,29 @@
 
   <body<%= ' data-branch-coverage=true' if branch_coverage? %>>
     <button id="dark-mode-toggle"></button>
-    <div id="loading">
-      <img src="<%= assets_path('loading.gif') %>" alt="loading"/>
+    <div id="loading" data-total-files="<%= result.source_files.count %>">
+      <div id="loading-inner">
+        <div id="loading-bar-track">
+          <div id="loading-bar-fill"></div>
+        </div>
+        <div id="loading-text">Loading 0%</div>
+      </div>
     </div>
+    <script type="text/javascript">
+      (function() {
+        var loading = document.getElementById('loading');
+        var total = parseInt(loading.getAttribute('data-total-files'), 10) || 1;
+        var fill = document.getElementById('loading-bar-fill');
+        var text = document.getElementById('loading-text');
+        var timer = setInterval(function() {
+          var parsed = document.querySelectorAll('template[id^="tmpl-"]').length;
+          var pct = Math.min(Math.round((parsed / total) * 100), 99);
+          fill.style.width = pct + '%';
+          text.textContent = 'Loading ' + pct + '%';
+        }, 50);
+        window._simplecovLoadingTimer = timer;
+      })();
+    </script>
     <div id="wrapper" class="hide">
       <div class="timestamp">Generated <%= timeago(Time.now) %></div>
       <ul class="group_tabs"></ul>

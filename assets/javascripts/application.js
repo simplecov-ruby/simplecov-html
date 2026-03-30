@@ -204,6 +204,7 @@ $(document).ready(function () {
   };
 
   $("abbr.timeago").timeago();
+  clearInterval(window._simplecovLoadingTimer);
   $('#loading').fadeOut();
   $('#wrapper').show();
   $('.dataTables_filter input').focus()
