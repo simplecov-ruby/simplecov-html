@@ -1,31 +1,31 @@
 <div class="file_list_container" id="<%= to_id(title) %>">
-  <h2>
-    <span class="group_name"><%= title %></span>
-    &mdash;
-    <span class="covered_percent"><%= covered_percent(source_files.covered_percent) %></span>
-  </h2>
+  <div class="file_list_header">
+    <h2>
+      <span class="group_name"><%= title %></span>
+      &mdash;
+      <span class="covered_percent"><%= covered_percent(source_files.covered_percent) %></span>
+    </h2>
+    <div class="file_list_search"></div>
+  </div>
 
   <a name="<%= to_id(title) %>"></a>
 
   <div class="summary-stats">
     <div class="t-line-summary">
-      <b><%= source_files.length %></b> files,
-      <b><%= source_files.lines_of_code %></b> relevant lines:
-      <span class="green"><b><%= source_files.covered_lines %></b> covered</span>,
-      <span class="red"><b><%= source_files.missed_lines %></b> missed</span>
+      <b><%= source_files.length %></b> files.
+      Lines: <span class="green"><b><%= source_files.covered_lines %></b></span>/<b><%= source_files.lines_of_code %></b> relevant lines covered<% if source_files.missed_lines > 0 %>,
+      <span class="red"><b><%= source_files.missed_lines %></b> missed</span><% end %>
     </div>
 <%- if branch_coverage? -%>
     <div class="t-branch-summary">
-      <b><%= source_files.total_branches %></b> branches:
-      <span class="green"><b><%= source_files.covered_branches %></b> covered</span>,
-      <span class="red"><b><%= source_files.missed_branches %></b> missed</span>
+      Branches: <span class="green"><b><%= source_files.covered_branches %></b></span>/<b><%= source_files.total_branches %></b> covered<% if source_files.missed_branches > 0 %>,
+      <span class="red"><b><%= source_files.missed_branches %></b> missed</span><% end %>
     </div>
 <%- end -%>
 <%- if method_coverage? -%>
     <div class="t-method-summary">
-      <b><%= source_files.total_methods %></b> methods:
-      <span class="green"><b><%= source_files.covered_methods %></b> covered</span>,
-      <span class="red"><b><%= source_files.missed_methods %></b> missed</span>
+      Methods: <span class="green"><b><%= source_files.covered_methods %></b></span>/<b><%= source_files.total_methods %></b> covered<% if source_files.missed_methods > 0 %>,
+      <span class="red"><b><%= source_files.missed_methods %></b> missed</span><% end %>
     </div>
 <%- end -%>
   </div>
@@ -59,14 +59,7 @@
 <%- source_files.each do |source_file| -%>
         <tr class="t-file">
           <td class="strong t-file__name"><%= link_to_source_file(source_file) %></td>
-          <td class="strong cell--number t-file__coverage">
-            <div class="coverage-bar">
-              <span class="<%= coverage_css_class(source_file.covered_percent) %>"><%= sprintf("%.2f", source_file.covered_percent.floor(2)) %>%</span>
-              <span class="coverage-bar__track">
-                <span class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.covered_percent) %>" style="width: <%= sprintf("%.1f", source_file.covered_percent.floor(1)) %>%"></span>
-              </span>
-            </div>
-          </td>
+          <td class="strong cell--number t-file__coverage"><%= covered_percent(source_file.covered_percent) %></td>
           <td class="cell--number"><%= source_file.lines.count %></td>
           <td class="cell--number"><%= source_file.covered_lines.count + source_file.missed_lines.count %></td>
           <td class="cell--number"><%= source_file.covered_lines.count %></td>

@@ -48,6 +48,16 @@ $(document).ready(function () {
     paging: false
   });
 
+  // Move search box into the header row
+  $('.file_list_container').each(function() {
+    var filter = $(this).find('.dataTables_filter');
+    var target = $(this).find('.file_list_search');
+    if (filter.length && target.length) {
+      filter.find('input').attr('placeholder', 'Search files\u2026');
+      target.append(filter);
+    }
+  });
+
   // --- Template materialization ---
 
   function materializeSourceFile(sourceFileId) {
@@ -189,7 +199,7 @@ $(document).ready(function () {
   $('.file_list_container').hide();
 
   $('.file_list_container h2').each(function () {
-    var container_id = $(this).parent().attr('id');
+    var container_id = $(this).closest('.file_list_container').attr('id');
     var group_name = $(this).find('.group_name').first().html();
     var covered_percent = $(this).find('.covered_percent').first().html();
 
