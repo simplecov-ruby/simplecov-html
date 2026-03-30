@@ -92,6 +92,9 @@ $(document).ready(function () {
 
       $('.file_list_container').hide();
     },
+    onComplete: function () {
+      $('#cboxLoadedContent').attr('tabindex', '0').focus();
+    },
     onCleanup: function () {
       if (prev_anchor && prev_anchor != curr_anchor) {
         $('a[href="#' + prev_anchor + '"]').click();
