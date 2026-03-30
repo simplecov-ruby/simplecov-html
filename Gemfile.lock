@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/simplecov-ruby/simplecov
-  revision: 3d8d723874ff14b06f30dee5d1453f9acc92fdf9
+  revision: c2c0206ecd5acf7efa85ee34bb25968bf48c6eec
   specs:
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -20,6 +20,7 @@ GEM
     docile (1.4.1)
     drb (2.2.3)
     execjs (2.10.0)
+    ffi (1.17.4)
     ffi (1.17.4-arm64-darwin)
     ffi (1.17.4-java)
     json (2.19.3)
@@ -30,9 +31,11 @@ GEM
     minitest (6.0.2)
       drb (~> 2.0)
       prism (~> 1.5)
-    nokogiri (1.19.2-arm64-darwin)
+    nokogiri (1.15.7-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.2-java)
+    nokogiri (1.15.7-java)
+      racc (~> 1.4)
+    nokogiri (1.15.7-x86_64-linux)
       racc (~> 1.4)
     parallel (1.27.0)
     parser (3.3.11.1)
@@ -94,6 +97,7 @@ PLATFORMS
   arm64-darwin-22
   arm64-darwin-25
   universal-java-1.8
+  x86_64-linux
 
 DEPENDENCIES
   logger
