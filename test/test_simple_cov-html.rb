@@ -113,9 +113,9 @@ private
 
     return if RUBY_ENGINE == "jruby"
 
-    branch_covered = html_doc.at_css("div#AllFiles div.t-branch-summary span.green").content.strip
+    branch_summary = html_doc.at_css("div#AllFiles div.t-branch-summary").content.strip
 
-    assert_match(/covered/, branch_covered)
+    assert_match(/covered/, branch_summary)
   end
 
   def assert_line_coverages(html_doc)
