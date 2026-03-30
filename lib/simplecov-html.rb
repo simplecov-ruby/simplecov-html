@@ -38,9 +38,7 @@ module SimpleCov
           end
         end
 
-        File.open(File.join(output_path, "index.html"), "wb") do |file|
-          file.puts template("layout").result(binding)
-        end
+        File.write(File.join(output_path, "index.html"), template("layout").result(binding), mode: "wb")
         puts output_message(result) unless @silent
       end
 

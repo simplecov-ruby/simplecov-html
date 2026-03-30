@@ -91,8 +91,7 @@ class TestSimpleCovHtml < Minitest::Test
 
   def test_silenced_output
     result = SimpleCov::Result.new({fixtures_path.join("sample.rb").to_s => CoverageFixtures::SAMPLE_RB})
-    formatter = SimpleCov::Formatter::HTMLFormatter.new(silent: true)
-    stdout, = capture_io { formatter.format(result) }
+    stdout, = capture_io { SimpleCov::Formatter::HTMLFormatter.new(silent: true).format(result) }
 
     assert_empty stdout
   end

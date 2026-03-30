@@ -27,6 +27,8 @@ Metrics/ClassLength:
   CountAsOne:
     - array
     - hash
+  Exclude:
+    - "test/**/*"
 
 Metrics/ModuleLength:
   CountAsOne:
