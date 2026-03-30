@@ -89,6 +89,14 @@ class TestSimpleCovHtml < Minitest::Test
     assert_match(/Encoding problems with file/, output)
   end
 
+  def test_silenced_output
+    result = SimpleCov::Result.new({fixtures_path.join("sample.rb").to_s => CoverageFixtures::SAMPLE_RB})
+    formatter = SimpleCov::Formatter::HTMLFormatter.new(silent: true)
+    stdout, = capture_io { formatter.format(result) }
+
+    assert_empty stdout
+  end
+
   def test_strength_css_classes
     formatter = SimpleCov::Formatter::HTMLFormatter.new
 

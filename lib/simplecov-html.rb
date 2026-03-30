@@ -22,12 +22,13 @@ module SimpleCov
         ".css" => "text/css",
       }.freeze
 
-      def initialize
+      def initialize(silent: false)
         @branch_coverage = SimpleCov.branch_coverage?
         @method_coverage = SimpleCov.method_coverage?
         @templates = {}
         @inline_assets = !ENV["SIMPLECOV_INLINE_ASSETS"].nil?
         @public_assets_dir = File.join(File.dirname(__FILE__), "../public/")
+        @silent = silent
       end
 
       def format(result)
@@ -40,7 +41,7 @@ module SimpleCov
         File.open(File.join(output_path, "index.html"), "wb") do |file|
           file.puts template("layout").result(binding)
         end
-        puts output_message(result)
+        puts output_message(result) unless @silent
       end
 
     private
