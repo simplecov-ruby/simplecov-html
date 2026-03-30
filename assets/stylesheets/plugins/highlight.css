@@ -1,5 +1,5 @@
 /*
-github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+  Syntax highlighting — light and dark themes
 */
 
 pre code {
@@ -9,7 +9,7 @@ pre .comment,
 pre .template_comment,
 pre .diff .header,
 pre .javadoc {
-  color: #998;
+  color: #6e7781;
   font-style: italic
 }
 
@@ -18,31 +18,30 @@ pre .css .rule .keyword,
 pre .winutils,
 pre .javascript .title,
 pre .lisp .title {
-  color: #000;
+  color: #cf222e;
   font-weight: bold
 }
 
 pre .number,
 pre .hexcolor {
-  color: #458
+  color: #0550ae
 }
-
 
 pre .string,
 pre .tag .value,
 pre .phpdoc,
 pre .tex .formula {
-  color: #d14
+  color: #0a3069
 }
 
 pre .subst {
-  color: #712;
+  color: #953800;
 }
 
 pre .constant,
 pre .title,
 pre .id {
-  color: #900;
+  color: #8250df;
   font-weight: bold
 }
 
@@ -55,7 +54,7 @@ pre .subst {
 pre .class .title,
 pre .haskell .label,
 pre .tex .command {
-  color: #458;
+  color: #8250df;
   font-weight: bold
 }
 
@@ -63,7 +62,7 @@ pre .tag,
 pre .tag .title,
 pre .rules .property,
 pre .django .tag .keyword {
-  color: #000080;
+  color: #116329;
   font-weight: normal
 }
 
@@ -71,15 +70,15 @@ pre .attribute,
 pre .variable,
 pre .instancevar,
 pre .lisp .body {
-  color: #008080
+  color: #953800
 }
 
 pre .regexp {
-  color: #009926
+  color: #0a3069
 }
 
 pre .class {
-  color: #458;
+  color: #8250df;
   font-weight: bold
 }
 
@@ -90,13 +89,13 @@ pre .ruby .symbol .keymethods,
 pre .lisp .keyword,
 pre .tex .special,
 pre .input_number {
-  color: #990073
+  color: #0550ae
 }
 
 pre .builtin,
 pre .built_in,
 pre .lisp .title {
-  color: #0086b3
+  color: #0550ae
 }
 
 pre .preprocessor,
@@ -104,16 +103,16 @@ pre .pi,
 pre .doctype,
 pre .shebang,
 pre .cdata {
-  color: #999;
+  color: #6e7781;
   font-weight: bold
 }
 
 pre .deletion {
-  background: #fdd
+  background: #ffebe9
 }
 
 pre .addition {
-  background: #dfd
+  background: #dafbe1
 }
 
 pre .diff .change {
@@ -121,9 +120,143 @@ pre .diff .change {
 }
 
 pre .chunk {
-  color: #aaa
+  color: #6e7781
 }
 
 pre .tex .formula {
   opacity: 0.5;
 }
+
+/* --- Dark mode syntax highlighting --- */
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light-mode) pre .comment,
+  :root:not(.light-mode) pre .template_comment,
+  :root:not(.light-mode) pre .diff .header,
+  :root:not(.light-mode) pre .javadoc { color: #8b949e; }
+
+  :root:not(.light-mode) pre .keyword,
+  :root:not(.light-mode) pre .css .rule .keyword,
+  :root:not(.light-mode) pre .winutils,
+  :root:not(.light-mode) pre .javascript .title,
+  :root:not(.light-mode) pre .lisp .title { color: #ff7b72; }
+
+  :root:not(.light-mode) pre .number,
+  :root:not(.light-mode) pre .hexcolor { color: #79c0ff; }
+
+  :root:not(.light-mode) pre .string,
+  :root:not(.light-mode) pre .tag .value,
+  :root:not(.light-mode) pre .phpdoc,
+  :root:not(.light-mode) pre .tex .formula { color: #a5d6ff; }
+
+  :root:not(.light-mode) pre .subst { color: #ffa657; }
+
+  :root:not(.light-mode) pre .constant,
+  :root:not(.light-mode) pre .title,
+  :root:not(.light-mode) pre .id { color: #d2a8ff; }
+
+  :root:not(.light-mode) pre .class .title,
+  :root:not(.light-mode) pre .haskell .label,
+  :root:not(.light-mode) pre .tex .command { color: #d2a8ff; }
+
+  :root:not(.light-mode) pre .tag,
+  :root:not(.light-mode) pre .tag .title,
+  :root:not(.light-mode) pre .rules .property,
+  :root:not(.light-mode) pre .django .tag .keyword { color: #7ee787; }
+
+  :root:not(.light-mode) pre .attribute,
+  :root:not(.light-mode) pre .variable,
+  :root:not(.light-mode) pre .instancevar,
+  :root:not(.light-mode) pre .lisp .body { color: #ffa657; }
+
+  :root:not(.light-mode) pre .regexp { color: #a5d6ff; }
+
+  :root:not(.light-mode) pre .class { color: #d2a8ff; }
+
+  :root:not(.light-mode) pre .symbol,
+  :root:not(.light-mode) pre .ruby .symbol .string,
+  :root:not(.light-mode) pre .ruby .symbol .keyword,
+  :root:not(.light-mode) pre .ruby .symbol .keymethods,
+  :root:not(.light-mode) pre .lisp .keyword,
+  :root:not(.light-mode) pre .tex .special,
+  :root:not(.light-mode) pre .input_number { color: #79c0ff; }
+
+  :root:not(.light-mode) pre .builtin,
+  :root:not(.light-mode) pre .built_in,
+  :root:not(.light-mode) pre .lisp .title { color: #79c0ff; }
+
+  :root:not(.light-mode) pre .preprocessor,
+  :root:not(.light-mode) pre .pi,
+  :root:not(.light-mode) pre .doctype,
+  :root:not(.light-mode) pre .shebang,
+  :root:not(.light-mode) pre .cdata { color: #8b949e; }
+
+  :root:not(.light-mode) pre .deletion { background: #2d1215; }
+  :root:not(.light-mode) pre .addition { background: #12261e; }
+  :root:not(.light-mode) pre .chunk { color: #8b949e; }
+}
+
+.dark-mode pre .comment,
+.dark-mode pre .template_comment,
+.dark-mode pre .diff .header,
+.dark-mode pre .javadoc { color: #8b949e; }
+
+.dark-mode pre .keyword,
+.dark-mode pre .css .rule .keyword,
+.dark-mode pre .winutils,
+.dark-mode pre .javascript .title,
+.dark-mode pre .lisp .title { color: #ff7b72; }
+
+.dark-mode pre .number,
+.dark-mode pre .hexcolor { color: #79c0ff; }
+
+.dark-mode pre .string,
+.dark-mode pre .tag .value,
+.dark-mode pre .phpdoc,
+.dark-mode pre .tex .formula { color: #a5d6ff; }
+
+.dark-mode pre .subst { color: #ffa657; }
+
+.dark-mode pre .constant,
+.dark-mode pre .title,
+.dark-mode pre .id { color: #d2a8ff; }
+
+.dark-mode pre .class .title,
+.dark-mode pre .haskell .label,
+.dark-mode pre .tex .command { color: #d2a8ff; }
+
+.dark-mode pre .tag,
+.dark-mode pre .tag .title,
+.dark-mode pre .rules .property,
+.dark-mode pre .django .tag .keyword { color: #7ee787; }
+
+.dark-mode pre .attribute,
+.dark-mode pre .variable,
+.dark-mode pre .instancevar,
+.dark-mode pre .lisp .body { color: #ffa657; }
+
+.dark-mode pre .regexp { color: #a5d6ff; }
+
+.dark-mode pre .class { color: #d2a8ff; }
+
+.dark-mode pre .symbol,
+.dark-mode pre .ruby .symbol .string,
+.dark-mode pre .ruby .symbol .keyword,
+.dark-mode pre .ruby .symbol .keymethods,
+.dark-mode pre .lisp .keyword,
+.dark-mode pre .tex .special,
+.dark-mode pre .input_number { color: #79c0ff; }
+
+.dark-mode pre .builtin,
+.dark-mode pre .built_in,
+.dark-mode pre .lisp .title { color: #79c0ff; }
+
+.dark-mode pre .preprocessor,
+.dark-mode pre .pi,
+.dark-mode pre .doctype,
+.dark-mode pre .shebang,
+.dark-mode pre .cdata { color: #8b949e; }
+
+.dark-mode pre .deletion { background: #2d1215; }
+.dark-mode pre .addition { background: #12261e; }
+.dark-mode pre .chunk { color: #8b949e; }

@@ -24,7 +24,7 @@ module SimpleCov
 
       def initialize(silent: false, inline_assets: false)
         @branch_coverage = SimpleCov.branch_coverage?
-        @method_coverage = SimpleCov.method_coverage?
+        @method_coverage = SimpleCov.respond_to?(:method_coverage?) && SimpleCov.method_coverage?
         @templates = {}
         @inline_assets = inline_assets || !ENV["SIMPLECOV_INLINE_ASSETS"].nil?
         @public_assets_dir = File.join(File.dirname(__FILE__), "../public/")
