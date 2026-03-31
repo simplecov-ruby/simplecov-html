@@ -413,7 +413,6 @@ table.file_list td.strong {
 }
 
 table.file_list td.t-file__name {
-  width: 100%;
   white-space: nowrap;
 }
 
@@ -423,6 +422,34 @@ a.src_link {
   word-break: break-all;
 }
 
+/* --- Coverage bar ------------------------------------------ */
+
+.cell--bar {
+  width: 100%;
+}
+
+.coverage-bar {
+  height: var(--bar-height);
+  background: var(--bar-bg);
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 60px;
+}
+
+.coverage-bar__fill {
+  height: 100%;
+  border-radius: 6px;
+}
+
+.coverage-bar__fill--green { background: var(--green); }
+.coverage-bar__fill--yellow { background: var(--yellow); }
+.coverage-bar__fill--red { background: var(--red); }
+
+@media (max-width: 640px) {
+  .cell--bar {
+    display: none;
+  }
+}
 
 /* --- Color utility classes --------------------------------- */
 
