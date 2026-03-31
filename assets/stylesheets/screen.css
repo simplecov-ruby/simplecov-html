@@ -518,17 +518,33 @@ dialog.source-dialog[open] {
   border-radius: 50%;
   width: 34px;
   height: 34px;
-  font-size: 24px;
-  line-height: 1;
+  font-size: 0;
   color: var(--text-secondary);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 1px;
+  position: relative;
   flex-shrink: 0;
   margin-left: var(--sp-4);
   transition: color 0.15s, border-color 0.15s;
+}
+
+.source-dialog__close::before,
+.source-dialog__close::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.source-dialog__close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.source-dialog__close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .source-dialog__close:hover {
