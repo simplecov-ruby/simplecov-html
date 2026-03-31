@@ -121,9 +121,9 @@ module SimpleCov
       end
 
       def coverage_css_class(covered_percent)
-        if covered_percent > 90
+        if covered_percent >= 90
           "green"
-        elsif covered_percent > 80
+        elsif covered_percent >= 75
           "yellow"
         else
           "red"

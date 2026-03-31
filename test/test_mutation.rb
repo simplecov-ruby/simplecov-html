@@ -10,17 +10,17 @@ class TestMutation < Minitest::Test
   def test_coverage_css_class_green
     assert_equal "green", formatter.send(:coverage_css_class, 100)
     assert_equal "green", formatter.send(:coverage_css_class, 91)
-    assert_equal "green", formatter.send(:coverage_css_class, 90.01)
+    assert_equal "green", formatter.send(:coverage_css_class, 90)
   end
 
   def test_coverage_css_class_yellow
-    assert_equal "yellow", formatter.send(:coverage_css_class, 90)
-    assert_equal "yellow", formatter.send(:coverage_css_class, 81)
-    assert_equal "yellow", formatter.send(:coverage_css_class, 80.01)
+    assert_equal "yellow", formatter.send(:coverage_css_class, 89.99)
+    assert_equal "yellow", formatter.send(:coverage_css_class, 76)
+    assert_equal "yellow", formatter.send(:coverage_css_class, 75)
   end
 
   def test_coverage_css_class_red
-    assert_equal "red", formatter.send(:coverage_css_class, 80)
+    assert_equal "red", formatter.send(:coverage_css_class, 74.99)
     assert_equal "red", formatter.send(:coverage_css_class, 50)
     assert_equal "red", formatter.send(:coverage_css_class, 0)
   end
