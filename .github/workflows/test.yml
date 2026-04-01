@@ -34,6 +34,5 @@ jobs:
           bundler-cache: true
         continue-on-error: ${{ (matrix.ruby-version == 'ruby-head') || (matrix.ruby-version == 'jruby-head') || (matrix.ruby-version == 'truffleruby') }}
 
-      - run: |
-          bundle exec rake
+      - run: bundle exec rake test
         continue-on-error: ${{ (matrix.ruby-version == 'ruby-head') || (matrix.ruby-version == 'jruby-head') || (matrix.ruby-version == 'truffleruby') }}

@@ -63,7 +63,7 @@ module SimpleCov
         end
 
         def shortened_filename(source_file)
-          source_file.filename.sub(SimpleCov.root, ".").gsub(%r{^\./}, "")
+          source_file.filename.sub(SimpleCov.root, ".").delete_prefix("./")
         end
 
         def link_to_source_file(source_file)
@@ -76,15 +76,16 @@ module SimpleCov
         end
 
         def to_id(value)
-          value.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, "")
+          value.sub(/\A[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, "")
         end
 
         def coverage_summary(stats, show_method_toggle: false)
-          line_stats = build_stats(stats[:covered_lines], stats[:total_lines])
-          branch_stats = build_stats(stats.fetch(:covered_branches, 0), stats.fetch(:total_branches, 0))
-          method_stats = build_stats(stats.fetch(:covered_methods, 0), stats.fetch(:total_methods, 0))
-          # Suppress "assigned but unused variable" warnings — these locals are consumed by the ERB template via binding
-          _ = [line_stats, branch_stats, method_stats, show_method_toggle]
+          @_summary = {
+            line: build_stats(stats.fetch(:covered_lines), stats.fetch(:total_lines)),
+            branch: build_stats(stats.fetch(:covered_branches, 0), stats.fetch(:total_branches, 0)),
+            method: build_stats(stats.fetch(:covered_methods, 0), stats.fetch(:total_methods, 0)),
+            show_method_toggle: show_method_toggle,
+          }
           template("coverage_summary").result(binding)
         end
 

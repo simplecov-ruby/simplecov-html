@@ -9,5 +9,4 @@ requires:
   - simplecov-html
 matcher:
   subjects:
-    - SimpleCov::Formatter::HTMLFormatter#coverage_css_class
-    - SimpleCov::Formatter::HTMLFormatter#strength_css_class
+    - SimpleCov::Formatter::HTMLFormatter*

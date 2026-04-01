@@ -16,6 +16,7 @@ end
 
 group :test do
   gem "minitest"
+  gem "mutant-minitest"
 end
 
 group :development do

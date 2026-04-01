@@ -15,7 +15,12 @@ SimpleCov.start do
     minimum_coverage line: 97
   else
     enable_coverage :branch
-    minimum_coverage line: 100, branch: 100
+    minimums = {line: 100, branch: 100}
+    if SimpleCov.respond_to?(:method_coverage_supported?) && SimpleCov.method_coverage_supported?
+      enable_coverage :method
+      minimums[:method] = 100
+    end
+    minimum_coverage minimums
   end
 end
 require "simplecov-html"
