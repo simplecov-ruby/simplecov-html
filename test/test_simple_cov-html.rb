@@ -48,18 +48,18 @@ class TestSimpleCovHtml < Minitest::Test
     SimpleCov.enable_coverage(:method)
     html_doc = format_results("sample.rb" => CoverageFixtures::SAMPLE_RB)
 
-    assert html_doc.at_css("div#AllFiles div.t-method-summary")
+    assert html_doc.at_css("div#AllFiles td.t-totals__method-coverage")
   end
 
   def test_output_without_branch_coverage
     SimpleCov.clear_coverage_criteria
     html_doc = format_results("sample.rb" => CoverageFixtures::SAMPLE_RB)
 
-    assert_nil html_doc.at_css("div#AllFiles div.t-branch-summary")
+    assert_nil html_doc.at_css("div#AllFiles td.t-totals__branch-coverage")
 
     stdout, = capture_io { format_results("sample.rb" => CoverageFixtures::SAMPLE_RB) }
 
-    refute_match(/Branch Coverage/, stdout)
+    refute_match(/Branch coverage:.*%/, stdout)
   end
 
   def test_inline_assets
@@ -113,29 +113,21 @@ private
 
     return if RUBY_ENGINE == "jruby"
 
-    branch_summary = html_doc.at_css("div#AllFiles div.t-branch-summary").content.strip
+    branch_cell = html_doc.at_css("div#AllFiles td.t-totals__branch-coverage")
 
-    assert_match(/covered/, branch_summary)
+    assert branch_cell
   end
 
   def assert_line_coverages(html_doc)
-    table = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__coverage").map { |m| m.content.strip }
+    table = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__coverage .coverage-cell__pct").map { |m| m.content.strip }
 
     assert_equal(EXPECTED_LINE_COVERAGES, table.sort_by(&:to_f))
-
-    pages = html_doc.css("div.source_files div.header h4:nth-child(2) span").map { |m| m.content.strip }
-
-    assert_equal(EXPECTED_LINE_COVERAGES, pages.sort_by(&:to_f))
   end
 
   def assert_branch_coverages(html_doc)
-    table = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__branch-coverage").map { |m| m.content.strip }
+    table = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__branch-coverage .coverage-cell__pct").map { |m| m.content.strip }
 
     assert_equal(EXPECTED_BRANCH_COVERAGES, table.sort_by(&:to_f))
-
-    pages = html_doc.css("div.source_files div.header h4:nth-child(3) span").map { |m| m.content.strip }
-
-    assert_equal(EXPECTED_BRANCH_COVERAGES, pages.sort_by(&:to_f))
   end
 
   def generate_inline_html

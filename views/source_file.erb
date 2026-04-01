@@ -1,44 +1,13 @@
 <div class="source_table" id="<%= id source_file %>">
   <div class="header">
-    <h3><%= shortened_filename source_file %></h3>
-    <h4>
-      <%= covered_percent(source_file.covered_percent) %>
-      lines covered
-    </h4>
-<%- if branch_coverage? -%>
-    <h4>
-      <%= covered_percent(source_file.branches_coverage_percent) %>
-      branches covered
-    </h4>
-<%- end -%>
-<%- if method_coverage? -%>
-    <h4>
-      <%= covered_percent(source_file.methods_coverage_percent) %>
-      methods covered
-    </h4>
-<%- end -%>
-    <div class="t-line-summary">
-      <b><%= source_file.lines_of_code %></b> relevant lines.
-      <span class="green"><b><%= source_file.covered_lines.count %></b> lines covered</span> and
-      <span class="red"><b><%= source_file.missed_lines.count %></b> lines missed.</span>
-    </div>
-<%- if branch_coverage? -%>
-    <div class="t-branch-summary">
-        <span><b><%= source_file.total_branches.count %></b> total branches, </span>
-        <span class="green"><b><%= source_file.covered_branches.count %></b> branches covered</span> and
-        <span class="red"><b><%= source_file.missed_branches.count %></b> branches missed.</span>
-    </div>
-<%- end -%>
-<%- if method_coverage? -%>
-    <div class="t-method-summary">
-        <span><b><%= source_file.methods.count %></b> total methods, </span>
-        <span class="green"><b><%= source_file.covered_methods.count %></b> methods covered</span> and
-        <span class="red"><b><%= source_file.missed_methods.count %></b> methods missed.</span>
-    </div>
-<%- end -%>
+    <h2><%= shortened_filename source_file %></h2>
+    <%= coverage_summary({
+      covered_lines: source_file.covered_lines.count, total_lines: source_file.covered_lines.count + source_file.missed_lines.count,
+      covered_branches: branch_coverage? ? source_file.covered_branches.count : 0, total_branches: branch_coverage? ? source_file.total_branches.count : 0,
+      covered_methods: method_coverage? ? source_file.covered_methods.count : 0, total_methods: method_coverage? ? source_file.methods.count : 0
+    }, show_method_toggle: method_coverage? && source_file.missed_methods.any?) %>
 <%- if method_coverage? && source_file.missed_methods.any? -%>
-    <div class="t-missed-method-summary">
-      <span>Missed methods:</span>
+    <div class="t-missed-method-list" style="display: none">
       <ul>
 <%- source_file.missed_methods.each do |missed_method| -%>
         <li><tt><%= ERB::Util.html_escape(missed_method.to_s) %></tt></li>
@@ -52,13 +21,13 @@
 <%- source_file.lines.each do |line| -%>
       <li class="<%= line_status?(source_file, line) %>"<%= " data-hits=\"#{line.coverage}\"" if line.coverage %> data-linenumber="<%= line.number %>">
 <%- if line.covered? -%>
-        <span class="hits"><%= line.coverage %></span>
+        <span class="hits" data-content="<%= line.coverage %>"></span>
 <%- elsif line.skipped? -%>
-        <span class="hits">skipped</span>
+        <span class="hits" data-content="skipped"></span>
 <%- end -%>
 <%- if branch_coverage? -%>
 <%- source_file.branches_for_line(line.number).each do |branch_type, hit_count| -%>
-        <span class="hits" title="<%= branch_type%> branch hit <%= hit_count %> times"><%= branch_type %>: <%= hit_count %></span>
+        <span class="hits" data-content="<%= branch_type %>: <%= hit_count %>" title="<%= branch_type%> branch hit <%= hit_count %> times"></span>
 <%- end -%>
 <%- end -%>
         <code class="ruby"><%= ERB::Util.html_escape(line.src.chomp) %></code>
