@@ -24,9 +24,6 @@ group :development do
   gem "rubocop-minitest"
   gem "rubocop-performance"
   gem "rubocop-rake"
-  gem "sass"
-  gem "sprockets"
-  gem "uglifier"
 end
 
 gem "logger" if RUBY_VERSION >= "3.4"
