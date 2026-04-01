@@ -30,26 +30,26 @@ end
 task default: %i[test rubocop]
 
 namespace :assets do
-  desc "Compiles all assets"
+  desc "Compiles all assets using esbuild"
   task :compile do
     puts "Compiling assets"
-    require "sprockets"
-    require "sprockets/sass_processor"
 
-    Sprockets.register_processor("text/css") do |input|
-      {data: input[:data].gsub(/(?<!-|_)url\(['"]?(.+?)['"]?\)/) { "asset-data-url(\"#{Regexp.last_match(1)}\")" }}
+    # JS: esbuild compiles TypeScript directly, then we concatenate with highlight.js and minify
+    sh "esbuild src/app.ts --bundle --minify --target=es2015 " \
+       "--banner:js=\"$(cat assets/javascripts/plugins/highlight.pack.js)\" " \
+       "--outfile=public/application.js"
+
+    # CSS: concatenate in order and minify
+    css = %w[
+      assets/stylesheets/reset.css
+      assets/stylesheets/plugins/highlight.css
+      assets/stylesheets/screen.css
+    ].map { |f| File.read(f) }.join("\n")
+
+    IO.popen(%w[esbuild --minify --loader=css], "r+") do |io|
+      io.write(css)
+      io.close_write
+      File.write("public/application.css", io.read)
     end
-
-    Sprockets.register_processor "text/css", Sprockets::ScssProcessor
-
-    assets = Sprockets::Environment.new do |env|
-      env.append_path "assets/javascripts"
-      env.append_path "assets/stylesheets"
-      env.append_path "public"
-      env.js_compressor = :uglify
-      env.css_compressor = :scss
-    end
-    assets["application.js"].write_to("public/application.js")
-    assets["application.css"].write_to("public/application.css")
   end
 end
