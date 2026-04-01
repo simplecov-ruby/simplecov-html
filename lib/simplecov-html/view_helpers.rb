@@ -1,0 +1,98 @@
+# frozen_string_literal: true
+
+require "digest/sha1"
+require "set"
+
+module SimpleCov
+  module Formatter
+    class HTMLFormatter
+      # Helper methods used by ERB templates for rendering coverage data.
+      module ViewHelpers
+        def line_status?(source_file, line)
+          if branch_coverage? && source_file.line_with_missed_branch?(line.number)
+            "missed-branch"
+          # :nocov:
+          elsif method_coverage? && missed_method_lines(source_file).include?(line.number)
+            "missed-method"
+          # :nocov:
+          else
+            line.status
+          end
+        end
+
+        # :nocov:
+        def missed_method_lines(source_file)
+          @missed_method_lines ||= {}
+          @missed_method_lines[source_file.filename] ||= missed_method_line_set(source_file)
+        end
+
+        def missed_method_line_set(source_file)
+          source_file.missed_methods
+                     .select { |m| m.start_line && m.end_line }
+                     .flat_map { |m| (m.start_line..m.end_line).to_a }
+                     .to_set
+        end
+        # :nocov:
+
+        def coverage_css_class(covered_percent)
+          if covered_percent >= 90
+            "green"
+          elsif covered_percent >= 75
+            "yellow"
+          else
+            "red"
+          end
+        end
+
+        def strength_css_class(covered_strength)
+          if covered_strength > 1
+            "green"
+          elsif covered_strength == 1
+            "yellow"
+          else
+            "red"
+          end
+        end
+
+        def id(source_file)
+          Digest::SHA1.hexdigest(source_file.filename)
+        end
+
+        def timeago(time)
+          "<abbr class=\"timeago\" title=\"#{time.iso8601}\">#{time.iso8601}</abbr>"
+        end
+
+        def shortened_filename(source_file)
+          source_file.filename.sub(SimpleCov.root, ".").gsub(%r{^\./}, "")
+        end
+
+        def link_to_source_file(source_file)
+          name = shortened_filename(source_file)
+          %(<a href="##{id source_file}" class="src_link" title="#{name}">#{name}</a>)
+        end
+
+        def covered_percent(percent)
+          template("covered_percent").result(binding)
+        end
+
+        def to_id(value)
+          value.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, "")
+        end
+
+        def coverage_summary(stats, show_method_toggle: false)
+          line_stats = build_stats(stats[:covered_lines], stats[:total_lines])
+          branch_stats = build_stats(stats.fetch(:covered_branches, 0), stats.fetch(:total_branches, 0))
+          method_stats = build_stats(stats.fetch(:covered_methods, 0), stats.fetch(:total_methods, 0))
+          # Suppress "assigned but unused variable" warnings — these locals are consumed by the ERB template via binding
+          _ = [line_stats, branch_stats, method_stats, show_method_toggle]
+          template("coverage_summary").result(binding)
+        end
+
+        def build_stats(covered, total)
+          pct = total.positive? ? (covered * 100.0 / total) : 100.0
+          {covered: covered, total: total, missed: total - covered, pct: pct}
+        end
+      end
+    end
+  end
+end

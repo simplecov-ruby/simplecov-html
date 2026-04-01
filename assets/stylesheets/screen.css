@@ -52,6 +52,10 @@
   --skipped-line-num-bg: #eed860;
   --missed-branch-bg: #ffd0a0;
   --missed-branch-line-num-bg: #ffb060;
+  --missed-branch-text: #b45309;
+  --missed-method-bg: #e8d0ff;
+  --missed-method-line-num-bg: #d4b0ff;
+  --missed-method-text: #7b2d8e;
 
   --source-bg: #fff;
   --source-border: #c0c5cc;
@@ -102,6 +106,10 @@
     --skipped-line-num-bg: #443920;
     --missed-branch-bg: #322218;
     --missed-branch-line-num-bg: #483020;
+    --missed-branch-text: #ffb86c;
+    --missed-method-bg: #1e1830;
+    --missed-method-line-num-bg: #2a2044;
+    --missed-method-text: #dcb8ff;
 
     --source-bg: #0d1117;
     --source-border: #3d444d;
@@ -147,6 +155,10 @@
   --skipped-line-num-bg: #443920;
   --missed-branch-bg: #322218;
   --missed-branch-line-num-bg: #483020;
+  --missed-branch-text: #ffb86c;
+  --missed-method-bg: #1e1830;
+  --missed-method-line-num-bg: #2a2044;
+  --missed-method-text: #dcb8ff;
 
   --source-bg: #0d1117;
   --source-border: #3d444d;
@@ -224,7 +236,6 @@ strong, b { font-weight: 600; }
 /* --- Layout ------------------------------------------------ */
 
 #wrapper {
-  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -289,13 +300,6 @@ abbr.timeago {
 
 /* --- File list header -------------------------------------- */
 
-.file_list_header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--sp-4);
-  margin-bottom: var(--sp-3);
-}
 
 .file_list_container h2 {
   font-size: 24px;
@@ -308,54 +312,103 @@ abbr.timeago {
   font-weight: 600;
 }
 
-.file_list_container .summary-stats {
+.summary-stats {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2) var(--sp-6);
-  margin-bottom: var(--sp-5);
+  flex-direction: column;
+  gap: var(--sp-1);
   font-size: 18px;
   color: var(--text-secondary);
 }
+
 
 .summary-stats b {
   color: var(--text);
 }
 
+.summary-stats .missed-branch-text b,
+.summary-stats .missed-method-text-color b,
+.summary-stats .green b,
+.summary-stats .red b {
+  color: inherit;
+}
+
 .summary-stats .green { color: var(--green); }
 .summary-stats .red { color: var(--red); }
 
+.coverage-disabled {
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
 /* --- DataTables overrides ---------------------------------- */
 
-.dataTables_filter {
-  margin-bottom: var(--sp-3);
+.dataTables_filter,
+.dataTables_info {
+  display: none;
 }
 
-.dataTables_filter label {
-  font-size: 0;
-  color: var(--text-secondary);
-  font-weight: normal;
+table.dataTable.no-footer {
+  border-bottom: none;
 }
 
-.dataTables_filter input {
+/* --- Column filters ---------------------------------------- */
+
+.th-with-filter {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.th-with-filter .th-label {
+  white-space: nowrap;
+}
+
+.col-filter--name {
+  width: 100%;
+  min-width: 200px;
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: var(--sp-1) var(--sp-4);
-  font-size: 16px;
+  font-size: 14px;
   background: var(--surface);
   color: var(--text);
   outline: none;
-  transition: border-color 0.15s;
 }
 
-.dataTables_filter input:focus {
+.col-filter--name:focus {
   border-color: var(--accent);
 }
 
-.dataTables_wrapper .dataTables_info {
-  font-size: 16px;
-  color: var(--text);
-  padding: var(--sp-2) 0;
+.col-filter__coverage {
+  display: flex;
+  gap: var(--sp-1);
 }
+
+.col-filter__op {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-1) var(--sp-1);
+  font-size: 14px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.col-filter__value {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-1) var(--sp-2);
+  font-size: 14px;
+  background: var(--surface);
+  color: var(--text);
+  width: 60px;
+  outline: none;
+}
+
+.col-filter__value:focus {
+  border-color: var(--accent);
+}
+
 
 /* --- File list table --------------------------------------- */
 
@@ -376,7 +429,7 @@ table.file_list thead th {
   color: var(--text-tertiary);
   background: var(--surface);
   padding: var(--sp-2) var(--sp-3);
-  border-bottom: 2px solid var(--border);
+  border-bottom: 2px solid var(--border-strong);
   white-space: nowrap;
   position: sticky;
   top: 0;
@@ -407,6 +460,15 @@ table.file_list td.cell--number {
   color: var(--text);
 }
 
+table.file_list th.cell--left,
+table.file_list th.cell--coverage {
+  text-align: left;
+}
+
+table.file_list th.cell--number {
+  text-align: right;
+}
+
 table.file_list td.strong {
   font-weight: 600;
   color: var(--text);
@@ -424,16 +486,35 @@ a.src_link {
 
 /* --- Coverage bar ------------------------------------------ */
 
-.cell--bar {
-  width: 100%;
+.coverage-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.coverage-cell__pct {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.coverage-cell__fraction {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 .coverage-bar {
+  flex-shrink: 0;
+  width: 80px;
   height: var(--bar-height);
   background: var(--bar-bg);
   border-radius: 6px;
   overflow: hidden;
-  min-width: 60px;
+  min-width: 40px;
 }
 
 .coverage-bar__fill {
@@ -445,17 +526,14 @@ a.src_link {
 .coverage-bar__fill--yellow { background: var(--yellow); }
 .coverage-bar__fill--red { background: var(--red); }
 
-@media (max-width: 640px) {
-  .cell--bar {
-    display: none;
-  }
-}
 
 /* --- Color utility classes --------------------------------- */
 
 .green { color: var(--green); }
 .red { color: var(--red); }
 .yellow { color: var(--yellow); }
+.missed-branch-text { color: var(--missed-branch-text); }
+.missed-method-text-color { color: var(--missed-method-text); }
 
 /* --- Source file dialog ------------------------------------ */
 
@@ -497,18 +575,12 @@ dialog.source-dialog[open] {
   min-width: 0;
 }
 
-.source-dialog__title h3 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: var(--sp-1);
+.source-dialog__title h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: var(--sp-2);
   word-break: break-all;
-}
-
-.source-dialog__title h4 {
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  margin: 0;
 }
 
 .source-dialog__close {
@@ -564,35 +636,47 @@ dialog.source-dialog[open] {
   background: var(--surface);
 }
 
-.source_table .header h3 {
-  font-size: 18px;
+.source_table .header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: var(--sp-2);
+}
+
+table.file_list .totals-row td {
+  padding: var(--sp-3) var(--sp-3);
   font-weight: 600;
-  margin-bottom: var(--sp-1);
+  border-bottom: 2px solid var(--border-strong);
+  background: var(--surface-alt);
 }
 
-.source_table .header h4 {
+.totals-row .t-file-count {
   font-size: 18px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  margin-bottom: var(--sp-1);
+  font-weight: 700;
+  color: var(--text);
 }
 
-.source_table .t-line-summary,
-.source_table .t-branch-summary,
-.source_table .t-method-summary,
-.source_table .t-missed-method-summary {
-  font-size: 18px;
-  color: var(--text-secondary);
-  margin-bottom: var(--sp-1);
+.t-missed-method-toggle {
+  color: var(--missed-method-text);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
 }
 
-.t-missed-method-summary ul {
+.t-missed-method-toggle:hover {
+  text-decoration: underline;
+  color: var(--missed-method-text);
+}
+
+.t-missed-method-list ul {
   padding-left: 2em;
   margin-top: var(--sp-1);
+  max-height: 200px;
+  overflow-y: auto;
 }
 
-.t-missed-method-summary li {
-  list-style: disc;
+.t-missed-method-list li {
+  list-style: none;
 }
 
 .source_table pre {
@@ -635,6 +719,7 @@ dialog.source-dialog[open] {
   color: var(--source-line-number);
   background: var(--source-line-num-bg);
   border-right: 1px solid var(--source-border);
+  -webkit-user-select: none;
   user-select: none;
   cursor: pointer;
 }
@@ -648,10 +733,10 @@ dialog.source-dialog[open] {
 }
 
 .source_table pre li code {
+  order: 1;
   flex: 1;
   min-width: 0;
   padding: 0 12px;
-  white-space: pre;
   white-space: pre-wrap;
 }
 
@@ -667,11 +752,12 @@ dialog.source-dialog[open] {
   text-align: center;
   line-height: 24px;
   border-left: 1px solid var(--source-border);
+  -webkit-user-select: none;
   user-select: none;
 }
 
-.source_table pre li code {
-  order: 1;
+.source_table pre .hits::after {
+  content: attr(data-content);
 }
 
 /* Coverage line status */
@@ -680,12 +766,14 @@ dialog.source-dialog[open] {
 .source_table .never         { background-color: var(--never-bg); }
 .source_table .skipped       { background-color: var(--skipped-bg); }
 .source_table .missed-branch { background-color: var(--missed-branch-bg); }
+.source_table .missed-method { background-color: var(--missed-method-bg); }
 
 .source_table .covered::before       { background-color: var(--covered-line-num-bg); }
 .source_table .missed::before        { background-color: var(--missed-line-num-bg); }
 .source_table .never::before         { background-color: var(--never-line-num-bg); }
 .source_table .skipped::before       { background-color: var(--skipped-line-num-bg); }
 .source_table .missed-branch::before { background-color: var(--missed-branch-line-num-bg); }
+.source_table .missed-method::before { background-color: var(--missed-method-line-num-bg); }
 
 /* --- Dark mode toggle -------------------------------------- */
 

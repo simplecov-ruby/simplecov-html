@@ -12,9 +12,11 @@ $(document).ready(function () {
     var toggle = document.getElementById('dark-mode-toggle');
     if (!toggle) return;
 
+    var root = document.documentElement;
+
     function isDark() {
-      return document.documentElement.classList.contains('dark-mode') ||
-        (!document.documentElement.classList.contains('light-mode') &&
+      return root.classList.contains('dark-mode') ||
+        (!root.classList.contains('light-mode') &&
          window.matchMedia('(prefers-color-scheme: dark)').matches);
     }
 
@@ -25,15 +27,10 @@ $(document).ready(function () {
     updateLabel();
 
     toggle.addEventListener('click', function() {
-      if (isDark()) {
-        document.documentElement.classList.remove('dark-mode');
-        document.documentElement.classList.add('light-mode');
-        localStorage.setItem('simplecov-dark-mode', 'light');
-      } else {
-        document.documentElement.classList.remove('light-mode');
-        document.documentElement.classList.add('dark-mode');
-        localStorage.setItem('simplecov-dark-mode', 'dark');
-      }
+      var switchToLight = isDark();
+      root.classList.toggle('light-mode', switchToLight);
+      root.classList.toggle('dark-mode', !switchToLight);
+      localStorage.setItem('simplecov-dark-mode', switchToLight ? 'light' : 'dark');
       updateLabel();
     });
 
@@ -44,18 +41,154 @@ $(document).ready(function () {
     });
   })();
   $('.file_list').dataTable({
-    order: [[1, "asc"]],
-    paging: false
+    order: [],
+    paging: false,
+    columnDefs: [
+      { orderSequence: ["asc", "desc"], targets: "_all" }
+    ],
+    info: false,
+    searching: true
   });
 
-  // Move search box into the header row
-  $('.file_list_container').each(function() {
-    var filter = $(this).find('.dataTables_filter');
-    var target = $(this).find('.file_list_search');
-    if (filter.length && target.length) {
-      filter.find('input').attr('placeholder', 'Search files\u2026');
-      target.append(filter);
+  // Hide DataTables' built-in search (replaced by column filter)
+  $('.dataTables_filter').hide();
+
+  // --- Column filters ---
+
+  var dataAttrMap = {
+    line:   { covered: 'covered-lines',    total: 'relevant-lines' },
+    branch: { covered: 'covered-branches', total: 'total-branches' },
+    method: { covered: 'covered-methods',  total: 'total-methods' }
+  };
+
+  function compare(op, value, threshold) {
+    if (op === 'gt')  return value > threshold;
+    if (op === 'gte') return value >= threshold;
+    if (op === 'eq')  return value === threshold;
+    if (op === 'lte') return value <= threshold;
+    if (op === 'lt')  return value < threshold;
+    return true;
+  }
+
+  // Custom DataTables filter: check all column filters
+  $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+    var table = $(settings.nTable);
+    var container = table.closest('.file_list_container');
+    var row = $(table.DataTable().row(dataIndex).node());
+
+    // File name search
+    var nameQuery = container.find('.col-filter--name').val();
+    if (nameQuery && data[0].toLowerCase().indexOf(nameQuery.toLowerCase()) === -1) return false;
+
+    // Coverage threshold filters
+    var pass = true;
+    container.find('.col-filter__value').each(function() {
+      var val = $(this).val();
+      if (!val) return;
+      var threshold = parseFloat(val);
+      if (isNaN(threshold)) return;
+
+      var type = $(this).data('type');
+      var op = container.find('.col-filter__op[data-type="' + type + '"]').val();
+      if (!op) return;
+
+      var attrs = dataAttrMap[type];
+      if (!attrs) return;
+      var covered = parseInt(row.data(attrs.covered), 10) || 0;
+      var total = parseInt(row.data(attrs.total), 10) || 0;
+      var pct = total > 0 ? (covered * 100.0 / total) : 100;
+
+      if (!compare(op, pct, threshold)) pass = false;
+    });
+
+    return pass;
+  });
+
+  // Disable nonsensical comparators based on value
+  function updateFilterOptions(input) {
+    var val = parseFloat($(input).val());
+    var select = $(input).closest('.col-filter__coverage').find('.col-filter__op');
+    select.find('option[value="gt"]').prop('disabled', val >= 100);
+    select.find('option[value="lt"]').prop('disabled', val <= 0);
+    // If the selected option is now disabled, switch to a valid one
+    if (select.find('option:selected').prop('disabled')) {
+      select.val(select.find('option:not(:disabled)').first().val());
     }
+  }
+
+  // Initialize on page load
+  $('.col-filter__value').each(function() { updateFilterOptions(this); });
+
+  // Focus search box on "/" key (standard shortcut)
+  $(document).on('keydown', function(e) {
+    if (e.key === '/' && !$(e.target).is('input, select, textarea')) {
+      e.preventDefault();
+      $('.file_list_container:visible .col-filter--name').first().focus();
+    }
+  });
+
+  // Prevent filter clicks from triggering column sort
+  $('.col-filter--name, .col-filter__op, .col-filter__value, .col-filter__coverage').on('click', function(e) {
+    e.stopPropagation();
+  });
+
+  // Redraw on any filter change
+  $(document).on('input change', '.col-filter--name, .col-filter__op, .col-filter__value', function() {
+    if ($(this).hasClass('col-filter__value')) updateFilterOptions(this);
+    $(this).closest('.file_list_container').find('table.file_list').DataTable().draw();
+  });
+
+  // Update totals row based on visible (filtered) rows
+  function updateTotalsRow(container) {
+    var dt = $(container).find('table.file_list').DataTable();
+    var filteredNodes = dt.rows({search: 'applied'}).nodes();
+    var rows = $(filteredNodes).filter('tr.t-file');
+
+    function sumData(attr) {
+      var total = 0;
+      rows.each(function() { total += parseInt($(this).data(attr), 10) || 0; });
+      return total;
+    }
+
+    function pctClass(pct) {
+      if (pct >= 90) return 'green';
+      if (pct >= 75) return 'yellow';
+      return 'red';
+    }
+
+    function buildCoverageCell(covered, total) {
+      if (total === 0) return '<span class="coverage-cell__pct">\u2013</span>';
+      var p = covered * 100.0 / total;
+      return '<div class="coverage-cell">' +
+        '<div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--' + pctClass(p) + '" style="width: ' + p.toFixed(1) + '%"></div></div>' +
+        '<span class="coverage-cell__pct ' + pctClass(p) + '">' + p.toFixed(2) + '%</span>' +
+        '<span class="coverage-cell__fraction">' + covered + '/' + total + '</span>' +
+        '</div>';
+    }
+
+    var coveredLines = sumData('covered-lines'), relevantLines = sumData('relevant-lines');
+
+    $(container).find('.t-file-count').text(rows.length + ' files');
+    $(container).find('.t-totals__line-coverage').html(buildCoverageCell(coveredLines, relevantLines));
+    $(container).find('.totals-row .cell--number').eq(0).text(relevantLines || '\u2013');
+
+    if ($(container).find('.t-totals__branch-coverage').length) {
+      var coveredBranches = sumData('covered-branches'), totalBranches = sumData('total-branches');
+      $(container).find('.t-totals__branch-coverage').html(buildCoverageCell(coveredBranches, totalBranches));
+      $(container).find('.totals-row .cell--number').eq(1).text(totalBranches || '\u2013');
+    }
+
+    if ($(container).find('.t-totals__method-coverage').length) {
+      var coveredMethods = sumData('covered-methods'), totalMethods = sumData('total-methods');
+      $(container).find('.t-totals__method-coverage').html(buildCoverageCell(coveredMethods, totalMethods));
+      var methodIdx = $(container).find('.t-totals__branch-coverage').length ? 2 : 1;
+      $(container).find('.totals-row .cell--number').eq(methodIdx).text(totalMethods || '\u2013');
+    }
+  }
+
+  // Recalculate on every DataTables draw (sort, filter)
+  $('table.file_list').on('draw.dt', function() {
+    updateTotalsRow($(this).closest('.file_list_container'));
   });
 
   // --- Template materialization ---
@@ -82,17 +215,12 @@ $(document).ready(function () {
   var dialogBody = document.getElementById('source-dialog-body');
   var dialogTitle = document.getElementById('source-dialog-title');
   var dialogClose = dialog.querySelector('.source-dialog__close');
-  var prev_anchor;
-  var curr_anchor;
 
   function openSourceFile(sourceFileId, linenumber) {
     var el = materializeSourceFile(sourceFileId);
     if (!el || !el.length) return;
 
-    // Clone the source table into the dialog
     var sourceTable = el[0].cloneNode(true);
-
-    // Move header content to dialog title area
     var header = sourceTable.querySelector('.header');
     if (header) {
       dialogTitle.innerHTML = header.innerHTML;
@@ -102,14 +230,10 @@ $(document).ready(function () {
     dialogBody.innerHTML = '';
     dialogBody.appendChild(sourceTable);
 
-    prev_anchor = curr_anchor ? curr_anchor : window.location.hash.substring(1);
-    curr_anchor = sourceFileId + (linenumber ? '-L' + linenumber : '');
-    window.location.hash = curr_anchor;
-
-    dialog.showModal();
+    if (!dialog.open) dialog.showModal();
+    document.documentElement.style.overflow = 'hidden';
     dialogBody.focus();
 
-    // Scroll to line number if specified
     if (linenumber) {
       var targetLine = dialogBody.querySelector('li[data-linenumber="' + linenumber + '"]');
       if (targetLine) {
@@ -118,53 +242,78 @@ $(document).ready(function () {
     }
   }
 
-  function closeDialog() {
-    dialog.close();
-
-    if (prev_anchor && prev_anchor.substring(0, 1) === '_') {
-      window.location.hash = prev_anchor;
-    } else {
-      var activeTab = $('.group_tabs li.active a').attr('href');
-      if (activeTab) {
-        window.location.hash = activeTab.replace('#', '#_');
-      }
+  function showFileList(tabId) {
+    if (dialog.open) {
+      dialog.close();
+      dialogBody.innerHTML = '';
+      dialogTitle.innerHTML = '';
+      document.documentElement.style.overflow = '';
     }
 
-    curr_anchor = window.location.hash.substring(1);
-
-    var active_group = $('.group_tabs li.active a').attr('class');
-    if (active_group) {
-      $("#" + active_group + ".file_list_container").show();
+    if (tabId) {
+      var tab = $('.group_tabs a.' + tabId);
+      if (tab.length) {
+        $('.group_tabs a').parent().removeClass('active');
+        tab.parent().addClass('active');
+        $('.file_list_container').hide();
+        $(".file_list_container#" + tabId).show();
+      }
     }
   }
 
-  dialogClose.addEventListener('click', closeDialog);
+  // Navigate to the state described by the current hash
+  function navigateToHash() {
+    var hash = window.location.hash.substring(1);
 
-  dialog.addEventListener('close', function() {
-    dialogBody.innerHTML = '';
-    dialogTitle.innerHTML = '';
-  });
-
-  // Close on backdrop click
-  dialog.addEventListener('click', function(e) {
-    if (e.target === dialog) {
-      closeDialog();
+    if (!hash) {
+      showFileList($('.group_tabs a:first').attr('href').replace('#', ''));
+      return;
     }
+
+    if (hash.substring(0, 1) === '_') {
+      showFileList(hash.substring(1));
+    } else {
+      var parts = hash.split('-L');
+      // Ensure a tab is active for when we navigate back
+      if (!$('.group_tabs li.active').length) {
+        var firstTab = $('.group_tabs a:first');
+        firstTab.parent().addClass('active');
+      }
+      openSourceFile(parts[0], parts[1]);
+    }
+  }
+
+  function navigateToActiveTab() {
+    var activeTab = $('.group_tabs li.active a').attr('href');
+    if (activeTab) {
+      window.location.hash = activeTab.replace('#', '#_');
+    }
+  }
+
+  dialogClose.addEventListener('click', navigateToActiveTab);
+
+  // Close dialog when clicking the backdrop
+  dialog.addEventListener('click', function(e) {
+    if (e.target === dialog) navigateToActiveTab();
   });
 
-  // Source link clicks
+  // Toggle missed methods list
+  $(document).on('click', '.t-missed-method-toggle', function (e) {
+    e.preventDefault();
+    $(this).closest('.header, .source-dialog__title, .source-dialog__header').find('.t-missed-method-list').toggle();
+  });
+
+  // Source link clicks — just set the hash, navigation handles the rest
   $(document).on('click', 'a.src_link', function (e) {
     e.preventDefault();
-    var sourceFileId = $(this).attr('href').substring(1);
-    openSourceFile(sourceFileId);
+    window.location.hash = $(this).attr('href').substring(1);
   });
 
-  // Clicking anywhere in a file row opens the source view
   $(document).on('click', 'table.file_list tbody tr', function (e) {
-    if ($(e.target).closest('a').length) return; // let link clicks handle themselves
+    if ($(e.target).closest('a').length) return;
     var link = $(this).find('a.src_link');
     if (link.length) {
-      openSourceFile(link.attr('href').substring(1));
+      window.location.hash = link.attr('href').substring(1);
     }
   });
 
@@ -172,34 +321,21 @@ $(document).ready(function () {
   $(document).on('click', '.source-dialog .source_table li[data-linenumber]', function () {
     dialogBody.scrollTop = this.offsetTop;
     var linenumber = $(this).data('linenumber');
-    var new_anchor = curr_anchor.replace(/-L.*/, '').replace(/-.*/, '') + '-L' + linenumber;
-    window.location.replace(window.location.href.replace(/#.*/, '#' + new_anchor));
-    curr_anchor = new_anchor;
+    var sourceFileId = window.location.hash.substring(1).replace(/-L.*/, '');
+    window.location.replace(window.location.href.replace(/#.*/, '#' + sourceFileId + '-L' + linenumber));
     return false;
   });
 
-  // --- Hash-based navigation ---
-
-  window.onpopstate = function () {
-    var hash = window.location.hash.substring(1);
-    if (!hash) return;
-
-    if (hash.substring(0, 1) === '_') {
-      if (dialog.open) closeDialog();
-      curr_anchor = hash;
-    } else if (!dialog.open) {
-      var parts = hash.split('-L');
-      openSourceFile(parts[0], parts[1]);
-    }
-  };
+  // All navigation goes through hashchange -> navigateToHash
+  window.addEventListener('hashchange', navigateToHash);
 
   // --- Tab system ---
 
   $('.source_files').hide();
   $('.file_list_container').hide();
 
-  $('.file_list_container h2').each(function () {
-    var container_id = $(this).closest('.file_list_container').attr('id');
+  $('.file_list_container').each(function () {
+    var container_id = $(this).attr('id');
     var group_name = $(this).find('.group_name').first().html();
     var covered_percent = $(this).find('.covered_percent').first().html();
 
@@ -210,36 +346,14 @@ $(document).ready(function () {
     $(this).addClass($(this).attr('href').replace('#', ''));
   });
 
-  var favicon_path = $('link[rel="icon"]').attr('href');
+  // Tab clicks just set the hash — navigation handles the rest
   $('.group_tabs').on('click', 'a', function () {
-    if (!$(this).parent().hasClass('active')) {
-      $('.group_tabs a').parent().removeClass('active');
-      $(this).parent().addClass('active');
-      $('.file_list_container').hide();
-      $(".file_list_container" + $(this).attr('href')).show();
-      window.location.href = window.location.href.split('#')[0] + $(this).attr('href').replace('#', '#_');
-
-      $('link[rel="icon"]').remove();
-      $('head').append('<link rel="icon" type="image/png" href="' + favicon_path + '" />');
-    }
+    window.location.hash = $(this).attr('href').replace('#', '#_');
     return false;
   });
 
   // --- Initial state from URL hash ---
-
-  if (window.location.hash) {
-    var anchor = window.location.hash.substring(1);
-    if (anchor.length === 40) {
-      openSourceFile(anchor);
-    } else if (anchor.length > 40) {
-      var ary = anchor.split('-L');
-      openSourceFile(ary[0], ary[1]);
-    } else {
-      $('.group_tabs a.' + anchor.replace('_', '')).click();
-    }
-  } else {
-    $('.group_tabs a:first').click();
-  }
+  navigateToHash();
 
   // --- Finalize loading ---
 
@@ -247,5 +361,4 @@ $(document).ready(function () {
   clearInterval(window._simplecovLoadingTimer);
   $('#loading').fadeOut();
   $('#wrapper').show();
-  $('.dataTables_filter input').focus();
 });
