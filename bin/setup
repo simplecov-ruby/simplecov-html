@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Installing Ruby dependencies..."
+bundle install
+
+echo "Installing Node dependencies..."
+bun install
+
+echo "Done! Run 'bundle exec rake' to run tests."

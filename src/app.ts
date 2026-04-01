@@ -1,6 +1,7 @@
-declare const hljs: {
-  highlightBlock(block: Element, tabReplace?: string): void;
-};
+import hljs from 'highlight.js/lib/core';
+import ruby from 'highlight.js/lib/languages/ruby';
+
+hljs.registerLanguage('ruby', ruby);
 
 
 // --- Utility helpers ------------------------------------------
@@ -260,7 +261,7 @@ function materializeSourceFile(sourceFileId: string): HTMLElement | null {
 
   const el = document.getElementById(sourceFileId);
   if (el) {
-    $$('pre code', el).forEach(e => { hljs.highlightBlock(e, '  '); });
+    $$('pre code', el).forEach(e => { hljs.highlightElement(e as HTMLElement); });
   }
   return el;
 }

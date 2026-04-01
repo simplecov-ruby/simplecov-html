@@ -3,14 +3,6 @@
 require "bundler"
 Bundler::GemHelper.install_tasks
 
-# See https://github.com/simplecov-ruby/simplecov/issues/171
-desc "Set permissions on all files so they are compatible with both user-local and system-wide installs"
-task :fix_permissions do
-  system 'bash -c "find . -type f -exec chmod 644 {} \; && find . -type d -exec chmod 755 {} \;"'
-end
-# Enforce proper permissions on each build
-Rake::Task[:build].prerequisites.unshift :fix_permissions
-
 require "rake/testtask"
 Rake::TestTask.new(:test) do |test|
   test.libs << "lib" << "test"
@@ -34,10 +26,8 @@ namespace :assets do
   task :compile do
     puts "Compiling assets"
 
-    # JS: esbuild compiles TypeScript directly, then we concatenate with highlight.js and minify
-    sh "esbuild src/app.ts --bundle --minify --target=es2015 " \
-       "--banner:js=\"$(cat assets/javascripts/plugins/highlight.pack.js)\" " \
-       "--outfile=public/application.js"
+    # JS: esbuild bundles TypeScript + highlight.js and minifies
+    sh "esbuild src/app.ts --bundle --minify --target=es2015 --outfile=public/application.js"
 
     # CSS: concatenate in order and minify
     css = %w[
