@@ -1,12 +1,12 @@
 <div class="summary-stats">
   <div class="t-line-summary">
-    Line coverage: <span class="<%= coverage_css_class(line_stats[:pct]) %>"><b><%= sprintf("%.2f", line_stats[:pct].floor(2)) %>%</b></span><span class="coverage-cell__fraction"> <%= line_stats[:covered] %>/<%= line_stats[:total] %> relevant lines covered</span><% if line_stats[:missed] > 0 %><span class="coverage-cell__fraction">,</span>
-    <span class="red"><b><%= line_stats[:missed] %></b> missed</span><% end %>
+    Line coverage: <span class="<%= coverage_css_class(@_summary[:line][:pct]) %>"><b><%= sprintf("%.2f", @_summary[:line][:pct].floor(2)) %>%</b></span><span class="coverage-cell__fraction"> <%= @_summary[:line][:covered] %>/<%= @_summary[:line][:total] %> relevant lines covered</span><% if @_summary[:line][:missed] > 0 %><span class="coverage-cell__fraction">,</span>
+    <span class="red"><b><%= @_summary[:line][:missed] %></b> missed</span><% end %>
   </div>
 <%- if branch_coverage? -%>
   <div class="t-branch-summary">
-    Branch coverage: <span class="<%= coverage_css_class(branch_stats[:pct]) %>"><b><%= sprintf("%.2f", branch_stats[:pct].floor(2)) %>%</b></span><span class="coverage-cell__fraction"> <%= branch_stats[:covered] %>/<%= branch_stats[:total] %> covered</span><% if branch_stats[:missed] > 0 %><span class="coverage-cell__fraction">,</span>
-    <span class="missed-branch-text"><b><%= branch_stats[:missed] %></b> missed</span><% end %>
+    Branch coverage: <span class="<%= coverage_css_class(@_summary[:branch][:pct]) %>"><b><%= sprintf("%.2f", @_summary[:branch][:pct].floor(2)) %>%</b></span><span class="coverage-cell__fraction"> <%= @_summary[:branch][:covered] %>/<%= @_summary[:branch][:total] %> covered</span><% if @_summary[:branch][:missed] > 0 %><span class="coverage-cell__fraction">,</span>
+    <span class="missed-branch-text"><b><%= @_summary[:branch][:missed] %></b> missed</span><% end %>
   </div>
 <%- else -%>
   <div class="t-branch-summary">
@@ -15,11 +15,11 @@
 <%- end -%>
 <%- if method_coverage? -%>
   <div class="t-method-summary">
-    Method coverage: <span class="<%= coverage_css_class(method_stats[:pct]) %>"><b><%= sprintf("%.2f", method_stats[:pct].floor(2)) %>%</b></span><span class="coverage-cell__fraction"> <%= method_stats[:covered] %>/<%= method_stats[:total] %> covered</span><% if method_stats[:missed] > 0 %><span class="coverage-cell__fraction">,</span>
-<%- if show_method_toggle -%>
-    <a href="#" class="t-missed-method-toggle"><b><%= method_stats[:missed] %></b> missed</a>
+    Method coverage: <span class="<%= coverage_css_class(@_summary[:method][:pct]) %>"><b><%= sprintf("%.2f", @_summary[:method][:pct].floor(2)) %>%</b></span><span class="coverage-cell__fraction"> <%= @_summary[:method][:covered] %>/<%= @_summary[:method][:total] %> covered</span><% if @_summary[:method][:missed] > 0 %><span class="coverage-cell__fraction">,</span>
+<%- if @_summary[:show_method_toggle] -%>
+    <a href="#" class="t-missed-method-toggle"><b><%= @_summary[:method][:missed] %></b> missed</a>
 <%- else -%>
-    <span class="missed-method-text-color"><b><%= method_stats[:missed] %></b> missed</span>
+    <span class="missed-method-text-color"><b><%= @_summary[:method][:missed] %></b> missed</span>
 <%- end -%>
 <%- end -%>
   </div>

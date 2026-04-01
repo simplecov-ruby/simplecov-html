@@ -19,7 +19,12 @@ rescue LoadError
   end
 end
 
-task default: %i[test rubocop]
+desc "Run mutation tests"
+task :mutant do
+  sh "bundle exec mutant run"
+end
+
+task default: %i[test rubocop mutant]
 
 namespace :assets do
   desc "Compiles all assets using esbuild"

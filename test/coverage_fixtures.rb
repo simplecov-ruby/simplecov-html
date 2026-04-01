@@ -12,7 +12,7 @@ module CoverageFixtures
   }.freeze
 
   SAMPLE_RB = {
-    "lines" => [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil, nil, nil, nil, nil, nil, nil, nil],
+    "lines" => [nil, 1, 1, 1, nil, nil, 1, 0, nil, nil, nil, nil, nil, nil, nil, nil],
   }.freeze
 
   INLINE_RB = {

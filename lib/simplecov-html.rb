@@ -27,7 +27,7 @@ module SimpleCov
 
       def initialize(silent: false, inline_assets: false)
         @branch_coverage = SimpleCov.branch_coverage?
-        @method_coverage = SimpleCov.respond_to?(:method_coverage?) && SimpleCov.method_coverage?
+        @method_coverage = SimpleCov.method_coverage?
         @templates = {}
         @inline_assets = inline_assets || ENV.key?("SIMPLECOV_INLINE_ASSETS")
         @public_assets_dir = File.join(File.dirname(__FILE__), "../public/")
@@ -72,7 +72,7 @@ module SimpleCov
       end
 
       def asset_output_path
-        @asset_output_path ||= File.join(output_path, "assets", SimpleCov::Formatter::HTMLFormatter::VERSION).tap do |path|
+        @asset_output_path ||= File.join(output_path, "assets", VERSION).tap do |path|
           FileUtils.mkdir_p(path)
         end
       end
@@ -80,13 +80,13 @@ module SimpleCov
       def assets_path(name)
         return asset_inline(name) if @inline_assets
 
-        File.join("./assets", SimpleCov::Formatter::HTMLFormatter::VERSION, name)
+        File.join("./assets", VERSION, name)
       end
 
       def asset_inline(name)
         path = File.join(@public_assets_dir, name)
         base64_content = [File.read(path)].pack("m0")
-        "data:#{CONTENT_TYPES[File.extname(name)]};base64,#{base64_content}"
+        "data:#{CONTENT_TYPES.fetch(File.extname(name))};base64,#{base64_content}"
       end
 
       def formatted_source_file(source_file)

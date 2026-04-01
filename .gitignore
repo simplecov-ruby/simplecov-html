@@ -28,3 +28,5 @@ coverage
 rdoc
 pkg
 .sass-cache
+/index.html
+/assets/[0-9]*
