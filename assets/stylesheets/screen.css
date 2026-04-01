@@ -342,14 +342,6 @@ abbr.timeago {
 
 /* --- DataTables overrides ---------------------------------- */
 
-.dataTables_filter,
-.dataTables_info {
-  display: none;
-}
-
-table.dataTable.no-footer {
-  border-bottom: none;
-}
 
 /* --- Column filters ---------------------------------------- */
 
