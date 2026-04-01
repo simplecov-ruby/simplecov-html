@@ -10,19 +10,25 @@ Gem::Specification.new do |gem|
   gem.authors     = ["Christoph Olszowka"]
   gem.email       = ["christoph at olszowka de"]
   gem.homepage    = "https://github.com/simplecov-ruby/simplecov-html"
-  gem.description = %(Default HTML formatter for SimpleCov code coverage tool for ruby 2.4+)
-  gem.summary     = gem.description
+  gem.summary     = "Default HTML formatter for SimpleCov code coverage tool"
+  gem.description = gem.summary
   gem.license     = "MIT"
 
   gem.required_ruby_version = ">= 2.7"
 
-  gem.files = Dir.chdir(__dir__) do
-    `git ls-files -z`.split("\x0").reject do |f|
-      (File.expand_path(f) == __FILE__) ||
-        f.start_with?(*%w[bin/ test/ spec/ features/ .git .github appveyor Gemfile Gemfile.lock assets .rubocop.yml Guardfile .tool-versions])
-    end
-  end
-  gem.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
+  gem.metadata = {
+    "homepage_uri" => gem.homepage,
+    "source_code_uri" => gem.homepage,
+    "changelog_uri" => "#{gem.homepage}/releases",
+    "bug_tracker_uri" => "#{gem.homepage}/issues",
+    "rubygems_mfa_required" => "true",
+  }
+
+  gem.files = Dir[
+    "lib/**/*.rb",
+    "public/**/*",
+    "views/**/*.erb",
+    "LICENSE"
+  ]
   gem.require_paths = ["lib"]
-  gem.metadata["rubygems_mfa_required"] = "true"
 end

@@ -20,6 +20,9 @@ tmtags
 ## RUBYMINE
 .idea
 
+## NODE
+node_modules
+
 ## PROJECT::GENERAL
 coverage
 rdoc

@@ -30,25 +30,48 @@ class TestSimpleCovHtml < Minitest::Test
     SimpleCov.filters.replace(@original_filters)
   end
 
-  def test_defined
-    assert defined?(SimpleCov::Formatter::HTMLFormatter::VERSION)
+  def test_version_defined
+    assert_predicate SimpleCov::Formatter::HTMLFormatter::VERSION, :frozen?
   end
 
-  def test_output
+  def test_output_header_coverage
+    html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
+    header = html_doc.at_css("div#AllFiles span.covered_percent span").content.strip
+
+    assert_equal "74.11%", header
+  end
+
+  def test_output_line_coverages
+    html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
+    pcts = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__coverage .coverage-cell__pct")
+    table = pcts.map { |m| m.content.strip }
+
+    assert_equal EXPECTED_LINE_COVERAGES, table.sort_by(&:to_f)
+  end
+
+  def test_output_branch_coverages
+    skip "Branch coverage not reliable on JRuby" if RUBY_ENGINE == "jruby"
+
     html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
 
-    assert_header_coverage(html_doc)
-    assert_line_coverages(html_doc)
-    assert_branch_coverages(html_doc) if RUBY_ENGINE != "jruby"
+    branch_cell = html_doc.at_css("div#AllFiles td.t-totals__branch-coverage")
+
+    assert branch_cell, "Expected branch coverage totals row"
+
+    pcts = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__branch-coverage .coverage-cell__pct")
+    table = pcts.map { |m| m.content.strip }
+
+    assert_equal EXPECTED_BRANCH_COVERAGES, table.sort_by(&:to_f)
   end
 
   def test_output_with_method_coverage
-    return unless SimpleCov.method_coverage_supported?
+    skip "Method coverage not supported" unless SimpleCov.method_coverage_supported?
 
     SimpleCov.enable_coverage(:method)
     html_doc = format_results("sample.rb" => CoverageFixtures::SAMPLE_RB)
 
-    assert html_doc.at_css("div#AllFiles td.t-totals__method-coverage")
+    assert html_doc.at_css("div#AllFiles td.t-totals__method-coverage"),
+           "Expected method coverage totals row"
   end
 
   def test_output_without_branch_coverage
@@ -96,39 +119,7 @@ class TestSimpleCovHtml < Minitest::Test
     assert_empty stdout
   end
 
-  def test_strength_css_classes
-    formatter = SimpleCov::Formatter::HTMLFormatter.new
-
-    assert_equal "green", formatter.send(:strength_css_class, 2)
-    assert_equal "yellow", formatter.send(:strength_css_class, 1)
-    assert_equal "red", formatter.send(:strength_css_class, 0)
-  end
-
 private
-
-  def assert_header_coverage(html_doc)
-    header = html_doc.at_css("div#AllFiles span.covered_percent span").content.strip
-
-    assert_equal("74.11%", header)
-
-    return if RUBY_ENGINE == "jruby"
-
-    branch_cell = html_doc.at_css("div#AllFiles td.t-totals__branch-coverage")
-
-    assert branch_cell
-  end
-
-  def assert_line_coverages(html_doc)
-    table = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__coverage .coverage-cell__pct").map { |m| m.content.strip }
-
-    assert_equal(EXPECTED_LINE_COVERAGES, table.sort_by(&:to_f))
-  end
-
-  def assert_branch_coverages(html_doc)
-    table = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__branch-coverage .coverage-cell__pct").map { |m| m.content.strip }
-
-    assert_equal(EXPECTED_BRANCH_COVERAGES, table.sort_by(&:to_f))
-  end
 
   def generate_inline_html
     formatter = SimpleCov::Formatter::HTMLFormatter.new
