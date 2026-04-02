@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/simplecov-ruby/simplecov
-  revision: c2c0206ecd5acf7efa85ee34bb25968bf48c6eec
+  revision: 7245d3a1292f4feb17c8876c5357e4034b0595a4
   specs:
     simplecov (0.22.0)
       docile (~> 1.1)
