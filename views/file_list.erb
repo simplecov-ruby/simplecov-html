@@ -12,39 +12,42 @@
               <input type="search" class="col-filter col-filter--name" placeholder="Filter paths&#8230;">
             </div>
           </th>
-          <th class="cell--coverage" colspan="4">
+          <th class="cell--coverage" colspan="2">
             <div class="th-with-filter">
               <span class="th-label">Line Coverage</span>
               <div class="col-filter__coverage">
                 <select class="col-filter__op" data-type="line"><option value="lt">&lt;</option><option value="lte" selected>&le;</option><option value="eq">=</option><option value="gte">&ge;</option><option value="gt">&gt;</option></select>
-                <input type="number" class="col-filter__value" min="0" max="100" data-type="line" value="100" placeholder="%" step="any">
+                <span class="col-filter__pct-wrap"><input type="number" class="col-filter__value" min="0" max="100" data-type="line" value="100" step="any"></span>
               </div>
             </div>
           </th>
-          <th class="cell--number">Relevant Lines</th>
+          <th class="cell--numerator">Lines Covered</th>
+          <th class="cell--denominator">Relevant Lines</th>
 <%- if branch_coverage? -%>
-          <th class="cell--coverage" colspan="4">
+          <th class="cell--coverage" colspan="2">
             <div class="th-with-filter">
               <span class="th-label">Branch Coverage</span>
               <div class="col-filter__coverage">
                 <select class="col-filter__op" data-type="branch"><option value="lt">&lt;</option><option value="lte" selected>&le;</option><option value="eq">=</option><option value="gte">&ge;</option><option value="gt">&gt;</option></select>
-                <input type="number" class="col-filter__value" min="0" max="100" data-type="branch" value="100" placeholder="%" step="any">
+                <span class="col-filter__pct-wrap"><input type="number" class="col-filter__value" min="0" max="100" data-type="branch" value="100" step="any"></span>
               </div>
             </div>
           </th>
-          <th class="cell--number">Branches</th>
+          <th class="cell--numerator">Branches Covered</th>
+          <th class="cell--denominator">Branches</th>
 <%- end -%>
 <%- if method_coverage? -%>
-          <th class="cell--coverage" colspan="4">
+          <th class="cell--coverage" colspan="2">
             <div class="th-with-filter">
               <span class="th-label">Method Coverage</span>
               <div class="col-filter__coverage">
                 <select class="col-filter__op" data-type="method"><option value="lt">&lt;</option><option value="lte" selected>&le;</option><option value="eq">=</option><option value="gte">&ge;</option><option value="gt">&gt;</option></select>
-                <input type="number" class="col-filter__value" min="0" max="100" data-type="method" value="100" placeholder="%" step="any">
+                <span class="col-filter__pct-wrap"><input type="number" class="col-filter__value" min="0" max="100" data-type="method" value="100" step="any"></span>
               </div>
             </div>
           </th>
-          <th class="cell--number">Methods</th>
+          <th class="cell--numerator">Methods Covered</th>
+          <th class="cell--denominator">Methods</th>
 <%- end -%>
         </tr>
 <%- line_pct = source_files.lines_of_code > 0 ? source_files.covered_percent : 100.0 -%>
@@ -56,20 +59,17 @@
           <td class="cell--pct strong t-totals__line-pct <%= coverage_css_class(line_pct) %>"><%= sprintf("%.2f", line_pct.floor(2)) %>%</td>
           <td class="cell--numerator strong t-totals__line-num"><%= fmt(source_files.covered_lines) %>/</td>
           <td class="cell--denominator strong t-totals__line-den"><%= fmt(source_files.lines_of_code) %></td>
-          <td class="cell--number strong"><%= fmt(source_files.lines_of_code) %></td>
 <%- if branch_coverage? -%>
           <td class="cell--bar t-totals__branch-bar"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(branch_pct) %>" style="width: <%= sprintf("%.1f", branch_pct.floor(1)) %>%"></div></div></td>
           <td class="cell--pct strong t-totals__branch-pct <%= coverage_css_class(branch_pct) %>"><%= sprintf("%.2f", branch_pct.floor(2)) %>%</td>
           <td class="cell--numerator strong t-totals__branch-num"><%= fmt(source_files.covered_branches) %>/</td>
           <td class="cell--denominator strong t-totals__branch-den"><%= fmt(source_files.total_branches) %></td>
-          <td class="cell--number strong"><%= fmt(source_files.total_branches) %></td>
 <%- end -%>
 <%- if method_coverage? -%>
           <td class="cell--bar t-totals__method-bar"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(method_pct) %>" style="width: <%= sprintf("%.1f", method_pct.floor(1)) %>%"></div></div></td>
           <td class="cell--pct strong t-totals__method-pct <%= coverage_css_class(method_pct) %>"><%= sprintf("%.2f", method_pct.floor(2)) %>%</td>
           <td class="cell--numerator strong t-totals__method-num"><%= fmt(source_files.covered_methods) %>/</td>
           <td class="cell--denominator strong t-totals__method-den"><%= fmt(source_files.total_methods) %></td>
-          <td class="cell--number strong"><%= fmt(source_files.total_methods) %></td>
 <%- end -%>
         </tr>
       </thead>
@@ -78,24 +78,21 @@
 <%- covered_lines = source_file.covered_lines.count; relevant_lines = covered_lines + source_file.missed_lines.count -%>
         <tr class="t-file" data-covered-lines="<%= covered_lines %>" data-relevant-lines="<%= relevant_lines %>"<% if branch_coverage? %> data-covered-branches="<%= source_file.covered_branches.count %>" data-total-branches="<%= source_file.total_branches.count %>"<% end %><% if method_coverage? %> data-covered-methods="<%= source_file.covered_methods.count %>" data-total-methods="<%= source_file.methods.count %>"<% end %>>
           <td class="strong t-file__name"><%= link_to_source_file(source_file) %></td>
-          <td class="cell--bar" data-order="<%= sprintf("%.2f", source_file.covered_percent) %>"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.covered_percent) %>" style="width: <%= sprintf("%.1f", source_file.covered_percent.floor(1)) %>%"></div></div></td>
-          <td class="cell--pct cell--line-pct <%= coverage_css_class(source_file.covered_percent) %>"><%= sprintf("%.2f", source_file.covered_percent.floor(2)) %>%</td>
+          <td class="cell--bar"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.covered_percent) %>" style="width: <%= sprintf("%.1f", source_file.covered_percent.floor(1)) %>%"></div></div></td>
+          <td class="cell--pct cell--line-pct <%= coverage_css_class(source_file.covered_percent) %>" data-order="<%= sprintf("%.2f", source_file.covered_percent) %>"><%= sprintf("%.2f", source_file.covered_percent.floor(2)) %>%</td>
           <td class="cell--numerator"><%= fmt(covered_lines) %>/</td>
           <td class="cell--denominator"><%= fmt(relevant_lines) %></td>
-          <td class="cell--number"><%= fmt(relevant_lines) %></td>
 <%- if branch_coverage? -%>
-          <td class="cell--bar" data-order="<%= sprintf("%.2f", source_file.branches_coverage_percent) %>"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.branches_coverage_percent) %>" style="width: <%= sprintf("%.1f", source_file.branches_coverage_percent.floor(1)) %>%"></div></div></td>
-          <td class="cell--pct cell--branch-pct <%= coverage_css_class(source_file.branches_coverage_percent) %>"><%= sprintf("%.2f", source_file.branches_coverage_percent.floor(2)) %>%</td>
+          <td class="cell--bar"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.branches_coverage_percent) %>" style="width: <%= sprintf("%.1f", source_file.branches_coverage_percent.floor(1)) %>%"></div></div></td>
+          <td class="cell--pct cell--branch-pct <%= coverage_css_class(source_file.branches_coverage_percent) %>" data-order="<%= sprintf("%.2f", source_file.branches_coverage_percent) %>"><%= sprintf("%.2f", source_file.branches_coverage_percent.floor(2)) %>%</td>
           <td class="cell--numerator"><%= fmt(source_file.covered_branches.count) %>/</td>
           <td class="cell--denominator"><%= fmt(source_file.total_branches.count) %></td>
-          <td class="cell--number"><%= fmt(source_file.total_branches.count) %></td>
 <%- end -%>
 <%- if method_coverage? -%>
-          <td class="cell--bar" data-order="<%= sprintf("%.2f", source_file.methods_coverage_percent) %>"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.methods_coverage_percent) %>" style="width: <%= sprintf("%.1f", source_file.methods_coverage_percent.floor(1)) %>%"></div></div></td>
-          <td class="cell--pct cell--method-pct <%= coverage_css_class(source_file.methods_coverage_percent) %>"><%= sprintf("%.2f", source_file.methods_coverage_percent.floor(2)) %>%</td>
+          <td class="cell--bar"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.methods_coverage_percent) %>" style="width: <%= sprintf("%.1f", source_file.methods_coverage_percent.floor(1)) %>%"></div></div></td>
+          <td class="cell--pct cell--method-pct <%= coverage_css_class(source_file.methods_coverage_percent) %>" data-order="<%= sprintf("%.2f", source_file.methods_coverage_percent) %>"><%= sprintf("%.2f", source_file.methods_coverage_percent.floor(2)) %>%</td>
           <td class="cell--numerator"><%= fmt(source_file.covered_methods.count) %>/</td>
           <td class="cell--denominator"><%= fmt(source_file.methods.count) %></td>
-          <td class="cell--number"><%= fmt(source_file.methods.count) %></td>
 <%- end -%>
         </tr>
 <%- end -%>

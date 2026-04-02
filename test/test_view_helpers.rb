@@ -130,6 +130,29 @@ class TestViewHelpers < Minitest::Test
     assert_equal "", formatter.send(:to_id, "!@#")
   end
 
+  cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#fmt" if respond_to?(:cover)
+
+  def test_fmt_small_numbers
+    assert_equal "0", formatter.send(:fmt, 0)
+    assert_equal "1", formatter.send(:fmt, 1)
+    assert_equal "999", formatter.send(:fmt, 999)
+  end
+
+  def test_fmt_thousands
+    assert_equal "1,000", formatter.send(:fmt, 1000)
+    assert_equal "1,234", formatter.send(:fmt, 1234)
+    assert_equal "9,999", formatter.send(:fmt, 9999)
+  end
+
+  def test_fmt_millions
+    assert_equal "1,000,000", formatter.send(:fmt, 1_000_000)
+    assert_equal "1,234,567", formatter.send(:fmt, 1_234_567)
+  end
+
+  def test_fmt_preserves_string_input
+    assert_equal "12,345", formatter.send(:fmt, "12345")
+  end
+
   cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#build_stats" if respond_to?(:cover)
 
   def test_build_stats_basic
