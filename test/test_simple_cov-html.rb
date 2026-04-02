@@ -43,7 +43,7 @@ class TestSimpleCovHtml < Minitest::Test
 
   def test_output_line_coverages
     html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
-    pcts = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__coverage .coverage-cell__pct")
+    pcts = html_doc.css("div#AllFiles table.file_list tr.t-file td.cell--line-pct")
     table = pcts.map { |m| m.content.strip }
 
     assert_equal EXPECTED_LINE_COVERAGES, table.sort_by(&:to_f)
@@ -54,11 +54,11 @@ class TestSimpleCovHtml < Minitest::Test
 
     html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
 
-    branch_cell = html_doc.at_css("div#AllFiles td.t-totals__branch-coverage")
+    branch_pct = html_doc.at_css("div#AllFiles td.t-totals__branch-pct")
 
-    assert branch_cell, "Expected branch coverage totals row"
+    assert branch_pct, "Expected branch coverage totals row"
 
-    pcts = html_doc.css("div#AllFiles table.file_list tr.t-file td.t-file__branch-coverage .coverage-cell__pct")
+    pcts = html_doc.css("div#AllFiles table.file_list tr.t-file td.cell--branch-pct")
     table = pcts.map { |m| m.content.strip }
 
     assert_equal EXPECTED_BRANCH_COVERAGES, table.sort_by(&:to_f)
@@ -70,7 +70,7 @@ class TestSimpleCovHtml < Minitest::Test
     SimpleCov.enable_coverage(:method)
     html_doc = format_results("sample.rb" => CoverageFixtures::SAMPLE_RB)
 
-    assert html_doc.at_css("div#AllFiles td.t-totals__method-coverage"),
+    assert html_doc.at_css("div#AllFiles td.t-totals__method-pct"),
            "Expected method coverage totals row"
   end
 

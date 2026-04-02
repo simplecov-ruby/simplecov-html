@@ -79,6 +79,10 @@ module SimpleCov
           value.sub(/\A[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, "")
         end
 
+        def fmt(number)
+          number.to_s.gsub(/(\d)(?=(\d{3})+(?!\d))/, '\\1,')
+        end
+
         def coverage_summary(stats, show_method_toggle: false)
           @_summary = {
             line: build_stats(stats.fetch(:covered_lines), stats.fetch(:total_lines)),

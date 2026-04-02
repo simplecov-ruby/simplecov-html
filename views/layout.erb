@@ -20,7 +20,7 @@
   </head>
 
   <body<%= ' data-branch-coverage=true' if branch_coverage? %>>
-    <div id="loading" data-total-files="<%= result.source_files.count %>">
+    <div id="loading" data-total-files="<%= result.source_files.count %>" style="display: none">
       <div id="loading-inner">
         <div id="loading-bar-track">
           <div id="loading-bar-fill"></div>
@@ -34,6 +34,7 @@
         var total = parseInt(loading.getAttribute('data-total-files'), 10) || 1;
         var fill = document.getElementById('loading-bar-fill');
         var text = document.getElementById('loading-text');
+        var showTimeout = setTimeout(function() { loading.style.display = ''; }, 250);
         var timer = setInterval(function() {
           var parsed = document.querySelectorAll('template[id^="tmpl-"]').length;
           var pct = Math.min(Math.round((parsed / total) * 100), 99);
@@ -41,6 +42,7 @@
           text.textContent = 'Loading ' + pct + '%';
         }, 50);
         window._simplecovLoadingTimer = timer;
+        window._simplecovShowTimeout = showTimeout;
       })();
     </script>
     <div id="wrapper" class="hide">
