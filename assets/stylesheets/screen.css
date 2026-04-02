@@ -351,6 +351,11 @@ abbr.timeago {
   gap: var(--sp-2);
 }
 
+table.file_list th.cell--coverage .th-with-filter {
+  white-space: nowrap;
+  justify-content: flex-end;
+}
+
 .th-with-filter .th-label {
   white-space: nowrap;
 }
@@ -405,13 +410,18 @@ abbr.timeago {
 /* --- File list table --------------------------------------- */
 
 .file_list--responsive {
-  overflow-x: auto;
 }
 
 table.file_list {
   width: 100%;
   font-size: 18px;
 }
+
+table.file_list {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
 
 table.file_list thead th {
   font-size: 14px;
@@ -420,11 +430,9 @@ table.file_list thead th {
   letter-spacing: 0.04em;
   color: var(--text-tertiary);
   background: var(--surface);
-  padding: var(--sp-2) var(--sp-3);
+  padding: var(--sp-2) var(--sp-2);
   border-bottom: 2px solid var(--border-strong);
   white-space: nowrap;
-  position: sticky;
-  top: 0;
 }
 
 table.file_list tbody tr {
@@ -441,7 +449,7 @@ table.file_list tbody tr:hover {
 }
 
 table.file_list tbody td {
-  padding: var(--sp-2) var(--sp-3);
+  padding: var(--sp-2) var(--sp-2);
   border-bottom: 1px solid var(--border);
   color: var(--text);
 }
@@ -461,6 +469,16 @@ table.file_list th.cell--number {
   text-align: right;
 }
 
+table.file_list th.cell--numerator {
+  text-align: right;
+  padding-right: 0;
+}
+
+table.file_list th.cell--denominator {
+  text-align: left;
+  padding-left: 0;
+}
+
 table.file_list td.strong {
   font-weight: 600;
   color: var(--text);
@@ -478,23 +496,35 @@ a.src_link {
 
 /* --- Coverage columns -------------------------------------- */
 
-.cell--bar {
-  padding-right: 0;
+table.file_list td.cell--bar {
+  padding-right: 4px;
+  padding-left: 0;
 }
 
-.cell--pct {
+table.file_list td.cell--bar .coverage-bar {
+  margin-left: auto;
+}
+
+table.file_list td.cell--pct {
   text-align: right;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  padding-left: var(--sp-2);
-  padding-right: var(--sp-1);
+  width: 1%;
+  padding-left: 4px;
+}
+
+table.file_list .totals-row td.cell--bar {
+  padding-right: 4px;
+  padding-left: 0;
+}
+
+table.file_list .totals-row td.cell--pct {
+  padding-left: 4px;
 }
 
 table.file_list td.cell--numerator {
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--text-secondary);
-  font-size: 14px;
   white-space: nowrap;
   padding-left: var(--sp-1);
   padding-right: 0;
@@ -503,8 +533,6 @@ table.file_list td.cell--numerator {
 table.file_list td.cell--denominator {
   text-align: left;
   font-variant-numeric: tabular-nums;
-  color: var(--text-secondary);
-  font-size: 14px;
   white-space: nowrap;
   padding-left: 0;
   padding-right: var(--sp-1);
@@ -663,7 +691,7 @@ dialog.source-dialog[open] {
 }
 
 table.file_list .totals-row td {
-  padding: var(--sp-3) var(--sp-3);
+  padding: var(--sp-2) var(--sp-2);
   font-weight: 600;
   border-bottom: 2px solid var(--border-strong);
   background: var(--surface-alt);
@@ -839,14 +867,14 @@ table.file_list thead th.sorting_asc,
 table.file_list thead th.sorting_desc {
   cursor: pointer;
   position: relative;
-  padding-right: 20px;
+  padding-right: 12px;
 }
 
 table.file_list thead th.sorting::after,
 table.file_list thead th.sorting_asc::after,
 table.file_list thead th.sorting_desc::after {
   position: absolute;
-  right: 4px;
+  right: 2px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 14px;

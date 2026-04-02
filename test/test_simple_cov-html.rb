@@ -43,7 +43,7 @@ class TestSimpleCovHtml < Minitest::Test
 
   def test_output_line_coverages
     html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
-    pcts = html_doc.css("div#AllFiles table.file_list tr.t-file td.cell--line-pct")
+    pcts = html_doc.css("div#AllFiles table.file_list tr.t-file .cell--line-pct")
     table = pcts.map { |m| m.content.strip }
 
     assert_equal EXPECTED_LINE_COVERAGES, table.sort_by(&:to_f)
@@ -58,10 +58,62 @@ class TestSimpleCovHtml < Minitest::Test
 
     assert branch_pct, "Expected branch coverage totals row"
 
-    pcts = html_doc.css("div#AllFiles table.file_list tr.t-file td.cell--branch-pct")
+    pcts = html_doc.css("div#AllFiles table.file_list tr.t-file .cell--branch-pct")
     table = pcts.map { |m| m.content.strip }
 
     assert_equal EXPECTED_BRANCH_COVERAGES, table.sort_by(&:to_f)
+  end
+
+  def test_coverage_headers_have_colspan_two
+    html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
+    headers = html_doc.css("div#AllFiles table.file_list th.cell--coverage")
+
+    assert_operator headers.length, :>=, 1, "Expected at least one coverage header"
+    headers.each do |th|
+      assert_equal "2", th["colspan"], "Coverage header '#{th.text.strip}' must have colspan=2"
+    end
+  end
+
+  def test_bar_cells_precede_pct_cells
+    html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
+    bar_cells = html_doc.css("div#AllFiles table.file_list tbody td.cell--bar")
+
+    assert_operator bar_cells.length, :>=, 1, "Expected at least one bar cell"
+    bar_cells.each do |bar|
+      pct = bar.next_element
+
+      assert pct, "Expected a sibling after each td.cell--bar"
+      assert_includes pct["class"], "cell--pct",
+                      "td.cell--bar must be immediately followed by td.cell--pct"
+    end
+  end
+
+  def test_line_pct_cells_have_data_order
+    html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
+    pct_cells = html_doc.css("div#AllFiles table.file_list tbody td.cell--line-pct")
+
+    assert_equal 12, pct_cells.length
+    pct_cells.each do |td|
+      order = td["data-order"]
+
+      assert order, "Each line pct cell must have a data-order attribute"
+      assert_match(/\A\d+\.\d+\z/, order, "data-order must be a decimal number, got '#{order}'")
+    end
+  end
+
+  def test_branch_pct_cells_have_data_order
+    skip "Branch coverage not reliable on JRuby" if RUBY_ENGINE == "jruby"
+
+    html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
+    pct_cells = html_doc.css("div#AllFiles table.file_list tbody td.cell--branch-pct")
+
+    assert_operator pct_cells.length, :>=, 1, "Expected at least one branch pct cell"
+    pct_cells.each do |td|
+      order = td["data-order"]
+
+      assert order, "Each branch pct cell must have a data-order attribute"
+      assert_match(/\A\d+\.\d+\z/, order, "data-order must be a decimal number, got '#{order}'")
+    end
   end
 
   def test_output_with_method_coverage

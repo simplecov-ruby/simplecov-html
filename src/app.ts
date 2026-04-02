@@ -95,7 +95,18 @@ interface SortEntry {
 
 const sortState: Record<string, SortEntry> = {};
 
-function getSortValue(td: Element): number | string {
+function getVisibleChild(row: Element, index: number): Element | null {
+  let count = 0;
+  for (let i = 0; i < row.children.length; i++) {
+    if ((row.children[i] as HTMLElement).style.display === 'none') continue;
+    if (count === index) return row.children[i];
+    count++;
+  }
+  return null;
+}
+
+function getSortValue(td: Element | null): number | string {
+  if (!td) return '';
   const order = td.getAttribute('data-order');
   if (order !== null) return parseFloat(order);
   const text = (td.textContent || '').trim();
@@ -115,8 +126,8 @@ function sortTable(table: Element, colIndex: number): void {
   const rows = Array.from(tbody.querySelectorAll('tr.t-file'));
 
   rows.sort((a, b) => {
-    const aVal = getSortValue(a.children[colIndex]);
-    const bVal = getSortValue(b.children[colIndex]);
+    const aVal = getSortValue(getVisibleChild(a, colIndex));
+    const bVal = getSortValue(getVisibleChild(b, colIndex));
     let cmp: number;
     if (typeof aVal === 'number' && typeof bVal === 'number') {
       cmp = aVal - bVal;
@@ -129,11 +140,14 @@ function sortTable(table: Element, colIndex: number): void {
   rows.forEach(row => tbody.appendChild(row));
 
   // Update sort indicators
-  let idx = 0;
+  let tdPos = 0;
   $$('thead tr:first-child th', table).forEach((th) => {
+    const span = parseInt(th.getAttribute('colspan') || '1', 10);
     th.classList.remove('sorting_asc', 'sorting_desc', 'sorting');
-    th.classList.add(idx === colIndex ? (dir === 'asc' ? 'sorting_asc' : 'sorting_desc') : 'sorting');
-    idx += parseInt(th.getAttribute('colspan') || '1', 10);
+    // colIndex falls within this th if it's >= tdPos and < tdPos + span
+    const isActive = colIndex >= tdPos && colIndex < tdPos + span;
+    th.classList.add(isActive ? (dir === 'asc' ? 'sorting_asc' : 'sorting_desc') : 'sorting');
+    tdPos += span;
   });
 }
 
@@ -212,6 +226,7 @@ function filterTable(container: Element): void {
   });
 
   updateTotalsRow(container);
+  equalizeBarWidths();
 }
 
 function updateFilterOptions(input: HTMLInputElement): void {
@@ -252,22 +267,16 @@ function updateTotalsRow(container: Element): void {
   const relevantLines = sumData('relevantLines');
   updateCoverageCells(container, '.t-totals__line', coveredLines, relevantLines);
 
-  const numberCells = $$('.totals-row .cell--number', container);
-  if (numberCells[0]) numberCells[0].textContent = relevantLines ? fmtNum(relevantLines) : '';
-
   if ($('.t-totals__branch-pct', container)) {
     const coveredBranches = sumData('coveredBranches');
     const totalBranches = sumData('totalBranches');
     updateCoverageCells(container, '.t-totals__branch', coveredBranches, totalBranches);
-    if (numberCells[1]) numberCells[1].textContent = totalBranches ? fmtNum(totalBranches) : '';
   }
 
   if ($('.t-totals__method-pct', container)) {
     const coveredMethods = sumData('coveredMethods');
     const totalMethods = sumData('totalMethods');
     updateCoverageCells(container, '.t-totals__method', coveredMethods, totalMethods);
-    const numIdx = $('.t-totals__branch-pct', container) ? 2 : 1;
-    if (numberCells[numIdx]) numberCells[numIdx].textContent = totalMethods ? fmtNum(totalMethods) : '';
   }
 }
 
@@ -292,9 +301,9 @@ function materializeSourceFile(sourceFileId: string): HTMLElement | null {
 
 // --- Bar width equalization ------------------------------------
 
-function setBarWidth(bars: Element[], headers: Element[], px: number): void {
+function setBarWidth(bars: Element[], table: Element, px: number): void {
   const w = px + 'px';
-  headers.forEach(h => h.setAttribute('colspan', '4'));
+  $$('th.cell--coverage', table).forEach(h => h.setAttribute('colspan', '2'));
   bars.forEach(b => {
     const s = (b as HTMLElement).style;
     s.display = '';
@@ -302,8 +311,8 @@ function setBarWidth(bars: Element[], headers: Element[], px: number): void {
   });
 }
 
-function hideBars(bars: Element[], headers: Element[]): void {
-  headers.forEach(h => h.setAttribute('colspan', '3'));
+function hideBars(bars: Element[], table: Element): void {
+  $$('th.cell--coverage', table).forEach(h => h.setAttribute('colspan', '1'));
   bars.forEach(b => {
     const s = (b as HTMLElement).style;
     s.display = 'none'; s.width = ''; s.minWidth = ''; s.maxWidth = '';
@@ -318,33 +327,43 @@ function equalizeBarWidths(): void {
     const table = $('table.file_list', container) as HTMLTableElement | null;
     if (!table) return;
     const bars = $$('td.cell--bar', table);
-    const headers = $$('th[colspan]', table);
     if (bars.length === 0) return;
 
     const wrapper = table.closest('.file_list--responsive') as HTMLElement | null;
     if (!wrapper) return;
 
-    const firstDataRow = $('tbody tr', table) || $('thead tr.totals-row', table);
-    const barsPerRow = firstDataRow ? $$('td.cell--bar', firstDataRow).length : 1;
+    // Hide during measurement to prevent flicker
+    wrapper.style.visibility = 'hidden';
 
-    // Step 1: Hide bars, measure content width with table at auto
-    hideBars(bars, headers);
-    table.style.width = 'auto';
-    void table.offsetWidth;
-    const contentWidth = table.scrollWidth;
+    // Test whether bars at a given width fit without overflow
+    const fitsAt = (px: number): boolean => {
+      setBarWidth(bars, table, px);
+      table.style.width = 'auto';
+      void table.offsetWidth;
+      const fits = table.scrollWidth <= wrapper.clientWidth;
+      table.style.width = '';
+      return fits;
+    };
 
-    // Step 2: Restore table width, measure available space
-    table.style.width = '';
-    void table.offsetWidth;
-    const availableWidth = wrapper.clientWidth;
+    let barWidth = 240;
+    if (!fitsAt(240)) {
+      if (!fitsAt(80)) {
+        hideBars(bars, table);
+        wrapper.style.visibility = '';
+        return;
+      }
+      // Binary search for the widest bars that fit
+      let lo = 80, hi = 239;
+      while (lo < hi) {
+        const mid = Math.ceil((lo + hi) / 2);
+        if (fitsAt(mid)) lo = mid;
+        else hi = mid - 1;
+      }
+      barWidth = lo;
+    }
 
-    // Step 3: Calculate bar width
-    const totalBarSpace = availableWidth - contentWidth;
-    const perBar = Math.floor(totalBarSpace / barsPerRow);
-
-    if (perBar < 100) return; // keep bars hidden
-
-    setBarWidth(bars, headers, Math.min(perBar, 200));
+    setBarWidth(bars, table, barWidth);
+    wrapper.style.visibility = '';
   });
 }
 
@@ -472,15 +491,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   })();
 
-  // Table sorting — compute td index from th colspan
+  // Table sorting — compute td index dynamically at click time
+  function thToTdIndex(table: Element, clickedTh: Element): number {
+    let idx = 0;
+    for (const th of $$('thead tr:first-child th', table)) {
+      const span = parseInt(th.getAttribute('colspan') || '1', 10);
+      if (th === clickedTh) return idx + span - 1;
+      idx += span;
+    }
+    return idx;
+  }
+
   $$('table.file_list').forEach(table => {
-    let tdIndex = 0;
     $$('thead tr:first-child th', table).forEach((th) => {
-      const myTdIndex = tdIndex;
       th.classList.add('sorting');
       (th as HTMLElement).style.cursor = 'pointer';
-      th.addEventListener('click', () => sortTable(table, myTdIndex));
-      tdIndex += parseInt(th.getAttribute('colspan') || '1', 10);
+      th.addEventListener('click', () => sortTable(table, thToTdIndex(table, th)));
     });
   });
 
@@ -596,4 +622,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Equalize bar widths now that wrapper is visible
   equalizeBarWidths();
+
 });
