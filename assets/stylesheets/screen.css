@@ -476,23 +476,51 @@ a.src_link {
   word-break: break-all;
 }
 
-/* --- Coverage bar ------------------------------------------ */
+/* --- Coverage columns -------------------------------------- */
 
-.coverage-cell {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
+.cell--bar {
+  padding-right: 0;
 }
 
-.coverage-cell__pct {
-  flex-shrink: 0;
-  font-variant-numeric: tabular-nums;
+.cell--pct {
   text-align: right;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  padding-left: var(--sp-2);
+  padding-right: var(--sp-1);
+}
+
+table.file_list td.cell--numerator {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  font-size: 14px;
+  white-space: nowrap;
+  padding-left: var(--sp-1);
+  padding-right: 0;
+}
+
+table.file_list td.cell--denominator {
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  font-size: 14px;
+  white-space: nowrap;
+  padding-left: 0;
+  padding-right: var(--sp-1);
+}
+
+table.file_list .totals-row td.cell--numerator {
+  color: var(--text);
+  padding-right: 0;
+}
+
+table.file_list .totals-row td.cell--denominator {
+  color: var(--text);
+  padding-left: 0;
 }
 
 .coverage-cell__fraction {
-  flex-shrink: 0;
   font-variant-numeric: tabular-nums;
   color: var(--text-secondary);
   font-size: 14px;
@@ -500,8 +528,7 @@ a.src_link {
 }
 
 .coverage-bar {
-  flex-shrink: 0;
-  width: 80px;
+  width: 100%;
   height: var(--bar-height);
   background: var(--bar-bg);
   border-radius: 6px;
@@ -521,9 +548,9 @@ a.src_link {
 
 /* --- Color utility classes --------------------------------- */
 
-.green { color: var(--green); }
-.red { color: var(--red); }
-.yellow { color: var(--yellow); }
+.green, table.file_list td.green { color: var(--green); }
+.red, table.file_list td.red { color: var(--red); }
+.yellow, table.file_list td.yellow { color: var(--yellow); }
 .missed-branch-text { color: var(--missed-branch-text); }
 .missed-method-text-color { color: var(--missed-method-text); }
 

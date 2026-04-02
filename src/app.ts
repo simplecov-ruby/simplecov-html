@@ -57,14 +57,33 @@ function pctClass(pct: number): string {
   return 'red';
 }
 
-function buildCoverageCell(covered: number, total: number): string {
-  if (total === 0) return '';
+function fmtNum(n: number): string {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function updateCoverageCells(
+  container: Element,
+  prefix: string,
+  covered: number,
+  total: number
+): void {
+  const barEl = $(prefix + '-bar', container);
+  const pctEl = $(prefix + '-pct', container);
+  const numEl = $(prefix + '-num', container);
+  const denEl = $(prefix + '-den', container);
+  if (total === 0) {
+    if (barEl) barEl.innerHTML = '';
+    if (pctEl) { pctEl.textContent = ''; pctEl.className = pctEl.className.replace(/green|yellow|red/g, '').trim(); }
+    if (numEl) numEl.textContent = '';
+    if (denEl) denEl.textContent = '';
+    return;
+  }
   const p = (covered * 100.0) / total;
-  return '<div class="coverage-cell">' +
-    '<div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--' + pctClass(p) + '" style="width: ' + p.toFixed(1) + '%"></div></div>' +
-    '<span class="coverage-cell__pct ' + pctClass(p) + '">' + p.toFixed(2) + '%</span>' +
-    '<span class="coverage-cell__fraction">' + covered + '/' + total + '</span>' +
-    '</div>';
+  const cls = pctClass(p);
+  if (barEl) barEl.innerHTML = '<div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--' + cls + '" style="width: ' + p.toFixed(1) + '%"></div></div>';
+  if (pctEl) { pctEl.textContent = p.toFixed(2) + '%'; pctEl.className = pctEl.className.replace(/green|yellow|red/g, '').trim() + ' ' + cls; }
+  if (numEl) numEl.textContent = fmtNum(covered) + '/';
+  if (denEl) denEl.textContent = fmtNum(total);
 }
 
 // --- Sort state -----------------------------------------------
@@ -110,9 +129,11 @@ function sortTable(table: Element, colIndex: number): void {
   rows.forEach(row => tbody.appendChild(row));
 
   // Update sort indicators
-  $$('th', table).forEach((th, i) => {
+  let idx = 0;
+  $$('thead tr:first-child th', table).forEach((th) => {
     th.classList.remove('sorting_asc', 'sorting_desc', 'sorting');
-    th.classList.add(i === colIndex ? (dir === 'asc' ? 'sorting_asc' : 'sorting_desc') : 'sorting');
+    th.classList.add(idx === colIndex ? (dir === 'asc' ? 'sorting_asc' : 'sorting_desc') : 'sorting');
+    idx += parseInt(th.getAttribute('colspan') || '1', 10);
   });
 }
 
@@ -219,31 +240,34 @@ function updateTotalsRow(container: Element): void {
   }
 
   const fileCount = $('.t-file-count', container);
-  if (fileCount) fileCount.textContent = rows.length + ' files';
+  const totalFiles = parseInt(container.getAttribute('data-total-files') || '0', 10);
+  if (fileCount) {
+    const label = rows.length === 1 ? ' file' : ' files';
+    fileCount.textContent = rows.length === totalFiles
+      ? fmtNum(totalFiles) + label
+      : fmtNum(rows.length) + '/' + fmtNum(totalFiles) + label;
+  }
 
   const coveredLines = sumData('coveredLines');
   const relevantLines = sumData('relevantLines');
-  const lineCov = $('.t-totals__line-coverage', container);
-  if (lineCov) lineCov.innerHTML = buildCoverageCell(coveredLines, relevantLines);
+  updateCoverageCells(container, '.t-totals__line', coveredLines, relevantLines);
 
   const numberCells = $$('.totals-row .cell--number', container);
-  if (numberCells[0]) numberCells[0].textContent = relevantLines ? String(relevantLines) : '';
+  if (numberCells[0]) numberCells[0].textContent = relevantLines ? fmtNum(relevantLines) : '';
 
-  const branchCov = $('.t-totals__branch-coverage', container);
-  if (branchCov) {
+  if ($('.t-totals__branch-pct', container)) {
     const coveredBranches = sumData('coveredBranches');
     const totalBranches = sumData('totalBranches');
-    branchCov.innerHTML = buildCoverageCell(coveredBranches, totalBranches);
-    if (numberCells[1]) numberCells[1].textContent = totalBranches ? String(totalBranches) : '';
+    updateCoverageCells(container, '.t-totals__branch', coveredBranches, totalBranches);
+    if (numberCells[1]) numberCells[1].textContent = totalBranches ? fmtNum(totalBranches) : '';
   }
 
-  const methodCov = $('.t-totals__method-coverage', container);
-  if (methodCov) {
+  if ($('.t-totals__method-pct', container)) {
     const coveredMethods = sumData('coveredMethods');
     const totalMethods = sumData('totalMethods');
-    methodCov.innerHTML = buildCoverageCell(coveredMethods, totalMethods);
-    const idx = branchCov ? 2 : 1;
-    if (numberCells[idx]) numberCells[idx].textContent = totalMethods ? String(totalMethods) : '';
+    updateCoverageCells(container, '.t-totals__method', coveredMethods, totalMethods);
+    const numIdx = $('.t-totals__branch-pct', container) ? 2 : 1;
+    if (numberCells[numIdx]) numberCells[numIdx].textContent = totalMethods ? fmtNum(totalMethods) : '';
   }
 }
 
@@ -264,6 +288,64 @@ function materializeSourceFile(sourceFileId: string): HTMLElement | null {
     $$('pre code', el).forEach(e => { hljs.highlightElement(e as HTMLElement); });
   }
   return el;
+}
+
+// --- Bar width equalization ------------------------------------
+
+function setBarWidth(bars: Element[], headers: Element[], px: number): void {
+  const w = px + 'px';
+  headers.forEach(h => h.setAttribute('colspan', '4'));
+  bars.forEach(b => {
+    const s = (b as HTMLElement).style;
+    s.display = '';
+    s.width = w; s.minWidth = w; s.maxWidth = w;
+  });
+}
+
+function hideBars(bars: Element[], headers: Element[]): void {
+  headers.forEach(h => h.setAttribute('colspan', '3'));
+  bars.forEach(b => {
+    const s = (b as HTMLElement).style;
+    s.display = 'none'; s.width = ''; s.minWidth = ''; s.maxWidth = '';
+  });
+}
+
+function equalizeBarWidths(): void {
+  $$('.file_list_container').forEach(container => {
+    if ((container as HTMLElement).style.display === 'none') return;
+    if ((container as HTMLElement).offsetWidth === 0) return;
+
+    const table = $('table.file_list', container) as HTMLTableElement | null;
+    if (!table) return;
+    const bars = $$('td.cell--bar', table);
+    const headers = $$('th[colspan]', table);
+    if (bars.length === 0) return;
+
+    const wrapper = table.closest('.file_list--responsive') as HTMLElement | null;
+    if (!wrapper) return;
+
+    const firstDataRow = $('tbody tr', table) || $('thead tr.totals-row', table);
+    const barsPerRow = firstDataRow ? $$('td.cell--bar', firstDataRow).length : 1;
+
+    // Step 1: Hide bars, measure content width with table at auto
+    hideBars(bars, headers);
+    table.style.width = 'auto';
+    void table.offsetWidth;
+    const contentWidth = table.scrollWidth;
+
+    // Step 2: Restore table width, measure available space
+    table.style.width = '';
+    void table.offsetWidth;
+    const availableWidth = wrapper.clientWidth;
+
+    // Step 3: Calculate bar width
+    const totalBarSpace = availableWidth - contentWidth;
+    const perBar = Math.floor(totalBarSpace / barsPerRow);
+
+    if (perBar < 100) return; // keep bars hidden
+
+    setBarWidth(bars, headers, Math.min(perBar, 200));
+  });
 }
 
 // --- Source file dialog ----------------------------------------
@@ -313,6 +395,11 @@ function showFileList(tabId: string): void {
       const target = document.getElementById(tabId);
       if (target) target.style.display = '';
     }
+  }
+  // Only equalize bars if the wrapper is actually visible
+  const wrapper = document.getElementById('wrapper');
+  if (wrapper && !wrapper.classList.contains('hide')) {
+    equalizeBarWidths();
   }
 }
 
@@ -385,12 +472,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   })();
 
-  // Table sorting
+  // Table sorting — compute td index from th colspan
   $$('table.file_list').forEach(table => {
-    $$('thead tr:first-child th', table).forEach((th, colIndex) => {
+    let tdIndex = 0;
+    $$('thead tr:first-child th', table).forEach((th) => {
+      const myTdIndex = tdIndex;
       th.classList.add('sorting');
       (th as HTMLElement).style.cursor = 'pointer';
-      th.addEventListener('click', () => sortTable(table, colIndex));
+      th.addEventListener('click', () => sortTable(table, myTdIndex));
+      tdIndex += parseInt(th.getAttribute('colspan') || '1', 10);
     });
   });
 
@@ -483,19 +573,27 @@ document.addEventListener('DOMContentLoaded', function () {
     window.location.hash = this.getAttribute('href')!.replace('#', '#_');
   });
 
+  // Equalize bar column widths within each table
+  // Defer until after wrapper is visible
+  window.addEventListener('resize', equalizeBarWidths);
+
   // Initial state
   navigateToHash();
 
   // Finalize loading
   clearInterval((window as any)._simplecovLoadingTimer);
+  clearTimeout((window as any)._simplecovShowTimeout);
 
-  const loading = document.getElementById('loading');
-  if (loading) {
-    loading.style.transition = 'opacity 0.3s';
-    loading.style.opacity = '0';
-    setTimeout(() => { loading.style.display = 'none'; }, 300);
+  const loadingEl = document.getElementById('loading');
+  if (loadingEl) {
+    loadingEl.style.transition = 'opacity 0.3s';
+    loadingEl.style.opacity = '0';
+    setTimeout(() => { loadingEl.style.display = 'none'; }, 300);
   }
 
-  const wrapper = document.getElementById('wrapper');
-  if (wrapper) wrapper.classList.remove('hide');
+  const wrapperEl = document.getElementById('wrapper');
+  if (wrapperEl) wrapperEl.classList.remove('hide');
+
+  // Equalize bar widths now that wrapper is visible
+  equalizeBarWidths();
 });

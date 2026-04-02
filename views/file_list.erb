@@ -1,4 +1,4 @@
-<div class="file_list_container" id="<%= to_id(title) %>">
+<div class="file_list_container" id="<%= to_id(title) %>" data-total-files="<%= source_files.length %>">
   <span class="group_name hide"><%= title %></span>
   <span class="covered_percent hide"><%= covered_percent(source_files.covered_percent) %></span>
 
@@ -9,10 +9,10 @@
           <th class="cell--left">
             <div class="th-with-filter">
               <span class="th-label">File Name</span>
-              <input type="search" class="col-filter col-filter--name" placeholder="Search files&#8230;">
+              <input type="search" class="col-filter col-filter--name" placeholder="Filter paths&#8230;">
             </div>
           </th>
-          <th class="cell--coverage">
+          <th class="cell--coverage" colspan="4">
             <div class="th-with-filter">
               <span class="th-label">Line Coverage</span>
               <div class="col-filter__coverage">
@@ -23,7 +23,7 @@
           </th>
           <th class="cell--number">Relevant Lines</th>
 <%- if branch_coverage? -%>
-          <th class="cell--coverage">
+          <th class="cell--coverage" colspan="4">
             <div class="th-with-filter">
               <span class="th-label">Branch Coverage</span>
               <div class="col-filter__coverage">
@@ -35,7 +35,7 @@
           <th class="cell--number">Branches</th>
 <%- end -%>
 <%- if method_coverage? -%>
-          <th class="cell--coverage">
+          <th class="cell--coverage" colspan="4">
             <div class="th-with-filter">
               <span class="th-label">Method Coverage</span>
               <div class="col-filter__coverage">
@@ -51,40 +51,25 @@
 <%- branch_pct = branch_coverage? && source_files.total_branches > 0 ? source_files.branch_covered_percent : 100.0 -%>
 <%- method_pct = method_coverage? && source_files.total_methods > 0 ? source_files.method_covered_percent : 100.0 -%>
         <tr class="totals-row">
-          <td class="strong t-file-count"><%= source_files.length %> files</td>
-          <td class="strong t-totals__line-coverage">
-            <div class="coverage-cell">
-              <div class="coverage-bar">
-                <div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(line_pct) %>" style="width: <%= sprintf("%.1f", line_pct.floor(1)) %>%"></div>
-              </div>
-              <span class="coverage-cell__pct <%= coverage_css_class(line_pct) %>"><%= sprintf("%.2f", line_pct.floor(2)) %>%</span>
-              <span class="coverage-cell__fraction"><%= source_files.covered_lines %>/<%= source_files.lines_of_code %></span>
-            </div>
-          </td>
-          <td class="cell--number"><%= source_files.lines_of_code %></td>
+          <td class="strong t-file-count"><%= fmt(source_files.length) %> <%= source_files.length == 1 ? "file" : "files" %></td>
+          <td class="cell--bar t-totals__line-bar"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(line_pct) %>" style="width: <%= sprintf("%.1f", line_pct.floor(1)) %>%"></div></div></td>
+          <td class="cell--pct strong t-totals__line-pct <%= coverage_css_class(line_pct) %>"><%= sprintf("%.2f", line_pct.floor(2)) %>%</td>
+          <td class="cell--numerator strong t-totals__line-num"><%= fmt(source_files.covered_lines) %>/</td>
+          <td class="cell--denominator strong t-totals__line-den"><%= fmt(source_files.lines_of_code) %></td>
+          <td class="cell--number strong"><%= fmt(source_files.lines_of_code) %></td>
 <%- if branch_coverage? -%>
-          <td class="strong t-totals__branch-coverage">
-            <div class="coverage-cell">
-              <div class="coverage-bar">
-                <div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(branch_pct) %>" style="width: <%= sprintf("%.1f", branch_pct.floor(1)) %>%"></div>
-              </div>
-              <span class="coverage-cell__pct <%= coverage_css_class(branch_pct) %>"><%= sprintf("%.2f", branch_pct.floor(2)) %>%</span>
-              <span class="coverage-cell__fraction"><%= source_files.covered_branches %>/<%= source_files.total_branches %></span>
-            </div>
-          </td>
-          <td class="cell--number"><%= source_files.total_branches %></td>
+          <td class="cell--bar t-totals__branch-bar"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(branch_pct) %>" style="width: <%= sprintf("%.1f", branch_pct.floor(1)) %>%"></div></div></td>
+          <td class="cell--pct strong t-totals__branch-pct <%= coverage_css_class(branch_pct) %>"><%= sprintf("%.2f", branch_pct.floor(2)) %>%</td>
+          <td class="cell--numerator strong t-totals__branch-num"><%= fmt(source_files.covered_branches) %>/</td>
+          <td class="cell--denominator strong t-totals__branch-den"><%= fmt(source_files.total_branches) %></td>
+          <td class="cell--number strong"><%= fmt(source_files.total_branches) %></td>
 <%- end -%>
 <%- if method_coverage? -%>
-          <td class="strong t-totals__method-coverage">
-            <div class="coverage-cell">
-              <div class="coverage-bar">
-                <div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(method_pct) %>" style="width: <%= sprintf("%.1f", method_pct.floor(1)) %>%"></div>
-              </div>
-              <span class="coverage-cell__pct <%= coverage_css_class(method_pct) %>"><%= sprintf("%.2f", method_pct.floor(2)) %>%</span>
-              <span class="coverage-cell__fraction"><%= source_files.covered_methods %>/<%= source_files.total_methods %></span>
-            </div>
-          </td>
-          <td class="cell--number"><%= source_files.total_methods %></td>
+          <td class="cell--bar t-totals__method-bar"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(method_pct) %>" style="width: <%= sprintf("%.1f", method_pct.floor(1)) %>%"></div></div></td>
+          <td class="cell--pct strong t-totals__method-pct <%= coverage_css_class(method_pct) %>"><%= sprintf("%.2f", method_pct.floor(2)) %>%</td>
+          <td class="cell--numerator strong t-totals__method-num"><%= fmt(source_files.covered_methods) %>/</td>
+          <td class="cell--denominator strong t-totals__method-den"><%= fmt(source_files.total_methods) %></td>
+          <td class="cell--number strong"><%= fmt(source_files.total_methods) %></td>
 <%- end -%>
         </tr>
       </thead>
@@ -93,39 +78,24 @@
 <%- covered_lines = source_file.covered_lines.count; relevant_lines = covered_lines + source_file.missed_lines.count -%>
         <tr class="t-file" data-covered-lines="<%= covered_lines %>" data-relevant-lines="<%= relevant_lines %>"<% if branch_coverage? %> data-covered-branches="<%= source_file.covered_branches.count %>" data-total-branches="<%= source_file.total_branches.count %>"<% end %><% if method_coverage? %> data-covered-methods="<%= source_file.covered_methods.count %>" data-total-methods="<%= source_file.methods.count %>"<% end %>>
           <td class="strong t-file__name"><%= link_to_source_file(source_file) %></td>
-          <td class="strong t-file__coverage" data-order="<%= sprintf("%.2f", source_file.covered_percent) %>">
-            <div class="coverage-cell">
-              <div class="coverage-bar">
-                <div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.covered_percent) %>" style="width: <%= sprintf("%.1f", source_file.covered_percent.floor(1)) %>%"></div>
-              </div>
-              <span class="coverage-cell__pct <%= coverage_css_class(source_file.covered_percent) %>"><%= sprintf("%.2f", source_file.covered_percent.floor(2)) %>%</span>
-              <span class="coverage-cell__fraction"><%= covered_lines %>/<%= relevant_lines %></span>
-            </div>
-          </td>
-          <td class="cell--number"><%= relevant_lines %></td>
+          <td class="cell--bar" data-order="<%= sprintf("%.2f", source_file.covered_percent) %>"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.covered_percent) %>" style="width: <%= sprintf("%.1f", source_file.covered_percent.floor(1)) %>%"></div></div></td>
+          <td class="cell--pct cell--line-pct <%= coverage_css_class(source_file.covered_percent) %>"><%= sprintf("%.2f", source_file.covered_percent.floor(2)) %>%</td>
+          <td class="cell--numerator"><%= fmt(covered_lines) %>/</td>
+          <td class="cell--denominator"><%= fmt(relevant_lines) %></td>
+          <td class="cell--number"><%= fmt(relevant_lines) %></td>
 <%- if branch_coverage? -%>
-          <td class="strong t-file__branch-coverage" data-order="<%= sprintf("%.2f", source_file.branches_coverage_percent) %>">
-            <div class="coverage-cell">
-              <div class="coverage-bar">
-                <div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.branches_coverage_percent) %>" style="width: <%= sprintf("%.1f", source_file.branches_coverage_percent.floor(1)) %>%"></div>
-              </div>
-              <span class="coverage-cell__pct <%= coverage_css_class(source_file.branches_coverage_percent) %>"><%= sprintf("%.2f", source_file.branches_coverage_percent.floor(2)) %>%</span>
-              <span class="coverage-cell__fraction"><%= source_file.covered_branches.count %>/<%= source_file.total_branches.count %></span>
-            </div>
-          </td>
-          <td class="cell--number"><%= source_file.total_branches.count %></td>
+          <td class="cell--bar" data-order="<%= sprintf("%.2f", source_file.branches_coverage_percent) %>"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.branches_coverage_percent) %>" style="width: <%= sprintf("%.1f", source_file.branches_coverage_percent.floor(1)) %>%"></div></div></td>
+          <td class="cell--pct cell--branch-pct <%= coverage_css_class(source_file.branches_coverage_percent) %>"><%= sprintf("%.2f", source_file.branches_coverage_percent.floor(2)) %>%</td>
+          <td class="cell--numerator"><%= fmt(source_file.covered_branches.count) %>/</td>
+          <td class="cell--denominator"><%= fmt(source_file.total_branches.count) %></td>
+          <td class="cell--number"><%= fmt(source_file.total_branches.count) %></td>
 <%- end -%>
 <%- if method_coverage? -%>
-          <td class="strong t-file__method-coverage" data-order="<%= sprintf("%.2f", source_file.methods_coverage_percent) %>">
-            <div class="coverage-cell">
-              <div class="coverage-bar">
-                <div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.methods_coverage_percent) %>" style="width: <%= sprintf("%.1f", source_file.methods_coverage_percent.floor(1)) %>%"></div>
-              </div>
-              <span class="coverage-cell__pct <%= coverage_css_class(source_file.methods_coverage_percent) %>"><%= sprintf("%.2f", source_file.methods_coverage_percent.floor(2)) %>%</span>
-              <span class="coverage-cell__fraction"><%= source_file.covered_methods.count %>/<%= source_file.methods.count %></span>
-            </div>
-          </td>
-          <td class="cell--number"><%= source_file.methods.count %></td>
+          <td class="cell--bar" data-order="<%= sprintf("%.2f", source_file.methods_coverage_percent) %>"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--<%= coverage_css_class(source_file.methods_coverage_percent) %>" style="width: <%= sprintf("%.1f", source_file.methods_coverage_percent.floor(1)) %>%"></div></div></td>
+          <td class="cell--pct cell--method-pct <%= coverage_css_class(source_file.methods_coverage_percent) %>"><%= sprintf("%.2f", source_file.methods_coverage_percent.floor(2)) %>%</td>
+          <td class="cell--numerator"><%= fmt(source_file.covered_methods.count) %>/</td>
+          <td class="cell--denominator"><%= fmt(source_file.methods.count) %></td>
+          <td class="cell--number"><%= fmt(source_file.methods.count) %></td>
 <%- end -%>
         </tr>
 <%- end -%>
