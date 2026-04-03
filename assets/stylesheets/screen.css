@@ -630,6 +630,42 @@ dialog.source-dialog[open] {
   word-break: break-all;
 }
 
+/* --- Source legend ------------------------------------------ */
+
+.source-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  align-items: center;
+  align-self: flex-end;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: var(--sp-6);
+}
+
+.source-legend__item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.source-legend__swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+.source-legend__swatch--covered       { background: var(--covered-bg); border-color: var(--covered-line-num-bg); }
+.source-legend__swatch--missed        { background: var(--missed-bg); border-color: var(--missed-line-num-bg); }
+.source-legend__swatch--skipped       { background: var(--skipped-bg); border-color: var(--skipped-line-num-bg); }
+.source-legend__swatch--missed-branch { background: var(--missed-branch-bg); border-color: var(--missed-branch-line-num-bg); }
+.source-legend__swatch--missed-method { background: var(--missed-method-bg); border-color: var(--missed-method-line-num-bg); }
+
 .source-dialog__close {
   appearance: none;
   background: none;
