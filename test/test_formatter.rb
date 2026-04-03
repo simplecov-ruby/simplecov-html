@@ -497,11 +497,42 @@ class TestFormatter < Minitest::Test
     refute_includes stdout, "incompatible character"
   end
 
-  def test_formatted_source_file_encoding_error_returns_nil
+  def test_formatted_source_file_encoding_error_returns_placeholder
     f = formatter_with_bad_template("bad")
     capture_io { @encoding_result = f.send(:formatted_source_file, sample_source_file) }
 
-    assert_nil @encoding_result
+    assert_includes @encoding_result, "source_table"
+    assert_includes @encoding_result, "Encoding Error"
+  end
+
+  def test_formatted_source_file_encoding_error_contains_correct_id
+    f = formatter_with_bad_template("bad")
+    result = nil
+    capture_io { result = f.send(:formatted_source_file, sample_source_file) }
+    expected_id = Digest::MD5.hexdigest(sample_source_file.filename)
+
+    assert_includes result, %(id="#{expected_id}")
+  end
+
+  def test_formatted_source_file_encoding_error_html_escapes_message
+    error = Encoding::CompatibilityError.new("dummy")
+    error.define_singleton_method(:message) { "<script>alert('xss')</script>" }
+    f = formatter_with_bad_template_error(error)
+    result = nil
+    capture_io { result = f.send(:formatted_source_file, sample_source_file) }
+
+    assert_includes result, ERB::Util.html_escape("<script>alert('xss')</script>")
+    refute_includes result, "<script>alert"
+  end
+
+  def test_formatted_source_file_encoding_error_message_in_paragraph
+    error = Encoding::CompatibilityError.new("dummy")
+    error.define_singleton_method(:message) { "specific_error_text_42" }
+    f = formatter_with_bad_template_error(error)
+    result = nil
+    capture_io { result = f.send(:formatted_source_file, sample_source_file) }
+
+    assert_includes result, "<p>specific_error_text_42</p>"
   end
 
   cover "SimpleCov::Formatter::HTMLFormatter#formatted_file_list" if respond_to?(:cover)

@@ -26,30 +26,13 @@ class TestViewHelpers < Minitest::Test
     assert_equal "red", formatter.send(:coverage_css_class, 0)
   end
 
-  cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#strength_css_class" if respond_to?(:cover)
-
-  def test_strength_css_class_green
-    assert_equal "green", formatter.send(:strength_css_class, 2)
-    assert_equal "green", formatter.send(:strength_css_class, 1.01)
-  end
-
-  def test_strength_css_class_yellow
-    assert_equal "yellow", formatter.send(:strength_css_class, 1)
-    assert_equal "yellow", formatter.send(:strength_css_class, 1.0)
-  end
-
-  def test_strength_css_class_red
-    assert_equal "red", formatter.send(:strength_css_class, 0.99)
-    assert_equal "red", formatter.send(:strength_css_class, 0)
-  end
-
   cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#id" if respond_to?(:cover)
 
-  def test_id_returns_sha1_hexdigest_of_filename
+  def test_id_returns_md5_hexdigest_of_filename
     source_file = stub_source_file("/path/to/file.rb")
     result = formatter.send(:id, source_file)
 
-    assert_equal Digest::SHA1.hexdigest("/path/to/file.rb"), result
+    assert_equal Digest::MD5.hexdigest("/path/to/file.rb"), result
   end
 
   def test_id_different_filenames_produce_different_ids
@@ -102,7 +85,7 @@ class TestViewHelpers < Minitest::Test
     result = formatter.send(:link_to_source_file, source_file)
 
     assert_includes result, "src_link"
-    assert_includes result, "href=\"##{Digest::SHA1.hexdigest(source_file.filename)}\""
+    assert_includes result, "href=\"##{Digest::MD5.hexdigest(source_file.filename)}\""
     assert_includes result, "title=\"lib/foo.rb\""
     assert_includes result, ">lib/foo.rb</a>"
   end
@@ -531,6 +514,660 @@ class TestViewHelpers < Minitest::Test
     assert_equal Set[5], result
   end
 
+  # -- file_data_attrs tests --------------------------------------------------
+
+  cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#file_data_attrs" if respond_to?(:cover)
+
+  def test_file_data_attrs_line_only
+    set_coverage_flags(branch: false, method: false)
+    sf = stub_data_attrs_source(covered: 8, missed: 2)
+    result = formatter.send(:file_data_attrs, sf)
+
+    assert_equal 'data-covered-lines="8" data-relevant-lines="10"', result
+  end
+
+  def test_file_data_attrs_with_branch_coverage
+    set_coverage_flags(branch: true, method: false)
+    sf = stub_data_attrs_source(covered: 5, missed: 3, covered_branches: 4, total_branches: 6)
+    result = formatter.send(:file_data_attrs, sf)
+
+    assert_equal 'data-covered-lines="5" data-relevant-lines="8" data-covered-branches="4" data-total-branches="6"', result
+  end
+
+  def test_file_data_attrs_with_method_coverage
+    set_coverage_flags(branch: false, method: true)
+    sf = stub_data_attrs_source(covered: 10, missed: 0, covered_methods: 3, total_methods: 5)
+    result = formatter.send(:file_data_attrs, sf)
+
+    assert_equal 'data-covered-lines="10" data-relevant-lines="10" data-covered-methods="3" data-total-methods="5"', result
+  end
+
+  def test_file_data_attrs_with_all_coverage
+    set_coverage_flags(branch: true, method: true)
+    sf = stub_data_attrs_source(covered: 7, missed: 3, covered_branches: 2, total_branches: 4, covered_methods: 1, total_methods: 2)
+    result = formatter.send(:file_data_attrs, sf)
+
+    expected = 'data-covered-lines="7" data-relevant-lines="10" ' \
+               'data-covered-branches="2" data-total-branches="4" ' \
+               'data-covered-methods="1" data-total-methods="2"'
+
+    assert_equal expected, result
+  end
+
+  def test_file_data_attrs_relevant_lines_is_covered_plus_missed
+    set_coverage_flags(branch: false, method: false)
+    sf = stub_data_attrs_source(covered: 3, missed: 7)
+    result = formatter.send(:file_data_attrs, sf)
+
+    assert_includes result, 'data-relevant-lines="10"'
+  end
+
+  def test_file_data_attrs_separator_is_space
+    set_coverage_flags(branch: false, method: false)
+    sf = stub_data_attrs_source(covered: 1, missed: 1)
+    result = formatter.send(:file_data_attrs, sf)
+
+    assert_equal 'data-covered-lines="1" data-relevant-lines="2"', result
+    assert_includes result, '" data-'
+  end
+
+  def test_file_data_attrs_key_names_contain_data_prefix
+    set_coverage_flags(branch: true, method: true)
+    sf = stub_data_attrs_source(covered: 1, missed: 0, covered_branches: 0, total_branches: 0, covered_methods: 0, total_methods: 0)
+    result = formatter.send(:file_data_attrs, sf)
+
+    result.scan(/data-[\w-]+/).each do |key|
+      assert key.start_with?("data-"), "Expected data- prefix, got: #{key}"
+    end
+  end
+
+  def test_file_data_attrs_zero_values
+    set_coverage_flags(branch: false, method: false)
+    sf = stub_data_attrs_source(covered: 0, missed: 0)
+    result = formatter.send(:file_data_attrs, sf)
+
+    assert_equal 'data-covered-lines="0" data-relevant-lines="0"', result
+  end
+
+  def test_file_data_attrs_no_branch_keys_without_branch_coverage
+    set_coverage_flags(branch: false, method: false)
+    sf = stub_data_attrs_source(covered: 5, missed: 5)
+    result = formatter.send(:file_data_attrs, sf)
+
+    refute_includes result, "covered-branches"
+    refute_includes result, "total-branches"
+  end
+
+  def test_file_data_attrs_no_method_keys_without_method_coverage
+    set_coverage_flags(branch: false, method: false)
+    sf = stub_data_attrs_source(covered: 5, missed: 5)
+    result = formatter.send(:file_data_attrs, sf)
+
+    refute_includes result, "covered-methods"
+    refute_includes result, "total-methods"
+  end
+
+  # -- coverage_bar tests -----------------------------------------------------
+
+  cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#coverage_bar" if respond_to?(:cover)
+
+  def test_coverage_bar_returns_html_div
+    result = formatter.send(:coverage_bar, 85.0)
+
+    assert_includes result, '<div class="coverage-bar">'
+    assert_includes result, "</div></div>"
+  end
+
+  def test_coverage_bar_uses_green_for_high_percent
+    result = formatter.send(:coverage_bar, 95.0)
+
+    assert_includes result, "coverage-bar__fill--green"
+  end
+
+  def test_coverage_bar_uses_yellow_for_medium_percent
+    result = formatter.send(:coverage_bar, 80.0)
+
+    assert_includes result, "coverage-bar__fill--yellow"
+  end
+
+  def test_coverage_bar_uses_red_for_low_percent
+    result = formatter.send(:coverage_bar, 50.0)
+
+    assert_includes result, "coverage-bar__fill--red"
+  end
+
+  def test_coverage_bar_formats_width_with_one_decimal
+    result = formatter.send(:coverage_bar, 85.67)
+
+    assert_includes result, 'style="width: 85.6%"'
+  end
+
+  def test_coverage_bar_floors_width
+    result = formatter.send(:coverage_bar, 99.99)
+
+    assert_includes result, 'style="width: 99.9%"'
+  end
+
+  def test_coverage_bar_zero_percent
+    result = formatter.send(:coverage_bar, 0.0)
+
+    assert_includes result, 'style="width: 0.0%"'
+    assert_includes result, "coverage-bar__fill--red"
+  end
+
+  def test_coverage_bar_hundred_percent
+    result = formatter.send(:coverage_bar, 100.0)
+
+    assert_includes result, 'style="width: 100.0%"'
+    assert_includes result, "coverage-bar__fill--green"
+  end
+
+  def test_coverage_bar_exact_output_structure
+    result = formatter.send(:coverage_bar, 90.0)
+
+    assert_equal '<div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--green" style="width: 90.0%"></div></div>', result
+  end
+
+  # -- coverage_cells tests ---------------------------------------------------
+
+  cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#coverage_cells" if respond_to?(:cover)
+
+  def test_coverage_cells_returns_four_td_elements
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line)
+
+    assert_equal 4, result.scan("<td").count
+  end
+
+  def test_coverage_cells_bar_cell_has_coverage_bar
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line)
+
+    assert_includes result, 'class="cell--bar"'
+    assert_includes result, "coverage-bar"
+  end
+
+  def test_coverage_cells_pct_cell_contains_formatted_percent
+    result = formatter.send(:coverage_cells, 85.999, 85, 100, type: :line)
+
+    assert_includes result, "85.99%"
+  end
+
+  def test_coverage_cells_pct_floors_to_two_decimals
+    result = formatter.send(:coverage_cells, 85.999, 85, 100, type: :line)
+
+    assert_includes result, "85.99%"
+    refute_includes result, "86.00%"
+  end
+
+  def test_coverage_cells_numerator_cell_has_covered_value
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line)
+
+    assert_includes result, ">85/</td>"
+  end
+
+  def test_coverage_cells_denominator_cell_has_total_value
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line)
+
+    assert_includes result, ">100</td>"
+  end
+
+  def test_coverage_cells_non_totals_has_data_order_attribute
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line)
+
+    assert_includes result, 'data-order="85.00"'
+  end
+
+  def test_coverage_cells_totals_has_no_data_order
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line, totals: true)
+
+    refute_includes result, "data-order"
+  end
+
+  def test_coverage_cells_uses_green_css_class_for_high
+    result = formatter.send(:coverage_cells, 95.0, 95, 100, type: :line)
+
+    assert_includes result, "green"
+  end
+
+  def test_coverage_cells_uses_red_css_class_for_low
+    result = formatter.send(:coverage_cells, 50.0, 50, 100, type: :line)
+
+    assert_includes result, "red"
+  end
+
+  def test_coverage_cells_pct_td_class_contains_css_color_non_totals
+    result = formatter.send(:coverage_cells, 95.0, 95, 100, type: :line)
+    pct_td = result.match(/<td class="cell--pct cell--line-pct ([^"]+)"/)
+
+    assert pct_td, "Expected to find pct td with cell--line-pct class"
+    assert_includes pct_td[1], "green"
+  end
+
+  def test_coverage_cells_pct_td_class_contains_css_color_totals
+    result = formatter.send(:coverage_cells, 95.0, 95, 100, type: :line, totals: true)
+    pct_td = result.match(/<td class="cell--pct strong t-totals__line-pct ([^"]+)"/)
+
+    assert pct_td, "Expected to find pct td with t-totals__line-pct class"
+    assert_includes pct_td[1], "green"
+  end
+
+  def test_coverage_cells_pct_td_class_red_for_low_non_totals
+    result = formatter.send(:coverage_cells, 50.0, 50, 100, type: :line)
+    pct_td = result.match(/<td class="cell--pct cell--line-pct ([^"]+)"/)
+
+    assert pct_td, "Expected to find pct td"
+    assert_includes pct_td[1], "red"
+  end
+
+  def test_coverage_cells_pct_td_class_red_for_low_totals
+    result = formatter.send(:coverage_cells, 50.0, 50, 100, type: :line, totals: true)
+    pct_td = result.match(/<td class="cell--pct strong t-totals__line-pct ([^"]+)"/)
+
+    assert pct_td, "Expected to find pct td"
+    assert_includes pct_td[1], "red"
+  end
+
+  def test_coverage_cells_non_totals_uses_type_in_pct_class
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line)
+
+    assert_includes result, "cell--line-pct"
+  end
+
+  def test_coverage_cells_non_totals_branch_type
+    result = formatter.send(:coverage_cells, 75.0, 15, 20, type: :branch)
+
+    assert_includes result, "cell--branch-pct"
+  end
+
+  def test_coverage_cells_totals_uses_type_in_bar_class
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line, totals: true)
+
+    assert_includes result, "t-totals__line-bar"
+  end
+
+  def test_coverage_cells_totals_uses_type_in_pct_class
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line, totals: true)
+
+    assert_includes result, "t-totals__line-pct"
+  end
+
+  def test_coverage_cells_totals_uses_type_in_num_class
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line, totals: true)
+
+    assert_includes result, "t-totals__line-num"
+  end
+
+  def test_coverage_cells_totals_uses_type_in_den_class
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line, totals: true)
+
+    assert_includes result, "t-totals__line-den"
+  end
+
+  def test_coverage_cells_totals_has_strong_classes
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line, totals: true)
+
+    assert_includes result, "strong t-totals__line-pct"
+    assert_includes result, "strong t-totals__line-num"
+    assert_includes result, "strong t-totals__line-den"
+  end
+
+  def test_coverage_cells_non_totals_numerator_class
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line)
+
+    assert_includes result, 'class="cell--numerator"'
+  end
+
+  def test_coverage_cells_non_totals_denominator_class
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line)
+
+    assert_includes result, 'class="cell--denominator"'
+  end
+
+  def test_coverage_cells_formats_large_numbers_with_commas
+    result = formatter.send(:coverage_cells, 85.0, 1234, 10_000, type: :line)
+
+    assert_includes result, "1,234"
+    assert_includes result, "10,000"
+  end
+
+  def test_coverage_cells_data_order_uses_two_decimals
+    result = formatter.send(:coverage_cells, 75.555, 75, 100, type: :line)
+
+    assert_includes result, 'data-order="75.56"'
+  end
+
+  def test_coverage_cells_exact_pct_format
+    result = formatter.send(:coverage_cells, 100.0, 100, 100, type: :line)
+
+    assert_includes result, "100.00%"
+  end
+
+  def test_coverage_cells_totals_pct_value_present
+    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line, totals: true)
+
+    assert_match(%r{<td class="cell--pct[^"]*">85\.00%</td>}, result)
+  end
+
+  # -- coverage_header_cells tests --------------------------------------------
+
+  cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#coverage_header_cells" if respond_to?(:cover)
+
+  def test_coverage_header_cells_contains_label
+    result = formatter.send(:coverage_header_cells, "Line", :line, "Covered", "Total")
+
+    assert_includes result, "Line"
+  end
+
+  def test_coverage_header_cells_contains_type_in_filter
+    result = formatter.send(:coverage_header_cells, "Line", :line, "Covered", "Total")
+
+    assert_includes result, 'data-type="line"'
+  end
+
+  def test_coverage_header_cells_contains_covered_label
+    result = formatter.send(:coverage_header_cells, "Line", :line, "Covered Lines", "Total")
+
+    assert_includes result, "Covered Lines"
+  end
+
+  def test_coverage_header_cells_contains_total_label
+    result = formatter.send(:coverage_header_cells, "Line", :line, "Covered", "Total Lines")
+
+    assert_includes result, "Total Lines"
+  end
+
+  def test_coverage_header_cells_contains_select_filter
+    result = formatter.send(:coverage_header_cells, "Line", :line, "Covered", "Total")
+
+    assert_includes result, "<select"
+    assert_includes result, "col-filter__op"
+  end
+
+  def test_coverage_header_cells_contains_input_filter
+    result = formatter.send(:coverage_header_cells, "Line", :line, "Covered", "Total")
+
+    assert_includes result, '<input type="number"'
+    assert_includes result, "col-filter__value"
+  end
+
+  def test_coverage_header_cells_has_coverage_colspan
+    result = formatter.send(:coverage_header_cells, "Line", :line, "Covered", "Total")
+
+    assert_includes result, 'colspan="2"'
+  end
+
+  def test_coverage_header_cells_type_appears_in_both_filter_elements
+    result = formatter.send(:coverage_header_cells, "Branch", :branch, "Covered", "Total")
+
+    assert_equal 2, result.scan('data-type="branch"').count
+  end
+
+  def test_coverage_header_cells_th_label_span
+    result = formatter.send(:coverage_header_cells, "My Label", :line, "Covered", "Total")
+
+    assert_includes result, '<span class="th-label">My Label</span>'
+  end
+
+  # -- coverage_type_summary direct tests -------------------------------------
+
+  cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#coverage_type_summary" if respond_to?(:cover)
+
+  def test_coverage_type_summary_enabled_returns_div_with_type_class
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 80.0, covered: 80, total: 100, missed: 20}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, 'class="t-line-summary"'
+  end
+
+  def test_coverage_type_summary_disabled_delegates_to_disabled_summary
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:coverage_type_summary, "branch", "Branch coverage", {}, enabled: false)
+
+    assert_includes result, "disabled"
+    assert_includes result, "t-branch-summary"
+  end
+
+  def test_coverage_type_summary_contains_formatted_percent
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 85.999, covered: 85, total: 100, missed: 15}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, "85.99%"
+  end
+
+  def test_coverage_type_summary_percent_is_floored
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 85.999, covered: 85, total: 100, missed: 15}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, "85.99%"
+    refute_includes result, "86.00%"
+  end
+
+  def test_coverage_type_summary_contains_css_class_from_pct
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 95.0, covered: 95, total: 100, missed: 5}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, '"green"'
+  end
+
+  def test_coverage_type_summary_css_class_red_for_low
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 50.0, covered: 50, total: 100, missed: 50}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, '"red"'
+  end
+
+  def test_coverage_type_summary_contains_covered_and_total
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 80.0, covered: 80, total: 100, missed: 20}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, "80/100"
+  end
+
+  def test_coverage_type_summary_default_suffix_is_covered
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 80.0, covered: 80, total: 100, missed: 20}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, "covered"
+  end
+
+  def test_coverage_type_summary_custom_suffix
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 80.0, covered: 80, total: 100, missed: 20}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true, suffix: "relevant lines covered")
+
+    assert_includes result, "relevant lines covered"
+  end
+
+  def test_coverage_type_summary_suffix_key_is_used
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 100.0, covered: 10, total: 10, missed: 0}}
+    result_default = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+    result_custom = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true, suffix: "unique_suffix_text")
+
+    assert_includes result_default, "10/10 covered"
+    assert_includes result_custom, "10/10 unique_suffix_text"
+    refute_includes result_custom, "10/10 covered"
+  end
+
+  def test_coverage_type_summary_ends_with_closing_div
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 100.0, covered: 100, total: 100, missed: 0}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert result.end_with?("</div>"), "Expected closing </div>, got: ...#{result[-30..]}"
+  end
+
+  def test_coverage_type_summary_contains_label
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 100.0, covered: 100, total: 100, missed: 0}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, "Line coverage:"
+  end
+
+  def test_coverage_type_summary_with_missed_includes_missed_count
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 80.0, covered: 80, total: 100, missed: 20}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, "<b>20</b> missed"
+  end
+
+  def test_coverage_type_summary_no_missed_when_zero
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 100.0, covered: 100, total: 100, missed: 0}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    refute_includes result, "missed"
+  end
+
+  def test_coverage_type_summary_missed_uses_default_red_class
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 80.0, covered: 80, total: 100, missed: 20}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, 'class="red"'
+  end
+
+  def test_coverage_type_summary_missed_uses_custom_missed_class
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 80.0, covered: 80, total: 100, missed: 20}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true, missed_class: "missed-branch-text")
+
+    assert_includes result, 'class="missed-branch-text"'
+    refute_includes result, 'class="red"'
+  end
+
+  def test_coverage_type_summary_toggle_false_uses_span
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 80.0, covered: 80, total: 100, missed: 20}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true, toggle: false)
+
+    assert_includes result, "<span"
+    refute_includes result, "t-missed-method-toggle"
+  end
+
+  def test_coverage_type_summary_toggle_true_uses_anchor
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 80.0, covered: 80, total: 100, missed: 20}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true, toggle: true)
+
+    assert_includes result, "t-missed-method-toggle"
+    assert_includes result, "<a href"
+  end
+
+  def test_coverage_type_summary_type_in_disabled_output
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:coverage_type_summary, "method", "Method coverage", {}, enabled: false)
+
+    assert_includes result, "t-method-summary"
+  end
+
+  def test_coverage_type_summary_missed_includes_comma_separator
+    f = new_formatter_with(branch: false, method: false)
+    summary = {line: {pct: 80.0, covered: 80, total: 100, missed: 20}}
+    result = f.send(:coverage_type_summary, "line", "Line coverage", summary, enabled: true)
+
+    assert_includes result, %(<span class="coverage-cell__fraction">,</span>)
+  end
+
+  def test_coverage_type_summary_type_appears_in_enabled_div_class
+    f = new_formatter_with(branch: false, method: false)
+    summary = {branch: {pct: 75.0, covered: 15, total: 20, missed: 5}}
+    result = f.send(:coverage_type_summary, "branch", "Branch coverage", summary, enabled: true)
+
+    assert_includes result, "t-branch-summary"
+  end
+
+  # -- disabled_summary tests -------------------------------------------------
+
+  cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#disabled_summary" if respond_to?(:cover)
+
+  def test_disabled_summary_contains_type_in_class
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:disabled_summary, "branch", "Branch coverage")
+
+    assert_includes result, "t-branch-summary"
+  end
+
+  def test_disabled_summary_contains_label
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:disabled_summary, "method", "Method coverage")
+
+    assert_includes result, "Method coverage:"
+  end
+
+  def test_disabled_summary_contains_disabled_text
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:disabled_summary, "branch", "Branch coverage")
+
+    assert_includes result, "disabled"
+  end
+
+  def test_disabled_summary_different_types_produce_different_classes
+    f = new_formatter_with(branch: false, method: false)
+    branch_result = f.send(:disabled_summary, "branch", "Branch coverage")
+    method_result = f.send(:disabled_summary, "method", "Method coverage")
+
+    assert_includes branch_result, "t-branch-summary"
+    assert_includes method_result, "t-method-summary"
+    refute_includes branch_result, "t-method-summary"
+    refute_includes method_result, "t-branch-summary"
+  end
+
+  # -- missed_summary_html tests ----------------------------------------------
+
+  cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#missed_summary_html" if respond_to?(:cover)
+
+  def test_missed_summary_html_no_toggle_uses_span_with_class
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:missed_summary_html, 5, "red", false)
+
+    assert_includes result, '<span class="red"><b>5</b> missed</span>'
+  end
+
+  def test_missed_summary_html_with_toggle_uses_anchor
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:missed_summary_html, 7, "red", true)
+
+    assert_includes result, '<a href="#" class="t-missed-method-toggle"><b>7</b> missed</a>'
+  end
+
+  def test_missed_summary_html_toggle_count_appears_in_output
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:missed_summary_html, 42, "red", true)
+
+    assert_includes result, "<b>42</b>"
+  end
+
+  def test_missed_summary_html_starts_with_comma_separator
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:missed_summary_html, 5, "red", false)
+
+    assert result.start_with?('<span class="coverage-cell__fraction">,</span>'), "Expected comma separator at start, got: #{result[0..60]}"
+  end
+
+  def test_missed_summary_html_no_toggle_uses_custom_class
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:missed_summary_html, 3, "missed-branch-text", false)
+
+    assert_includes result, 'class="missed-branch-text"'
+  end
+
+  def test_missed_summary_html_returns_non_empty_string
+    f = new_formatter_with(branch: false, method: false)
+    result = f.send(:missed_summary_html, 1, "red", false)
+
+    refute_empty result
+    assert_includes result, "missed"
+  end
+
 private
 
   def formatter
@@ -631,6 +1268,29 @@ private
     m1 = make_method_stub(start_line, end_line)
     obj = Object.new
     obj.define_singleton_method(:missed_methods) { [m1] }
+    obj
+  end
+
+  def stub_data_attrs_source(covered:, missed:, covered_branches: 0, total_branches: 0, covered_methods: 0, total_methods: 0) # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists
+    cl = make_countable(covered)
+    ml = make_countable(missed)
+    cb = make_countable(covered_branches)
+    tb = make_countable(total_branches)
+    cm = make_countable(covered_methods)
+    tm = make_countable(total_methods)
+    obj = Object.new
+    obj.define_singleton_method(:covered_lines) { cl }
+    obj.define_singleton_method(:missed_lines) { ml }
+    obj.define_singleton_method(:covered_branches) { cb }
+    obj.define_singleton_method(:total_branches) { tb }
+    obj.define_singleton_method(:covered_methods) { cm }
+    obj.define_singleton_method(:methods) { tm }
+    obj
+  end
+
+  def make_countable(value)
+    obj = Object.new
+    obj.define_singleton_method(:count) { value }
     obj
   end
 end

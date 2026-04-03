@@ -93,6 +93,7 @@ module SimpleCov
         template("source_file").result(binding)
       rescue Encoding::CompatibilityError => e
         puts "Encoding problems with file #{source_file.filename}. Simplecov/ERB can't handle non ASCII characters in filenames. Error: #{e.message}."
+        %(<div class="source_table" id="#{id(source_file)}"><div class="header"><h2>Encoding Error</h2><p>#{ERB::Util.html_escape(e.message)}</p></div></div>)
       end
 
       def formatted_file_list(title, source_files)
