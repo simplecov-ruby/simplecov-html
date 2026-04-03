@@ -7,7 +7,7 @@ hljs.registerLanguage('ruby', ruby);
 // --- Constants ------------------------------------------------
 
 const MAX_BAR_WIDTH = 240;
-const MIN_BAR_WIDTH = 80;
+const MIN_BAR_WIDTH = 160;
 const GREEN_THRESHOLD = 90;
 const YELLOW_THRESHOLD = 75;
 
@@ -74,21 +74,21 @@ function updateCoverageCells(
   covered: number,
   total: number
 ): void {
-  const barEl = $(prefix + '-bar', container);
-  const pctEl = $(prefix + '-pct', container);
+  const covCell = $(prefix + '-pct', container);
   const numEl = $(prefix + '-num', container);
   const denEl = $(prefix + '-den', container);
   if (total === 0) {
-    if (barEl) barEl.innerHTML = '';
-    if (pctEl) { pctEl.textContent = ''; pctEl.className = pctEl.className.replace(/green|yellow|red/g, '').trim(); }
+    if (covCell) { covCell.innerHTML = ''; covCell.className = covCell.className.replace(/green|yellow|red/g, '').trim(); }
     if (numEl) numEl.textContent = '';
     if (denEl) denEl.textContent = '';
     return;
   }
   const p = (covered * 100.0) / total;
   const cls = pctClass(p);
-  if (barEl) barEl.innerHTML = `<div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--${cls}" style="width: ${p.toFixed(1)}%"></div></div>`;
-  if (pctEl) { pctEl.textContent = p.toFixed(2) + '%'; pctEl.className = `${pctEl.className.replace(/green|yellow|red/g, '').trim()} ${cls}`; }
+  if (covCell) {
+    covCell.innerHTML = `<div class="coverage-cell"><div class="bar-sizer"><div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--${cls}" style="width: ${p.toFixed(1)}%"></div></div></div><span class="coverage-pct">${p.toFixed(2)}%</span></div>`;
+    covCell.className = `${covCell.className.replace(/green|yellow|red/g, '').trim()} ${cls}`;
+  }
   if (numEl) numEl.textContent = fmtNum(covered) + '/';
   if (denEl) denEl.textContent = fmtNum(total);
 }
@@ -305,21 +305,11 @@ function materializeSourceFile(sourceFileId: string): HTMLElement | null {
 
 // --- Bar width equalization ------------------------------------
 
-function setBarWidth(bars: Element[], table: Element, px: number): void {
+function setBarSizerWidth(sizers: Element[], px: number): void {
   const w = px + 'px';
-  $$('th.cell--coverage', table).forEach(h => h.setAttribute('colspan', '2'));
-  bars.forEach(b => {
-    const s = (b as HTMLElement).style;
-    s.display = '';
-    s.width = w; s.minWidth = w; s.maxWidth = w;
-  });
-}
-
-function hideBars(bars: Element[], table: Element): void {
-  $$('th.cell--coverage', table).forEach(h => h.setAttribute('colspan', '1'));
-  bars.forEach(b => {
-    const s = (b as HTMLElement).style;
-    s.display = 'none'; s.width = ''; s.minWidth = ''; s.maxWidth = '';
+  sizers.forEach(s => {
+    const st = (s as HTMLElement).style;
+    st.width = w; st.minWidth = w; st.maxWidth = w;
   });
 }
 
@@ -330,40 +320,27 @@ function equalizeBarWidths(): void {
 
     const table = $('table.file_list', container) as HTMLTableElement | null;
     if (!table) return;
-    const bars = $$('td.cell--bar', table);
-    if (bars.length === 0) return;
+    const sizers = $$('.bar-sizer', table);
+    if (sizers.length === 0) return;
 
     const wrapper = table.closest('.file_list--responsive') as HTMLElement | null;
     if (!wrapper) return;
 
     wrapper.style.visibility = 'hidden';
 
-    const fitsAt = (px: number): boolean => {
-      setBarWidth(bars, table, px);
-      table.style.width = 'auto';
+    // Binary search for the largest bar width that fits without scrolling,
+    // scaling gradually from MAX_BAR_WIDTH down to MIN_BAR_WIDTH.
+    // If the table overflows even at MIN_BAR_WIDTH, use MIN_BAR_WIDTH anyway.
+    let lo = MIN_BAR_WIDTH, hi = MAX_BAR_WIDTH;
+    while (lo < hi) {
+      const mid = Math.ceil((lo + hi) / 2);
+      setBarSizerWidth(sizers, mid);
       void table.offsetWidth;
-      const fits = table.scrollWidth <= wrapper.clientWidth;
-      table.style.width = '';
-      return fits;
-    };
-
-    let barWidth = MAX_BAR_WIDTH;
-    if (!fitsAt(MAX_BAR_WIDTH)) {
-      if (!fitsAt(MIN_BAR_WIDTH)) {
-        hideBars(bars, table);
-        wrapper.style.visibility = '';
-        return;
-      }
-      let lo = MIN_BAR_WIDTH, hi = MAX_BAR_WIDTH - 1;
-      while (lo < hi) {
-        const mid = Math.ceil((lo + hi) / 2);
-        if (fitsAt(mid)) lo = mid;
-        else hi = mid - 1;
-      }
-      barWidth = lo;
+      if (table.scrollWidth <= wrapper.clientWidth) lo = mid;
+      else hi = mid - 1;
     }
+    setBarSizerWidth(sizers, lo);
 
-    setBarWidth(bars, table, barWidth);
     wrapper.style.visibility = '';
   });
 }

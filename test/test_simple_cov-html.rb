@@ -64,27 +64,14 @@ class TestSimpleCovHtml < Minitest::Test
     assert_equal EXPECTED_BRANCH_COVERAGES, table.sort_by(&:to_f)
   end
 
-  def test_coverage_headers_have_colspan_two
+  def test_coverage_cells_contain_bar_and_percentage
     html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
-    headers = html_doc.css("div#AllFiles table.file_list th.cell--coverage")
+    cov_cells = html_doc.css("div#AllFiles table.file_list tbody td.cell--coverage")
 
-    assert_operator headers.length, :>=, 1, "Expected at least one coverage header"
-    headers.each do |th|
-      assert_equal "2", th["colspan"], "Coverage header '#{th.text.strip}' must have colspan=2"
-    end
-  end
-
-  def test_bar_cells_precede_pct_cells
-    html_doc = format_results(CoverageFixtures::ALL_FIXTURES)
-    bar_cells = html_doc.css("div#AllFiles table.file_list tbody td.cell--bar")
-
-    assert_operator bar_cells.length, :>=, 1, "Expected at least one bar cell"
-    bar_cells.each do |bar|
-      pct = bar.next_element
-
-      assert pct, "Expected a sibling after each td.cell--bar"
-      assert_includes pct["class"], "cell--pct",
-                      "td.cell--bar must be immediately followed by td.cell--pct"
+    assert_operator cov_cells.length, :>=, 1, "Expected at least one coverage cell"
+    cov_cells.each do |td|
+      assert td.at_css(".bar-sizer"), "Coverage cell must contain a bar-sizer"
+      assert td.at_css(".coverage-pct"), "Coverage cell must contain a coverage-pct"
     end
   end
 

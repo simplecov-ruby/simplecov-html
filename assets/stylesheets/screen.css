@@ -410,6 +410,7 @@ table.file_list th.cell--coverage .th-with-filter {
 /* --- File list table --------------------------------------- */
 
 .file_list--responsive {
+  overflow-x: auto;
 }
 
 table.file_list {
@@ -502,30 +503,28 @@ a.src_link {
 
 /* --- Coverage columns -------------------------------------- */
 
-table.file_list td.cell--bar {
-  padding-right: 4px;
-  padding-left: 0;
-}
-
-table.file_list td.cell--bar .coverage-bar {
-  margin-left: auto;
-}
-
-table.file_list td.cell--pct {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+table.file_list td.cell--coverage {
   white-space: nowrap;
-  width: 1%;
-  padding-left: 4px;
 }
 
-table.file_list .totals-row td.cell--bar {
-  padding-right: 4px;
-  padding-left: 0;
+.coverage-cell {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
-table.file_list .totals-row td.cell--pct {
-  padding-left: 4px;
+.coverage-cell .coverage-pct {
+  flex: 0 0 4.5em;
+  font-variant-numeric: tabular-nums;
+}
+
+.coverage-cell .bar-sizer {
+  flex: 0 0 auto;
+  width: 240px;
+  min-width: 160px;
+  max-width: 240px;
 }
 
 table.file_list td.cell--numerator {
@@ -567,7 +566,6 @@ table.file_list .totals-row td.cell--denominator {
   background: var(--bar-bg);
   border-radius: 6px;
   overflow: hidden;
-  min-width: 40px;
 }
 
 .coverage-bar__fill {
