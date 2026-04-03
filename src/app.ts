@@ -367,6 +367,67 @@ function equalizeBarWidths(): void {
   });
 }
 
+// --- Keyboard navigation ----------------------------------------
+
+let focusedRow: HTMLElement | null = null;
+
+function getVisibleFileRows(): HTMLElement[] {
+  const visible = $$('.file_list_container').filter(c => (c as HTMLElement).style.display !== 'none');
+  if (!visible.length) return [];
+  return $$('tbody tr.t-file', visible[0]).filter(r => (r as HTMLElement).style.display !== 'none') as HTMLElement[];
+}
+
+function setFocusedRow(row: HTMLElement | null): void {
+  if (focusedRow) focusedRow.classList.remove('keyboard-focus');
+  focusedRow = row;
+  if (focusedRow) {
+    focusedRow.classList.add('keyboard-focus');
+    focusedRow.scrollIntoView({ block: 'nearest' });
+  }
+}
+
+function moveFocus(direction: 1 | -1): void {
+  const rows = getVisibleFileRows();
+  if (!rows.length) return;
+  if (!focusedRow || rows.indexOf(focusedRow) === -1) {
+    setFocusedRow(direction === 1 ? rows[0] : rows[rows.length - 1]);
+    return;
+  }
+  const idx = rows.indexOf(focusedRow) + direction;
+  if (idx >= 0 && idx < rows.length) setFocusedRow(rows[idx]);
+}
+
+function openFocusedRow(): void {
+  if (!focusedRow) return;
+  const link = focusedRow.querySelector('a.src_link');
+  if (link) window.location.hash = link.getAttribute('href')!.substring(1);
+}
+
+function getMissedLines(): HTMLElement[] {
+  return $$('.source-dialog .source_table li.missed, .source-dialog .source_table li.missed-branch, .source-dialog .source_table li.missed-method') as HTMLElement[];
+}
+
+function jumpToMissedLine(direction: 1 | -1): void {
+  const lines = getMissedLines();
+  if (!lines.length) return;
+
+  const scrollTop = dialogBody.scrollTop;
+  const midpoint = scrollTop + dialogBody.clientHeight / 2;
+
+  if (direction === 1) {
+    const next = lines.find(li => li.offsetTop > midpoint);
+    const target = next || lines[0];
+    dialogBody.scrollTop = target.offsetTop - dialogBody.clientHeight / 3;
+  } else {
+    let prev: HTMLElement | null = null;
+    for (let i = lines.length - 1; i >= 0; i--) {
+      if (lines[i].offsetTop < midpoint - 10) { prev = lines[i]; break; }
+    }
+    const target = prev || lines[lines.length - 1];
+    dialogBody.scrollTop = target.offsetTop - dialogBody.clientHeight / 3;
+  }
+}
+
 // --- Source file dialog ----------------------------------------
 
 let dialog: HTMLDialogElement;
@@ -398,6 +459,7 @@ function openSourceFile(sourceFileId: string, linenumber?: string): void {
 }
 
 function showFileList(tabId: string): void {
+  setFocusedRow(null);
   if (dialog.open) {
     dialog.close();
     dialogBody.innerHTML = '';
@@ -528,14 +590,45 @@ document.addEventListener('DOMContentLoaded', function () {
     filterTable(this.closest('.file_list_container')!);
   });
 
-  // "/" to focus search
+  // Keyboard shortcuts
   document.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === '/' && !(e.target as Element).matches('input, select, textarea')) {
+    const inInput = (e.target as Element).matches('input, select, textarea');
+
+    // "/" to focus search
+    if (e.key === '/' && !inInput) {
       e.preventDefault();
       const visible = $$('.file_list_container').filter(c => (c as HTMLElement).style.display !== 'none');
       const input = visible.length ? $('.col-filter--name', visible[0]) as HTMLElement | null : null;
       if (input) input.focus();
+      return;
     }
+
+    // Escape — close dialog or clear focus
+    if (e.key === 'Escape') {
+      if (dialog.open) {
+        e.preventDefault();
+        navigateToActiveTab();
+      } else if (inInput) {
+        (e.target as HTMLElement).blur();
+      } else if (focusedRow) {
+        setFocusedRow(null);
+      }
+      return;
+    }
+
+    if (inInput) return;
+
+    // Source view shortcuts (dialog open)
+    if (dialog.open) {
+      if (e.key === 'n' && !e.shiftKey) { e.preventDefault(); jumpToMissedLine(1); }
+      if (e.key === 'N' || (e.key === 'n' && e.shiftKey) || e.key === 'p') { e.preventDefault(); jumpToMissedLine(-1); }
+      return;
+    }
+
+    // File list shortcuts (dialog closed)
+    if (e.key === 'j') { e.preventDefault(); moveFocus(1); }
+    if (e.key === 'k') { e.preventDefault(); moveFocus(-1); }
+    if (e.key === 'Enter' && focusedRow) { e.preventDefault(); openFocusedRow(); }
   });
 
   // Dialog setup

@@ -448,6 +448,12 @@ table.file_list tbody tr:hover {
   background: var(--accent-subtle);
 }
 
+table.file_list tbody tr.keyboard-focus {
+  background: var(--accent-subtle);
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
 table.file_list tbody td {
   padding: var(--sp-2) var(--sp-2);
   border-bottom: 1px solid var(--border);
