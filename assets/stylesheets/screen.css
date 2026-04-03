@@ -920,3 +920,217 @@ table.file_list thead th.sorting_desc::after {
 table.file_list thead th.sorting::after        { content: "\2195"; }
 table.file_list thead th.sorting_asc::after     { content: "\2191"; }
 table.file_list thead th.sorting_desc::after    { content: "\2193"; }
+
+/* --- Print ------------------------------------------------- */
+
+@media print {
+  /* Force light palette */
+  :root, .dark-mode {
+    --bg: #fff;
+    --surface: #fff;
+    --surface-alt: #f4f5f7;
+    --text: #111;
+    --text-secondary: #333;
+    --text-tertiary: #444;
+    --zebra: #f4f5f7;
+    --border: #c0c5cc;
+    --border-strong: #999;
+    --accent: #0550ae;
+    --green: #116329;
+    --red: #a40e26;
+    --yellow: #7a5200;
+    --orange: #953800;
+    --bar-bg: #d0d7de;
+    --covered-bg: #ccf5d0;
+    --covered-line-num-bg: #9ae6a4;
+    --missed-bg: #ffd8d5;
+    --missed-line-num-bg: #ffb8b3;
+    --never-bg: #fff;
+    --never-line-num-bg: #f0f1f3;
+    --skipped-bg: #fff0a0;
+    --skipped-line-num-bg: #eed860;
+    --missed-branch-bg: #ffd0a0;
+    --missed-branch-line-num-bg: #ffb060;
+    --missed-branch-text: #b45309;
+    --missed-method-bg: #e8d0ff;
+    --missed-method-line-num-bg: #d4b0ff;
+    --missed-method-text: #7b2d8e;
+    --source-bg: #fff;
+    --source-border: #c0c5cc;
+    --source-line-number: #444;
+    --source-line-num-bg: #f0f1f3;
+    --hits-bg: #e0e3e8;
+    --hits-color: #333;
+  }
+
+  body {
+    padding: 0;
+    font-size: 12pt;
+  }
+
+  /* Hide interactive/non-printable elements */
+  #loading,
+  #dark-mode-toggle,
+  .tab-bar,
+  .source_files,
+  .col-filter--name,
+  .col-filter__coverage,
+  table.file_list thead th.sorting::after,
+  table.file_list thead th.sorting_asc::after,
+  table.file_list thead th.sorting_desc::after {
+    display: none !important;
+  }
+
+  /* --- File list view (dialog closed) --- */
+
+  /* Show all tab groups */
+  #wrapper, .file_list_container {
+    display: block !important;
+  }
+
+  /* Hide file list when source dialog is open */
+  body:has(.source-dialog[open]) #wrapper {
+    display: none !important;
+  }
+
+  /* Remove panel border/radius since there are no tabs */
+  #content {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  /* Group headings — re-show the hidden group name */
+  .file_list_container .group_name {
+    display: inline !important;
+    font-size: 16pt;
+    font-weight: 700;
+  }
+
+  .file_list_container .covered_percent {
+    display: inline !important;
+    font-weight: 600;
+  }
+
+  /* Add space between groups */
+  .file_list_container + .file_list_container {
+    margin-top: 24pt;
+  }
+
+  /* --- Source file view (dialog open) --- */
+
+  dialog.source-dialog {
+    display: none;
+  }
+
+  dialog.source-dialog[open] {
+    display: block !important;
+    position: static;
+    width: 100%;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    background: #fff;
+  }
+
+  .source-dialog__close {
+    display: none !important;
+  }
+
+  .source-dialog__header {
+    flex-wrap: wrap;
+    border-bottom: none;
+    padding: 0 0 8pt 0;
+  }
+
+  .source-dialog__title {
+    flex: 0 0 100%;
+  }
+
+  .source-dialog__title h2 {
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .source-legend {
+    margin-left: 0;
+    padding-left: 0;
+    padding-top: var(--sp-2);
+  }
+
+  .source-dialog__body {
+    overflow: visible;
+  }
+
+  .source_table pre {
+    font-size: 8pt;
+    line-height: 1.4;
+  }
+
+  .source_table pre li {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .source_table pre li::before {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .source_table pre .hits {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Coverage bar: add border so it's visible without color printing */
+  .coverage-bar {
+    border: 1px solid var(--border);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .coverage-bar__fill {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Preserve background colors for coverage status */
+  table.file_list tbody tr:nth-child(even) {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Table typography for print */
+  table.file_list {
+    font-size: 10pt;
+  }
+
+  table.file_list thead th {
+    font-size: 9pt;
+  }
+
+  /* Page break handling */
+  table.file_list {
+    page-break-inside: auto;
+  }
+
+  table.file_list tr {
+    page-break-inside: avoid;
+  }
+
+  table.file_list thead {
+    display: table-header-group;
+  }
+
+  #footer {
+    font-size: 10pt;
+    margin-top: 12pt;
+  }
+
+  /* Links: show URL after link text */
+  #footer a::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: var(--text-tertiary);
+  }
+}
