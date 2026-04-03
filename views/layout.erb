@@ -77,6 +77,17 @@
     <dialog id="source-dialog" class="source-dialog">
       <div class="source-dialog__header">
         <div class="source-dialog__title" id="source-dialog-title"></div>
+        <div class="source-legend">
+          <span class="source-legend__item"><span class="source-legend__swatch source-legend__swatch--covered"></span>Covered</span>
+          <span class="source-legend__item"><span class="source-legend__swatch source-legend__swatch--skipped"></span>Skipped</span>
+          <span class="source-legend__item"><span class="source-legend__swatch source-legend__swatch--missed"></span>Missed line</span>
+<%- if branch_coverage? -%>
+          <span class="source-legend__item"><span class="source-legend__swatch source-legend__swatch--missed-branch"></span>Missed branch</span>
+<%- end -%>
+<%- if method_coverage? -%>
+          <span class="source-legend__item"><span class="source-legend__swatch source-legend__swatch--missed-method"></span>Missed method</span>
+<%- end -%>
+        </div>
         <button class="source-dialog__close" aria-label="Close" title="Close">&times;</button>
       </div>
       <div class="source-dialog__body" id="source-dialog-body" tabindex="0"></div>
