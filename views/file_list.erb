@@ -12,12 +12,12 @@
               <input type="search" class="col-filter col-filter--name" placeholder="Filter paths&#8230;">
             </div>
           </th>
-          <%= coverage_header_cells("Line Coverage", "line", "Lines Covered", "Relevant Lines") %>
+          <%= coverage_header_cells("Line Coverage", "line", "Covered", "Lines") %>
 <%- if branch_coverage? -%>
-          <%= coverage_header_cells("Branch Coverage", "branch", "Branches Covered", "Branches") %>
+          <%= coverage_header_cells("Branch Coverage", "branch", "Covered", "Branches") %>
 <%- end -%>
 <%- if method_coverage? -%>
-          <%= coverage_header_cells("Method Coverage", "method", "Methods Covered", "Methods") %>
+          <%= coverage_header_cells("Method Coverage", "method", "Covered", "Methods") %>
 <%- end -%>
         </tr>
 <%- line_pct = source_files.lines_of_code > 0 ? source_files.covered_percent : 100.0 -%>

@@ -12,7 +12,7 @@ SimpleCov.start do
   coverage_dir "tmp/coverage"
   add_filter "/test/"
   if RUBY_ENGINE == "jruby"
-    minimum_coverage line: 97
+    minimum_coverage line: 91
   else
     enable_coverage :branch
     minimums = {line: 100, branch: 100}

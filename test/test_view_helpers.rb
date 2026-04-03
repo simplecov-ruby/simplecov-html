@@ -665,24 +665,29 @@ class TestViewHelpers < Minitest::Test
   def test_coverage_bar_exact_output_structure
     result = formatter.send(:coverage_bar, 90.0)
 
-    assert_equal '<div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--green" style="width: 90.0%"></div></div>', result
+    expected = '<div class="bar-sizer"><div class="coverage-bar">' \
+               '<div class="coverage-bar__fill coverage-bar__fill--green" style="width: 90.0%"></div>' \
+               "</div></div>"
+
+    assert_equal expected, result
   end
 
   # -- coverage_cells tests ---------------------------------------------------
 
   cover "SimpleCov::Formatter::HTMLFormatter::ViewHelpers#coverage_cells" if respond_to?(:cover)
 
-  def test_coverage_cells_returns_four_td_elements
+  def test_coverage_cells_returns_three_td_elements
     result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line)
 
-    assert_equal 4, result.scan("<td").count
+    assert_equal 3, result.scan("<td").count
   end
 
-  def test_coverage_cells_bar_cell_has_coverage_bar
+  def test_coverage_cells_combined_cell_has_bar_and_pct
     result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line)
 
-    assert_includes result, 'class="cell--bar"'
     assert_includes result, "coverage-bar"
+    assert_includes result, "coverage-pct"
+    assert_includes result, "coverage-cell"
   end
 
   def test_coverage_cells_pct_cell_contains_formatted_percent
@@ -722,6 +727,12 @@ class TestViewHelpers < Minitest::Test
     refute_includes result, "data-order"
   end
 
+  def test_totals_cell_attrs_returns_four_elements_with_empty_order
+    _, _, _, order = formatter.send(:totals_cell_attrs, :line, "green")
+
+    assert_equal "", order
+  end
+
   def test_coverage_cells_uses_green_css_class_for_high
     result = formatter.send(:coverage_cells, 95.0, 95, 100, type: :line)
 
@@ -734,36 +745,36 @@ class TestViewHelpers < Minitest::Test
     assert_includes result, "red"
   end
 
-  def test_coverage_cells_pct_td_class_contains_css_color_non_totals
+  def test_coverage_cells_td_class_contains_css_color_non_totals
     result = formatter.send(:coverage_cells, 95.0, 95, 100, type: :line)
-    pct_td = result.match(/<td class="cell--pct cell--line-pct ([^"]+)"/)
+    cov_td = result.match(/<td class="cell--coverage cell--line-pct ([^"]+)"/)
 
-    assert pct_td, "Expected to find pct td with cell--line-pct class"
-    assert_includes pct_td[1], "green"
+    assert cov_td, "Expected to find coverage td with cell--line-pct class"
+    assert_includes cov_td[1], "green"
   end
 
-  def test_coverage_cells_pct_td_class_contains_css_color_totals
+  def test_coverage_cells_td_class_contains_css_color_totals
     result = formatter.send(:coverage_cells, 95.0, 95, 100, type: :line, totals: true)
-    pct_td = result.match(/<td class="cell--pct strong t-totals__line-pct ([^"]+)"/)
+    cov_td = result.match(/<td class="cell--coverage strong t-totals__line-pct ([^"]+)"/)
 
-    assert pct_td, "Expected to find pct td with t-totals__line-pct class"
-    assert_includes pct_td[1], "green"
+    assert cov_td, "Expected to find coverage td with t-totals__line-pct class"
+    assert_includes cov_td[1], "green"
   end
 
-  def test_coverage_cells_pct_td_class_red_for_low_non_totals
+  def test_coverage_cells_td_class_red_for_low_non_totals
     result = formatter.send(:coverage_cells, 50.0, 50, 100, type: :line)
-    pct_td = result.match(/<td class="cell--pct cell--line-pct ([^"]+)"/)
+    cov_td = result.match(/<td class="cell--coverage cell--line-pct ([^"]+)"/)
 
-    assert pct_td, "Expected to find pct td"
-    assert_includes pct_td[1], "red"
+    assert cov_td, "Expected to find coverage td"
+    assert_includes cov_td[1], "red"
   end
 
-  def test_coverage_cells_pct_td_class_red_for_low_totals
+  def test_coverage_cells_td_class_red_for_low_totals
     result = formatter.send(:coverage_cells, 50.0, 50, 100, type: :line, totals: true)
-    pct_td = result.match(/<td class="cell--pct strong t-totals__line-pct ([^"]+)"/)
+    cov_td = result.match(/<td class="cell--coverage strong t-totals__line-pct ([^"]+)"/)
 
-    assert pct_td, "Expected to find pct td"
-    assert_includes pct_td[1], "red"
+    assert cov_td, "Expected to find coverage td"
+    assert_includes cov_td[1], "red"
   end
 
   def test_coverage_cells_non_totals_uses_type_in_pct_class
@@ -776,12 +787,6 @@ class TestViewHelpers < Minitest::Test
     result = formatter.send(:coverage_cells, 75.0, 15, 20, type: :branch)
 
     assert_includes result, "cell--branch-pct"
-  end
-
-  def test_coverage_cells_totals_uses_type_in_bar_class
-    result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line, totals: true)
-
-    assert_includes result, "t-totals__line-bar"
   end
 
   def test_coverage_cells_totals_uses_type_in_pct_class
@@ -805,7 +810,7 @@ class TestViewHelpers < Minitest::Test
   def test_coverage_cells_totals_has_strong_classes
     result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line, totals: true)
 
-    assert_includes result, "strong t-totals__line-pct"
+    assert_includes result, "cell--coverage strong t-totals__line-pct"
     assert_includes result, "strong t-totals__line-num"
     assert_includes result, "strong t-totals__line-den"
   end
@@ -844,7 +849,8 @@ class TestViewHelpers < Minitest::Test
   def test_coverage_cells_totals_pct_value_present
     result = formatter.send(:coverage_cells, 85.0, 85, 100, type: :line, totals: true)
 
-    assert_match(%r{<td class="cell--pct[^"]*">85\.00%</td>}, result)
+    assert_includes result, "85.00%"
+    assert_includes result, "coverage-pct"
   end
 
   # -- coverage_header_cells tests --------------------------------------------
@@ -889,10 +895,11 @@ class TestViewHelpers < Minitest::Test
     assert_includes result, "col-filter__value"
   end
 
-  def test_coverage_header_cells_has_coverage_colspan
+  def test_coverage_header_cells_has_no_colspan
     result = formatter.send(:coverage_header_cells, "Line", :line, "Covered", "Total")
 
-    assert_includes result, 'colspan="2"'
+    refute_includes result, "colspan"
+    assert_includes result, "cell--coverage"
   end
 
   def test_coverage_header_cells_type_appears_in_both_filter_elements
@@ -1271,20 +1278,22 @@ private
     obj
   end
 
-  def stub_data_attrs_source(covered:, missed:, covered_branches: 0, total_branches: 0, covered_methods: 0, total_methods: 0) # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists
-    cl = make_countable(covered)
-    ml = make_countable(missed)
-    cb = make_countable(covered_branches)
-    tb = make_countable(total_branches)
-    cm = make_countable(covered_methods)
-    tm = make_countable(total_methods)
-    obj = Object.new
-    obj.define_singleton_method(:covered_lines) { cl }
-    obj.define_singleton_method(:missed_lines) { ml }
-    obj.define_singleton_method(:covered_branches) { cb }
-    obj.define_singleton_method(:total_branches) { tb }
-    obj.define_singleton_method(:covered_methods) { cm }
-    obj.define_singleton_method(:methods) { tm }
+  def stub_data_attrs_source(covered:, missed:, **extras)
+    define_countable_methods(
+      Object.new,
+      covered_lines: covered, missed_lines: missed,
+      covered_branches: extras.fetch(:covered_branches, 0),
+      total_branches: extras.fetch(:total_branches, 0),
+      covered_methods: extras.fetch(:covered_methods, 0),
+      methods: extras.fetch(:total_methods, 0)
+    )
+  end
+
+  def define_countable_methods(obj, **attrs)
+    attrs.each do |name, val|
+      c = make_countable(val)
+      obj.define_singleton_method(name) { c }
+    end
     obj
   end
 
