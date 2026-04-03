@@ -4,6 +4,13 @@ import ruby from 'highlight.js/lib/languages/ruby';
 hljs.registerLanguage('ruby', ruby);
 
 
+// --- Constants ------------------------------------------------
+
+const MAX_BAR_WIDTH = 240;
+const MIN_BAR_WIDTH = 80;
+const GREEN_THRESHOLD = 90;
+const YELLOW_THRESHOLD = 75;
+
 // --- Utility helpers ------------------------------------------
 
 function $(sel: string, ctx?: Element | Document): Element | null {
@@ -52,8 +59,8 @@ function timeago(date: Date): string {
 // --- Coverage helpers -----------------------------------------
 
 function pctClass(pct: number): string {
-  if (pct >= 90) return 'green';
-  if (pct >= 75) return 'yellow';
+  if (pct >= GREEN_THRESHOLD) return 'green';
+  if (pct >= YELLOW_THRESHOLD) return 'yellow';
   return 'red';
 }
 
@@ -80,8 +87,8 @@ function updateCoverageCells(
   }
   const p = (covered * 100.0) / total;
   const cls = pctClass(p);
-  if (barEl) barEl.innerHTML = '<div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--' + cls + '" style="width: ' + p.toFixed(1) + '%"></div></div>';
-  if (pctEl) { pctEl.textContent = p.toFixed(2) + '%'; pctEl.className = pctEl.className.replace(/green|yellow|red/g, '').trim() + ' ' + cls; }
+  if (barEl) barEl.innerHTML = `<div class="coverage-bar"><div class="coverage-bar__fill coverage-bar__fill--${cls}" style="width: ${p.toFixed(1)}%"></div></div>`;
+  if (pctEl) { pctEl.textContent = p.toFixed(2) + '%'; pctEl.className = `${pctEl.className.replace(/green|yellow|red/g, '').trim()} ${cls}`; }
   if (numEl) numEl.textContent = fmtNum(covered) + '/';
   if (denEl) denEl.textContent = fmtNum(total);
 }
@@ -137,14 +144,13 @@ function sortTable(table: Element, colIndex: number): void {
     return dir === 'asc' ? cmp : -cmp;
   });
 
-  rows.forEach(row => tbody.appendChild(row));
+  tbody.append(...rows);
 
   // Update sort indicators
   let tdPos = 0;
   $$('thead tr:first-child th', table).forEach((th) => {
     const span = parseInt(th.getAttribute('colspan') || '1', 10);
     th.classList.remove('sorting_asc', 'sorting_desc', 'sorting');
-    // colIndex falls within this th if it's >= tdPos and < tdPos + span
     const isActive = colIndex >= tdPos && colIndex < tdPos + span;
     th.classList.add(isActive ? (dir === 'asc' ? 'sorting_asc' : 'sorting_desc') : 'sorting');
     tdPos += span;
@@ -170,32 +176,29 @@ const dataAttrMap: Record<string, DataAttrPair> = {
   method: { covered: 'coveredMethods',  total: 'totalMethods' }
 };
 
+const comparators: Record<string, (value: number, threshold: number) => boolean> = {
+  gt:  (v, t) => v > t,
+  gte: (v, t) => v >= t,
+  eq:  (v, t) => v === t,
+  lte: (v, t) => v <= t,
+  lt:  (v, t) => v < t,
+};
+
 function compare(op: string, value: number, threshold: number): boolean {
-  if (op === 'gt')  return value > threshold;
-  if (op === 'gte') return value >= threshold;
-  if (op === 'eq')  return value === threshold;
-  if (op === 'lte') return value <= threshold;
-  if (op === 'lt')  return value < threshold;
-  return true;
+  return (comparators[op] || (() => true))(value, threshold);
 }
 
 // --- Filter & totals ------------------------------------------
 
-function filterTable(container: Element): void {
-  const table = $('table.file_list', container) as HTMLTableElement | null;
-  if (!table) return;
-
-  const nameInput = $('.col-filter--name', container) as HTMLInputElement | null;
-  const nameQuery = nameInput ? nameInput.value : '';
-
-  const filters: ActiveFilter[] = $$('.col-filter__value', container)
+function parseFilters(container: Element): ActiveFilter[] {
+  return $$('.col-filter__value', container)
     .map((input: Element) => {
       const inp = input as HTMLInputElement;
       if (!inp.value) return null;
       const threshold = parseFloat(inp.value);
       if (isNaN(threshold)) return null;
       const type = inp.dataset.type || '';
-      const opSelect = $(".col-filter__op[data-type=\"" + type + "\"]", container) as HTMLSelectElement | null;
+      const opSelect = $(`.col-filter__op[data-type="${type}"]`, container) as HTMLSelectElement | null;
       const op = opSelect ? opSelect.value : '';
       if (!op) return null;
       const attrs = dataAttrMap[type];
@@ -203,6 +206,15 @@ function filterTable(container: Element): void {
       return { attrs, op, threshold } as ActiveFilter;
     })
     .filter((f): f is ActiveFilter => f !== null);
+}
+
+function filterTable(container: Element): void {
+  const table = $('table.file_list', container) as HTMLTableElement | null;
+  if (!table) return;
+
+  const nameInput = $('.col-filter--name', container) as HTMLInputElement | null;
+  const nameQuery = nameInput ? nameInput.value : '';
+  const filters = parseFilters(container);
 
   $$('tbody tr.t-file', table).forEach(row => {
     const htmlRow = row as HTMLElement;
@@ -210,7 +222,7 @@ function filterTable(container: Element): void {
 
     if (nameQuery) {
       const name = (row.children[0].textContent || '').toLowerCase();
-      if (name.indexOf(nameQuery.toLowerCase()) === -1) visible = false;
+      if (!name.includes(nameQuery.toLowerCase())) visible = false;
     }
 
     if (visible) {
@@ -225,8 +237,9 @@ function filterTable(container: Element): void {
     htmlRow.style.display = visible ? '' : 'none';
   });
 
+  invalidateFileRowCache();
   updateTotalsRow(container);
-  equalizeBarWidths();
+  scheduleEqualizeBarWidths();
 }
 
 function updateFilterOptions(input: HTMLInputElement): void {
@@ -263,20 +276,11 @@ function updateTotalsRow(container: Element): void {
       : fmtNum(rows.length) + '/' + fmtNum(totalFiles) + label;
   }
 
-  const coveredLines = sumData('coveredLines');
-  const relevantLines = sumData('relevantLines');
-  updateCoverageCells(container, '.t-totals__line', coveredLines, relevantLines);
-
-  if ($('.t-totals__branch-pct', container)) {
-    const coveredBranches = sumData('coveredBranches');
-    const totalBranches = sumData('totalBranches');
-    updateCoverageCells(container, '.t-totals__branch', coveredBranches, totalBranches);
-  }
-
-  if ($('.t-totals__method-pct', container)) {
-    const coveredMethods = sumData('coveredMethods');
-    const totalMethods = sumData('totalMethods');
-    updateCoverageCells(container, '.t-totals__method', coveredMethods, totalMethods);
+  for (const type of Object.keys(dataAttrMap)) {
+    const attrs = dataAttrMap[type];
+    const prefix = `.t-totals__${type}`;
+    if (!$(prefix + '-pct', container)) continue;
+    updateCoverageCells(container, prefix, sumData(attrs.covered), sumData(attrs.total));
   }
 }
 
@@ -332,10 +336,8 @@ function equalizeBarWidths(): void {
     const wrapper = table.closest('.file_list--responsive') as HTMLElement | null;
     if (!wrapper) return;
 
-    // Hide during measurement to prevent flicker
     wrapper.style.visibility = 'hidden';
 
-    // Test whether bars at a given width fit without overflow
     const fitsAt = (px: number): boolean => {
       setBarWidth(bars, table, px);
       table.style.width = 'auto';
@@ -345,15 +347,14 @@ function equalizeBarWidths(): void {
       return fits;
     };
 
-    let barWidth = 240;
-    if (!fitsAt(240)) {
-      if (!fitsAt(80)) {
+    let barWidth = MAX_BAR_WIDTH;
+    if (!fitsAt(MAX_BAR_WIDTH)) {
+      if (!fitsAt(MIN_BAR_WIDTH)) {
         hideBars(bars, table);
         wrapper.style.visibility = '';
         return;
       }
-      // Binary search for the widest bars that fit
-      let lo = 80, hi = 239;
+      let lo = MIN_BAR_WIDTH, hi = MAX_BAR_WIDTH - 1;
       while (lo < hi) {
         const mid = Math.ceil((lo + hi) / 2);
         if (fitsAt(mid)) lo = mid;
@@ -367,14 +368,31 @@ function equalizeBarWidths(): void {
   });
 }
 
+let equalizeRafId = 0;
+
+function scheduleEqualizeBarWidths(): void {
+  if (equalizeRafId) return;
+  equalizeRafId = requestAnimationFrame(() => {
+    equalizeRafId = 0;
+    equalizeBarWidths();
+  });
+}
+
 // --- Keyboard navigation ----------------------------------------
 
 let focusedRow: HTMLElement | null = null;
+let cachedFileRows: HTMLElement[] | null = null;
+
+function invalidateFileRowCache(): void {
+  cachedFileRows = null;
+}
 
 function getVisibleFileRows(): HTMLElement[] {
+  if (cachedFileRows) return cachedFileRows;
   const visible = $$('.file_list_container').filter(c => (c as HTMLElement).style.display !== 'none');
   if (!visible.length) return [];
-  return $$('tbody tr.t-file', visible[0]).filter(r => (r as HTMLElement).style.display !== 'none') as HTMLElement[];
+  cachedFileRows = $$('tbody tr.t-file', visible[0]).filter(r => (r as HTMLElement).style.display !== 'none') as HTMLElement[];
+  return cachedFileRows;
 }
 
 function setFocusedRow(row: HTMLElement | null): void {
@@ -433,20 +451,35 @@ function jumpToMissedLine(direction: 1 | -1): void {
 let dialog: HTMLDialogElement;
 let dialogBody: HTMLElement;
 let dialogTitle: HTMLElement;
+let activeSourceEl: HTMLElement | null = null;
+let savedHeaderHTML = '';
+
+function restoreActiveSource(): void {
+  if (!activeSourceEl) return;
+  if (savedHeaderHTML) {
+    activeSourceEl.insertAdjacentHTML('afterbegin', savedHeaderHTML);
+    savedHeaderHTML = '';
+  }
+  const container = document.querySelector('.source_files');
+  if (container) container.appendChild(activeSourceEl);
+  activeSourceEl = null;
+}
 
 function openSourceFile(sourceFileId: string, linenumber?: string): void {
+  restoreActiveSource();
+
   const el = materializeSourceFile(sourceFileId);
   if (!el) return;
 
-  const sourceTable = el.cloneNode(true) as HTMLElement;
-  const header = sourceTable.querySelector('.header');
+  const header = el.querySelector('.header');
   if (header) {
+    savedHeaderHTML = header.outerHTML;
     dialogTitle.innerHTML = header.innerHTML;
     header.remove();
   }
 
-  dialogBody.innerHTML = '';
-  dialogBody.appendChild(sourceTable);
+  activeSourceEl = el;
+  dialogBody.appendChild(el);
 
   if (!dialog.open) dialog.showModal();
   document.documentElement.style.overflow = 'hidden';
@@ -460,7 +493,10 @@ function openSourceFile(sourceFileId: string, linenumber?: string): void {
 
 function showFileList(tabId: string): void {
   setFocusedRow(null);
+  invalidateFileRowCache();
+
   if (dialog.open) {
+    restoreActiveSource();
     dialog.close();
     dialogBody.innerHTML = '';
     dialogTitle.innerHTML = '';
@@ -477,10 +513,9 @@ function showFileList(tabId: string): void {
       if (target) target.style.display = '';
     }
   }
-  // Only equalize bars if the wrapper is actually visible
   const wrapper = document.getElementById('wrapper');
   if (wrapper && !wrapper.classList.contains('hide')) {
-    equalizeBarWidths();
+    scheduleEqualizeBarWidths();
   }
 }
 
@@ -512,6 +547,39 @@ function navigateToActiveTab(): void {
   }
 }
 
+// --- Dark mode ------------------------------------------------
+
+function initDarkMode(): void {
+  const toggle = document.getElementById('dark-mode-toggle');
+  if (!toggle) return;
+
+  const root = document.documentElement;
+
+  function isDark(): boolean {
+    return root.classList.contains('dark-mode') ||
+      (!root.classList.contains('light-mode') &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches);
+  }
+
+  function updateLabel(): void {
+    toggle!.textContent = isDark() ? '\u2600\uFE0F Light' : '\uD83C\uDF19 Dark';
+  }
+
+  updateLabel();
+
+  toggle.addEventListener('click', () => {
+    const switchToLight = isDark();
+    root.classList.toggle('light-mode', switchToLight);
+    root.classList.toggle('dark-mode', !switchToLight);
+    localStorage.setItem('simplecov-dark-mode', switchToLight ? 'light' : 'dark');
+    updateLabel();
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (!localStorage.getItem('simplecov-dark-mode')) updateLabel();
+  });
+}
+
 // --- Initialization -------------------------------------------
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -521,37 +589,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!isNaN(date.getTime())) el.textContent = timeago(date);
   });
 
-  // Dark mode toggle
-  (function () {
-    const toggle = document.getElementById('dark-mode-toggle');
-    if (!toggle) return;
-
-    const root = document.documentElement;
-
-    function isDark(): boolean {
-      return root.classList.contains('dark-mode') ||
-        (!root.classList.contains('light-mode') &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches);
-    }
-
-    function updateLabel(): void {
-      toggle!.textContent = isDark() ? '\u2600\uFE0F Light' : '\uD83C\uDF19 Dark';
-    }
-
-    updateLabel();
-
-    toggle.addEventListener('click', () => {
-      const switchToLight = isDark();
-      root.classList.toggle('light-mode', switchToLight);
-      root.classList.toggle('dark-mode', !switchToLight);
-      localStorage.setItem('simplecov-dark-mode', switchToLight ? 'light' : 'dark');
-      updateLabel();
-    });
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      if (!localStorage.getItem('simplecov-dark-mode')) updateLabel();
-    });
-  })();
+  initDarkMode();
 
   // Table sorting — compute td index dynamically at click time
   function thToTdIndex(table: Element, clickedTh: Element): number {
@@ -693,8 +731,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Equalize bar column widths within each table
-  // Defer until after wrapper is visible
-  window.addEventListener('resize', equalizeBarWidths);
+  window.addEventListener('resize', scheduleEqualizeBarWidths);
 
   // Initial state
   navigateToHash();
