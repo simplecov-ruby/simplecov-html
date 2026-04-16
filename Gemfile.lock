@@ -1,11 +1,8 @@
 GIT
   remote: https://github.com/simplecov-ruby/simplecov
-  revision: 7245d3a1292f4feb17c8876c5357e4034b0595a4
+  revision: 00376ea2f29ce7a7355b7c2d7d094b666b57cb9b
   specs:
     simplecov (0.22.0)
-      docile (~> 1.1)
-      simplecov-html (~> 0.12)
-      simplecov_json_formatter (~> 0.1)
 
 PATH
   remote: .
@@ -19,7 +16,6 @@ GEM
     date (3.5.1)
     date (3.5.1-java)
     diff-lcs (2.0.0)
-    docile (1.4.1)
     drb (2.2.3)
     erb (6.0.2)
     erb (6.0.2-java)
@@ -108,7 +104,6 @@ GEM
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1)
     ruby-progressbar (1.13.0)
-    simplecov_json_formatter (0.1.4)
     sorbet-runtime (0.6.13080)
     stringio (3.2.0)
     tsort (0.2.0)
