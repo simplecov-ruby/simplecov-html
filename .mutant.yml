@@ -6,7 +6,7 @@ includes:
   - test
 requires:
   - simplecov
-  - simplecov-html
+  - ./lib/simplecov-html
 matcher:
   subjects:
     - SimpleCov::Formatter::HTMLFormatter*
