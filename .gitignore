@@ -1,5 +1,6 @@
-.rvmrc
 .bundle
+.mutant
+.rvmrc
 /tmp
 
 ## MAC OS
